@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   CardActionArea,
   CardContent,
   Divider,
@@ -12,14 +11,12 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { BoxGG, BoxLog, BoxLogin } from "./Style";
+import { BoxGG, BtnLog, BoxLogin } from "./Style";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
-var regUserName = /^[0-9]{9,10}$/;
-var regpass = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
 function Login() {
   const navigate = useNavigate();
@@ -70,6 +67,9 @@ function Login() {
       }}
     >
       <BoxLogin>
+        <Box sx={{ textAlign: "center", marginBottom: 5 }}>
+          <Typography variant="h3">Login</Typography>
+        </Box>
         <BoxGG variant="outlined">
           <CardActionArea>
             <CardContent sx={{ alignItems: "center" }}>
@@ -87,7 +87,7 @@ function Login() {
         </BoxGG>
         <Divider sx={{ margin: 5 }}>OR</Divider>
 
-        <BoxLog>
+        <Box>
           <form noValidate autoComplete="off" onSubmit={handleSubmit}>
             <TextField
               label="User Name"
@@ -119,23 +119,12 @@ function Login() {
             />
 
             <Box style={{ justifyContent: "center", textAlign: "center" }}>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                  width: "60%",
-                  borderRadius: 5,
-                  height: 50,
-                  fontSize: 20,
-                  backgroundColor: "#D93A00",
-                  color: "white",
-                }}
-              >
+              <BtnLog type="submit" variant="contained">
                 log in
-              </Button>
+              </BtnLog>
             </Box>
           </form>
-        </BoxLog>
+        </Box>
 
         <Box
           style={{
