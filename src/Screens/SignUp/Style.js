@@ -1,5 +1,5 @@
-import styled from "@emotion/styled";
-import { Button, Stack } from "@mui/material";
+
+import { Button, Stack, styled } from "@mui/material";
 
 export const BoxLogin = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",

@@ -1,5 +1,5 @@
-import styled from "@emotion/styled";
-import { Button, Card, Stack } from "@mui/material";
+
+import { Button, Card, Stack, styled } from "@mui/material";
 
 export const BoxGG = styled(Card)(({ theme }) => ({
   border: theme.palette.mode === "light" ? "1px solid black" : "1px solid gray",
