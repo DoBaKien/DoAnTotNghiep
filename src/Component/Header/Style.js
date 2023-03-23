@@ -1,4 +1,3 @@
-
 import { styled, Switch } from "@mui/material";
 import { Stack } from "@mui/system";
 
@@ -51,7 +50,7 @@ export const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 
 export const StackHeader = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
-  boxShadow: "0px 1px 0px 0px #888888",
+
   justifyContent: "center",
   alignItems: "center",
 }));
@@ -60,4 +59,7 @@ export const Search = styled("div")(({ theme }) => ({
   borderRadius: 20,
   width: "50%",
   height: 40,
+  "&:hover": {
+    border: "1px solid currentColor",
+  },
 }));

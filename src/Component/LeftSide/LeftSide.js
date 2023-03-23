@@ -10,13 +10,9 @@ import {
 } from "@mui/material";
 import { BoxSide } from "./Style.js";
 import HomeIcon from "@mui/icons-material/Home";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import SettingsIcon from "@mui/icons-material/Settings";
-import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
-import PersonIcon from "@mui/icons-material/Person";
-import ArticleIcon from "@mui/icons-material/Article";
-import LeaderboardIcon from "@mui/icons-material/Leaderboard";
-import MessageIcon from "@mui/icons-material/Message";
+import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import PeopleIcon from "@mui/icons-material/People";
 import ModeNightIcon from "@mui/icons-material/ModeNight";
 import { useContext } from "react";
 import { ThemeUseContext } from "../Darkmode/ThemeUseContext.js";
@@ -28,7 +24,14 @@ function LeftSide() {
     <BoxSide>
       <Box sx={{ flex: { xl: 1, md: 2, sm: 2, xs: 1 } }}>
         <Box p={2} sx={{ display: { xs: "none", lg: "block" } }}>
-          <Box position="fixed">
+          <Box
+            position="fixed"
+            sx={{
+              border: "1px solid gray",
+              padding:1,
+              borderRadius:10
+            }}
+          >
             <List>
               <ListItem disablePadding>
                 <ListItemButton>
@@ -41,7 +44,7 @@ function LeftSide() {
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    <ArticleIcon />
+                    <QuestionAnswerIcon />
                   </ListItemIcon>
                   <ListItemText primary="Question" />
                 </ListItemButton>
@@ -49,7 +52,7 @@ function LeftSide() {
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    <LeaderboardIcon />
+                    <LocalOfferIcon />
                   </ListItemIcon>
                   <ListItemText primary="Tags" />
                 </ListItemButton>
@@ -57,7 +60,7 @@ function LeftSide() {
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    <MessageIcon />
+                    <PeopleIcon />
                   </ListItemIcon>
                   <ListItemText primary="Users" />
                 </ListItemButton>
@@ -86,52 +89,25 @@ function LeftSide() {
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    <ArticleIcon />
+                    <QuestionAnswerIcon />
                   </ListItemIcon>
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    <LeaderboardIcon />
+                    <LocalOfferIcon />
                   </ListItemIcon>
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
-                    <MessageIcon />
+                    <PeopleIcon />
                   </ListItemIcon>
                 </ListItemButton>
               </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <PersonIcon />
-                  </ListItemIcon>
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <InsertPhotoIcon />
-                  </ListItemIcon>
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <SettingsIcon />
-                  </ListItemIcon>
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <AccountBoxIcon />
-                  </ListItemIcon>
-                </ListItemButton>
-              </ListItem>
+
               <ListItem disablePadding>
                 <IconButton
                   sx={{ ml: 1 }}

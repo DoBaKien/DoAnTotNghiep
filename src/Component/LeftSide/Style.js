@@ -5,4 +5,6 @@ export const BoxSide = styled(Box)(({ theme }) => ({
   width: "45%",
   marginRight: 50,
   minWidth: 60,
+  border: "1px solid gray",
+  borderRadius: 20,
 }));
