@@ -2,7 +2,7 @@ import { Box, styled } from "@mui/material";
 
 export const BoxContent = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
-  padding: 10,
+  padding: 20,
   minWidth: 300,
   height: "-moz-fit-content",
   width: "-moz-fit-content",
