@@ -5,12 +5,12 @@ import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import AddLinkIcon from "@mui/icons-material/AddLink";
 import {
   BoxContent,
-  BoxHome,
   CrePost,
   StackContent,
   StackCreate,
   StyledBadge,
 } from "./Style";
+import { BoxHome } from "../../Assert/Style";
 import { useNavigate } from "react-router-dom";
 
 function Home() {

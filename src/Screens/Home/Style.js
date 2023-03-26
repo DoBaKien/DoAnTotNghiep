@@ -1,10 +1,6 @@
 import { Badge, Box, Stack, styled } from "@mui/material";
 
-export const BoxHome = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
-  height: "-moz-fit-content",
-  justifyContent: "center",
-}));
+
 export const StackContent = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
   height: "-moz-fit-content",
