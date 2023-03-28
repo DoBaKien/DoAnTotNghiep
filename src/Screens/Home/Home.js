@@ -1,18 +1,31 @@
-import { Box, Typography, Avatar, IconButton, InputBase } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Avatar,
+  IconButton,
+  InputBase,
+  Stack,
+  Divider,
+} from "@mui/material";
 import Header from "../../Component/Header/Header";
 import LeftSide from "../../Component/LeftSide/LeftSide";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import AddLinkIcon from "@mui/icons-material/AddLink";
 import {
   BoxContent,
+  BoxDetails,
+  BoxTag,
+  BoxText,
+  BoxTitle,
   CrePost,
   StackContent,
   StackCreate,
+  StackPost,
   StyledBadge,
 } from "./Style";
 import { BoxHome } from "../../Assert/Style";
 import { useNavigate } from "react-router-dom";
-
+import "./Home.css";
 function Home() {
   const navigate = useNavigate();
   const handleCreate = () => {
@@ -54,15 +67,71 @@ function Home() {
           </StackCreate>
 
           <BoxContent>
-            {Array.from(Array(6)).map(() => (
-              <Typography variant="body1">
-                Sau khi chè chén no say, có lẽ vì muốn “lấy thân báo đáp” nên
-                chú mèo đã dí theo cô về tận nhà, muốn cho cô cơ hội được phục
-                vụ mình. Cô gái thấy thế vội vã đóng cửa lại nhưng không ngờ
-                quàng thượng này lì quá, nó cạy cửa ra rồi cố gắng lách mình vào
-                trong nhà. Không còn cách nào khác, cô gái đành phải tạm thời
-                thu nhận tên giang hồ meo này về nuôi.
-              </Typography>
+            {Array.from(Array(6)).map((_, i) => (
+              <StackPost
+                key={i}
+                direction="row"
+                spacing={2}
+                divider={
+                  <Divider
+                    orientation="vertical"
+                    flexItem
+                    sx={{ display: { xs: "none", lg: "block" } }}
+                  />
+                }
+              >
+                <BoxDetails sx={{ display: { xs: "none", lg: "block" } }}>
+                  <BoxText>
+                    <Typography>1 vote</Typography>
+                  </BoxText>
+                  <BoxText>
+                    <Typography>1 answer</Typography>
+                  </BoxText>
+                  <BoxText>
+                    <Typography>1 view</Typography>
+                  </BoxText>
+                </BoxDetails>
+
+                <BoxTitle>
+                  <Typography component="div" className="title">
+                    SQL Error mismatched input 'sql_query' expecting when using
+                    Create Table in Pyspark SQL Error mismatched input
+                    'sql_query' expecting when using Create Table in Pyspark SQL
+                    Error mismatched input 'sql_query' expecting when using
+                    Create Table in Pyspark
+                  </Typography>
+                  <Stack
+                    direction={{ xs: "column", lg: "row" }}
+                    sx={{ marginTop: 1 }}
+                  >
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      sx={{ width: "100%", alignItems: "center" }}
+                    >
+                      {Array.from(Array(3)).map((_, i) => (
+                        <BoxTag key={i}>
+                          <Typography variant="body2">asd {i}</Typography>
+                        </BoxTag>
+                      ))}
+                    </Stack>
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      sx={{
+                        width: 300,
+                        alignItems: "center",
+                        marginTop: { xs: 1, lg: 0 },
+                        marginBottom: { xs: 1, lg: 0 },
+                      }}
+                    >
+                      <Avatar sx={{ width: 35, height: 35 }}>N</Avatar>
+
+                      <Typography>Name Account</Typography>
+                    </Stack>
+                  </Stack>
+                </BoxTitle>
+              </StackPost>
             ))}
           </BoxContent>
         </Box>

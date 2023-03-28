@@ -11,7 +11,7 @@ function CreatePost() {
   const parse = require("html-react-parser");
 
   return (
-    <BoxHome>
+    <BoxHome color={"text.primary"}>
       <Header />
       <BoxNav>
         <Typography variant="h3">ASK A QUESTION</Typography>

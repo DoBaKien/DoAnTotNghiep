@@ -18,8 +18,17 @@ import { useContext } from "react";
 import { ThemeUseContext } from "../Darkmode/ThemeUseContext.js";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
+import { useNavigate } from "react-router-dom";
 function LeftSide() {
   const context = useContext(ThemeUseContext);
+  const navigate = useNavigate();
+  const handleHome = () => {
+    navigate("/");
+  };
+  const handleTags = () => {
+    navigate("/tags");
+  };
+
   return (
     <BoxSide>
       <Box sx={{ flex: { xl: 1, md: 2, sm: 2, xs: 1 } }}>
@@ -28,13 +37,13 @@ function LeftSide() {
             position="fixed"
             sx={{
               border: "1px solid gray",
-              padding:1,
-              borderRadius:10
+              padding: 1,
+              borderRadius: 10,
             }}
           >
             <List>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={handleHome}>
                   <ListItemIcon>
                     <HomeIcon />
                   </ListItemIcon>
@@ -50,7 +59,7 @@ function LeftSide() {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={handleTags}>
                   <ListItemIcon>
                     <LocalOfferIcon />
                   </ListItemIcon>
@@ -80,7 +89,7 @@ function LeftSide() {
           <Box position="fixed">
             <List style={{ width: "50px" }}>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={handleHome}>
                   <ListItemIcon>
                     <HomeIcon />
                   </ListItemIcon>
@@ -94,7 +103,7 @@ function LeftSide() {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={handleTags}>
                   <ListItemIcon>
                     <LocalOfferIcon />
                   </ListItemIcon>

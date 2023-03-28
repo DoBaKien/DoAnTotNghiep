@@ -1,6 +1,5 @@
 import { Badge, Box, Stack, styled } from "@mui/material";
 
-
 export const StackContent = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
   height: "-moz-fit-content",
@@ -8,15 +7,16 @@ export const StackContent = styled(Stack)(({ theme }) => ({
   margin: "0 auto",
 }));
 export const BoxContent = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
-  margin: "20px 50px 20px 10px",
+  backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
+  margin: "20px 10px 20px 10px",
   height: "-moz-fit-content",
-  width: "-moz-fit-content",
+  width: "60vw",
 }));
+
 export const StackCreate = styled(Stack)(({ theme }) => ({
-  width: "-moz-fit-content",
+  width: "60vw",
   height: 80,
-  margin: "20px 50px 20px 10px",
+  margin: "20px 10px 20px 10px",
   borderRadius: 10,
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
   display: "flex",
@@ -49,5 +49,38 @@ export const StyledBadge = styled(Badge)(({ theme }) => ({
       border: "1px solid currentColor",
       content: '""',
     },
+  },
+}));
+export const BoxTitle = styled(Box)(() => ({
+  height: "-moz-fit-content",
+  width: "100%",
+}));
+export const BoxDetails = styled(Box)(() => ({
+  height: 100,
+  width: 100,
+}));
+export const BoxText = styled(Box)(() => ({
+  width: "100%",
+  height: 33,
+  textAlign: "end",
+}));
+export const StackPost = styled(Stack)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
+  marginBottom: 10,
+}));
+export const BoxTag = styled(Box)(() => ({
+  padding: 5,
+
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  border: "1px solid gray",
+  borderRadius: 10,
+  backgroundColor: "#E1ECF4",
+  color: "black",
+  cursor: "pointer",
+  "&:hover": {
+    border: "1px solid currentColor",
+    backgroundColor: "#D6E0E8",
   },
 }));
