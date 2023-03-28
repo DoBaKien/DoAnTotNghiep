@@ -20,19 +20,9 @@ export const InputFind = styled("div")(({ theme }) => ({
   marginTop: 20,
   border: "1px solid black",
 }));
-export const BoxTags = styled(Paper)(({ theme }) => ({
+export const PaperUser = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
   padding: theme.spacing(2),
-}));
-export const BoxTag = styled(Box)(() => ({
-  height: 25,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  border: "1px solid gray",
-  borderRadius: 10,
-  backgroundColor: "#E1ECF4",
-  color: "black",
   cursor: "pointer",
   "&:hover": {
     border: "1px solid currentColor",

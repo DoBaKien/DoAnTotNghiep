@@ -28,6 +28,9 @@ function LeftSide() {
   const handleTags = () => {
     navigate("/tags");
   };
+  const handleUsers = () => {
+    navigate("/users");
+  };
 
   return (
     <BoxSide>
@@ -67,7 +70,7 @@ function LeftSide() {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={handleUsers}>
                   <ListItemIcon>
                     <PeopleIcon />
                   </ListItemIcon>
@@ -110,7 +113,7 @@ function LeftSide() {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={handleUsers}>
                   <ListItemIcon>
                     <PeopleIcon />
                   </ListItemIcon>

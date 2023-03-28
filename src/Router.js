@@ -8,6 +8,7 @@ import Home from "./Screens/Home/Home";
 import SignUp from "./Screens/SignUp/SignUp";
 import CreatePost from "./Screens/CreatePost/CreatePost";
 import Tags from "./Screens/Tags/Tags";
+import User from "./Screens/User/User";
 
 function Router() {
   const context = useContext(ThemeUseContext);
@@ -20,6 +21,7 @@ function Router() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/create" element={<CreatePost />} />
         <Route path="/tags" element={<Tags />} />
+        <Route path="/users" element={<User />} />
       </Routes>
     </ThemeProvider>
   );

@@ -13,7 +13,7 @@ function Tags() {
       <Header />
       <StackContent direction="row">
         <LeftSide></LeftSide>
-        <BoxContent>
+        <BoxContent sx={{ width: { xs: "100vw", lg: "60vw" } }}>
           <Typography variant="h4">Tags</Typography>
           <Box sx={{ width: "40vw", marginTop: 2 }}>
             <Typography>

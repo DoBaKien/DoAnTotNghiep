@@ -70,7 +70,6 @@ export const StackPost = styled(Stack)(({ theme }) => ({
 }));
 export const BoxTag = styled(Box)(() => ({
   padding: 5,
-
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
