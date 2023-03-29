@@ -88,7 +88,13 @@ function LeftSide() {
             </List>
           </Box>
         </Box>
-        <Box flex={0.1} sx={{ display: { lg: "none", xs: "block" } }}>
+        <Box
+          flex={0.1}
+          sx={{
+            display: { lg: "none", xs: "flex" },
+            justifyContent: "center",
+          }}
+        >
           <Box position="fixed">
             <List style={{ width: "50px" }}>
               <ListItem disablePadding>

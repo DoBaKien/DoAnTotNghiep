@@ -11,6 +11,7 @@ import Header from "../../Component/Header/Header";
 import LeftSide from "../../Component/LeftSide/LeftSide";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 import AddLinkIcon from "@mui/icons-material/AddLink";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 import {
   BoxContent,
   BoxDetails,
@@ -20,6 +21,7 @@ import {
   CrePost,
   StackContent,
   StackCreate,
+  StackName,
   StackPost,
   StyledBadge,
 } from "./Style";
@@ -50,7 +52,7 @@ function Home() {
               </IconButton>
             </Box>
 
-            <CrePost>
+            <CrePost sx={{ display: { xs: "none", lg: "block" } }}>
               <InputBase
                 sx={{ ml: 2, flex: 1, fontSize: 22 }}
                 fullWidth
@@ -58,6 +60,12 @@ function Home() {
                 onClick={handleCreate}
               />
             </CrePost>
+            <IconButton
+              onClick={handleCreate}
+              sx={{ display: { xs: "block", lg: "none" } }}
+            >
+              <PostAddIcon fontSize="large" />
+            </IconButton>
             <IconButton onClick={handleCreate}>
               <InsertPhotoIcon fontSize="large" />
             </IconButton>
@@ -115,12 +123,10 @@ function Home() {
                         </BoxTag>
                       ))}
                     </Stack>
-                    <Stack
+                    <StackName
                       direction="row"
                       spacing={2}
                       sx={{
-                        width: 300,
-                        alignItems: "center",
                         marginTop: { xs: 1, lg: 0 },
                         marginBottom: { xs: 1, lg: 0 },
                       }}
@@ -128,7 +134,7 @@ function Home() {
                       <Avatar sx={{ width: 35, height: 35 }}>N</Avatar>
 
                       <Typography>Name Account</Typography>
-                    </Stack>
+                    </StackName>
                   </Stack>
                 </BoxTitle>
               </StackPost>

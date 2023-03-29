@@ -8,7 +8,7 @@ export const StackContent = styled(Stack)(({ theme }) => ({
 }));
 export const BoxContent = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
-  margin: "20px 10px 20px 10px",
+  marginTop: 20,
   height: "-moz-fit-content",
   width: "60vw",
 }));
@@ -16,7 +16,7 @@ export const BoxContent = styled(Box)(({ theme }) => ({
 export const StackCreate = styled(Stack)(({ theme }) => ({
   width: "60vw",
   height: 80,
-  margin: "20px 10px 20px 10px",
+  marginTop: 20,
   borderRadius: 10,
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
   display: "flex",
@@ -53,7 +53,7 @@ export const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 export const BoxTitle = styled(Box)(() => ({
   height: "-moz-fit-content",
-  width: "100%",
+  width: "90%",
 }));
 export const BoxDetails = styled(Box)(() => ({
   height: 100,
@@ -82,4 +82,8 @@ export const BoxTag = styled(Box)(() => ({
     border: "1px solid currentColor",
     backgroundColor: "#D6E0E8",
   },
+}));
+export const StackName = styled(Stack)(() => ({
+  width: 220,
+  alignItems: "center",
 }));

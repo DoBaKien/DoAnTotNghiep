@@ -15,7 +15,7 @@ export const InputFind = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#3A3B3C" : "#E8E8E8",
   borderRadius: 5,
   width: "50%",
-  minWidth: 300,
+  minWidth: 200,
   height: 40,
   marginTop: 20,
   border: "1px solid black",
