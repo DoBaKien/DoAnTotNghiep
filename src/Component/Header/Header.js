@@ -35,6 +35,10 @@ function Header() {
     navigate("/login");
     setAnchorEl(null);
   };
+  const handlePf = () => {
+    navigate("/profile");
+    setAnchorEl(null);
+  };
   return (
     <StackHeader direction="row" color={"text.primary"} spacing={2}>
       <Box
@@ -112,7 +116,7 @@ function Header() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handlePf}>
           <Avatar /> Profile
         </MenuItem>
         <MenuItem sx={{ justifyContent: "center" }}>

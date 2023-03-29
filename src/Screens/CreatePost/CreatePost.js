@@ -1,14 +1,81 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import JoditEditor from "jodit-react";
 import { useRef, useState } from "react";
 import { BoxHome } from "../../Assert/Style";
 import Header from "../../Component/Header/Header";
 import { BoxContent, BoxNav } from "../CreatePost/Style";
+import CloseIcon from "@mui/icons-material/Close";
 
 function CreatePost() {
   const editor = useRef(null);
   const [content, setContent] = useState("");
   const parse = require("html-react-parser");
+  const [val, setVal] = useState([]);
+
+  const handleAdd = (e) => {
+    setVal([...val, { id: val.length + 1, value: e }]);
+  };
+
+  const Suit = (e, id) => {
+    if (e === "code") {
+      return (
+        <Box>
+          <Stack direction="row" sx={{ alignItems: "center" }}>
+            <Typography variant="h6">Code </Typography>
+            <IconButton color="error" onClick={() => handleDelete(id)}>
+              <CloseIcon />
+            </IconButton>
+          </Stack>
+          <TextField
+            id="outlined-multiline-static"
+            multiline
+            rows={4}
+            fullWidth
+            placeholder="Enter code"
+          />
+        </Box>
+      );
+    } else {
+      return (
+        <Box>
+          <Stack direction="row" sx={{ alignItems: "center" }}>
+            <Typography variant="h6">Text</Typography>
+            <IconButton color="error" onClick={() => handleDelete(id)}>
+              <CloseIcon />
+            </IconButton>
+          </Stack>
+          <JoditEditor
+            ref={editor}
+            value={content}
+            tabIndex={1}
+            onBlur={(newContent) => setContent(newContent)}
+            onChange={(newContent) => setContent(newContent)}
+          />
+        </Box>
+      );
+    }
+  };
+
+  const handleDelete = (i) => {
+    if (val.length > 0) {
+      // check if array is not empty
+      const newArray = [...val]; // create a copy of the original array
+      newArray.pop(); // remove the last element from the new array
+      if (newArray.length === 0) {
+        // check if the new array is empty
+        setVal([]); // set the state to a new array with a default value
+      } else {
+        setVal(newArray); // update the state with the new array
+      }
+    }
+  };
 
   return (
     <BoxHome color={"text.primary"}>
@@ -68,13 +135,41 @@ function CreatePost() {
           margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
         }}
       >
+        <Button
+          variant="contained"
+          sx={{ marginRight: 1 }}
+          onClick={() => handleAdd("text")}
+        >
+          Text
+        </Button>
+        <Button variant="contained" onClick={() => handleAdd("code")}>
+          Code
+        </Button>
+      </BoxContent>
+
+      {val.map((data) => {
+        return (
+          <BoxContent
+            key={data.id}
+            sx={{
+              margin: {
+                lg: "10px 200px 0px 200px",
+                xs: "10px 10px 0px 10px",
+              },
+            }}
+          >
+            {Suit(data.value, data.id)}
+          </BoxContent>
+        );
+      })}
+
+      <BoxContent
+        sx={{
+          margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
+        }}
+      >
         <Typography variant="h6">Tags</Typography>
-        <TextField
-          id="outlined-basic"
-          variant="outlined"
-          fullWidth
-          placeholder="Tags"
-        />
+        <TextField variant="outlined" fullWidth placeholder="Tags" />
       </BoxContent>
       <BoxContent
         sx={{

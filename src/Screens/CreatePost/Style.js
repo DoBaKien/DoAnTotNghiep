@@ -5,7 +5,8 @@ export const BoxContent = styled(Box)(({ theme }) => ({
   padding: 20,
   minWidth: 300,
   height: "-moz-fit-content",
-  width: 800,
+  width: "-moz-fit-content",
+
 }));
 export const BoxNav = styled(Box)(() => ({
   height: 100,
