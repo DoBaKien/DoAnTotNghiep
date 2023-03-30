@@ -1,4 +1,4 @@
-import { Box, Paper, Stack, styled } from "@mui/material";
+import { Box,  Stack, styled } from "@mui/material";
 
 export const StackContent = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
@@ -19,13 +19,4 @@ export const InputFind = styled("div")(({ theme }) => ({
   height: 40,
   marginTop: 20,
   border: "1px solid black",
-}));
-export const PaperUser = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
-  padding: theme.spacing(2),
-  cursor: "pointer",
-  "&:hover": {
-    border: "1px solid currentColor",
-    backgroundColor: "#D6E0E8",
-  },
 }));

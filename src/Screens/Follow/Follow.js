@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   Button,
-  Divider,
   Stack,
   Typography,
   List,
@@ -12,34 +11,29 @@ import {
   ListItemText,
 } from "@mui/material";
 import {
-  BoxAbout,
   BoxHome,
+  BoxAbout,
+  BoxContent,
   BoxList,
   BoxName,
   StackContent,
-  BoxContent,
+  PaperUser,
 } from "../../Assert/Style";
 import Header from "../../Component/Header/Header";
-import {
-  BoxDetails,
-  BoxTag,
-  BoxText,
-  BoxTitle,
-  StackPost,
-} from "../Home/Style";
+
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { BoxPost } from "./Style";
 import { useNavigate } from "react-router-dom";
+import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 
-function Profile() {
+function Follow() {
   const navigation = useNavigate();
-  const handleFollow = () => {
-    navigation("/follow");
+  const handleQUestion = () => {
+    navigation("/profile");
   };
-
   return (
     <BoxHome color={"text.primary"}>
       <Header />
@@ -116,7 +110,7 @@ function Profile() {
               >
                 <List>
                   <ListItem disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={handleQUestion}>
                       <ListItemIcon>
                         <QuestionAnswerIcon />
                       </ListItemIcon>
@@ -124,7 +118,7 @@ function Profile() {
                     </ListItemButton>
                   </ListItem>
                   <ListItem disablePadding>
-                    <ListItemButton onClick={handleFollow}>
+                    <ListItemButton>
                       <ListItemIcon>
                         <FavoriteIcon />
                       </ListItemIcon>
@@ -197,67 +191,44 @@ function Profile() {
           </Box>
         </BoxList>
         <BoxPost>
-          {Array.from(Array(6)).map((_, i) => (
-            <StackPost
-              key={i}
-              direction="row"
-              spacing={2}
-              divider={
-                <Divider
-                  orientation="vertical"
-                  flexItem
-                  sx={{ display: { xs: "none", lg: "block" } }}
-                />
-              }
-            >
-              <BoxDetails sx={{ display: { xs: "none", lg: "block" } }}>
-                <BoxText>
-                  <Typography>1 vote</Typography>
-                </BoxText>
-                <BoxText>
-                  <Typography>1 answer</Typography>
-                </BoxText>
-                <BoxText>
-                  <Typography>1 view</Typography>
-                </BoxText>
-              </BoxDetails>
-
-              <BoxTitle>
-                <Typography component="div" className="title">
-                  SQL Error mismatched input 'sql_query' expecting when using
-                  Create Table in Pyspark SQL Error mismatched input 'sql_query'
-                  expecting when using Create Table in Pyspark SQL Error
-                  mismatched input 'sql_query' expecting when using Create Table
-                  in Pyspark
-                </Typography>
-                <Stack
-                  direction={{ xs: "column", lg: "row" }}
-                  sx={{ marginTop: 1 }}
-                >
-                  <Stack
-                    direction="row"
-                    spacing={2}
-                    sx={{
-                      width: "100%",
-                      alignItems: "center",
-                      marginBottom: 2,
-                      marginTop: 1,
-                    }}
-                  >
-                    {Array.from(Array(3)).map((_, i) => (
-                      <BoxTag key={i}>
-                        <Typography variant="body2">asd {i}</Typography>
-                      </BoxTag>
-                    ))}
+          <Grid2
+            container
+            spacing={{ xs: 1, md: 3 }}
+            columns={{ xs: 4, sm: 8, md: 12 }}
+          >
+            {Array.from(Array(20)).map((_, index) => (
+              <Grid2 xs={4} sm={4} md={4} key={index}>
+                <PaperUser>
+                  <Stack direction="row" spacing={2}>
+                    <Box
+                      sx={{
+                        width: 50,
+                        height: 60,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        display: "flex",
+                      }}
+                    >
+                      <Avatar sx={{ width: 50, height: 50 }}>A</Avatar>
+                    </Box>
+                    <Box
+                      sx={{
+                        width: "100%",
+                        height: 60,
+                      }}
+                    >
+                      <Typography sx={{ marginBottom: 1 }}>Name</Typography>
+                      <Typography>Loacation</Typography>
+                    </Box>
                   </Stack>
-                </Stack>
-              </BoxTitle>
-            </StackPost>
-          ))}
+                </PaperUser>
+              </Grid2>
+            ))}
+          </Grid2>
         </BoxPost>
       </Stack>
     </BoxHome>
   );
 }
 
-export default Profile;
+export default Follow;

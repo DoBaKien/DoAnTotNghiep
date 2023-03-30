@@ -10,6 +10,7 @@ import CreatePost from "./Screens/CreatePost/CreatePost";
 import Tags from "./Screens/Tags/Tags";
 import User from "./Screens/User/User";
 import Profile from "./Screens/Profile/Profile";
+import Follow from "./Screens/Follow/Follow";
 
 function Router() {
   const context = useContext(ThemeUseContext);
@@ -24,6 +25,7 @@ function Router() {
         <Route path="/tags" element={<Tags />} />
         <Route path="/users" element={<User />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/follow" element={<Follow />} />
       </Routes>
     </ThemeProvider>
   );

@@ -1,8 +1,8 @@
 import Header from "../../Component/Header/Header";
 import LeftSide from "../../Component/LeftSide/LeftSide";
 
-import { BoxContent, InputFind, PaperUser, StackContent } from "./Style";
-import { BoxHome } from "../../Assert/Style";
+import { BoxContent, InputFind, StackContent } from "./Style";
+import { BoxHome, PaperUser } from "../../Assert/Style";
 import {
   Avatar,
   Box,
