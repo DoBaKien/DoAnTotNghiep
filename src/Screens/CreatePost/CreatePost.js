@@ -16,11 +16,19 @@ import CloseIcon from "@mui/icons-material/Close";
 function CreatePost() {
   const editor = useRef(null);
   const [content, setContent] = useState("");
-  const parse = require("html-react-parser");
+  // const parse = require("html-react-parser");
   const [val, setVal] = useState([]);
 
   const handleAdd = (e) => {
-    setVal([...val, { id: val.length + 1, value: e }]);
+    setVal([...val, { id: val.length + 1, type: e }]);
+  };
+
+  const handle = (e, id) => {
+    console.log(e, id);
+  };
+
+  const handleCre = () => {
+    console.log(val);
   };
 
   const Suit = (e, id) => {
@@ -34,29 +42,30 @@ function CreatePost() {
             </IconButton>
           </Stack>
           <TextField
-            id="outlined-multiline-static"
             multiline
             rows={4}
             fullWidth
             placeholder="Enter code"
+            onChange={(e) => handle(e.target.value, id)}
           />
         </Box>
       );
     } else {
       return (
-        <Box>
+        <Box sx={{ color: "black" }}>
           <Stack direction="row" sx={{ alignItems: "center" }}>
-            <Typography variant="h6">Text</Typography>
+            <Typography variant="h6" color={"text.primary"}>
+              Text
+            </Typography>
             <IconButton color="error" onClick={() => handleDelete(id)}>
               <CloseIcon />
             </IconButton>
           </Stack>
           <JoditEditor
             ref={editor}
-            value={content}
             tabIndex={1}
             onBlur={(newContent) => setContent(newContent)}
-            onChange={(newContent) => setContent(newContent)}
+            onChange={(e) => handle(e, id)}
           />
         </Box>
       );
@@ -101,13 +110,12 @@ function CreatePost() {
           margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
         }}
       >
-        <Box>
-          <Typography variant="h6">
+        <Box color={"black"}>
+          <Typography variant="h6" color={"text.primary"}>
             What are the details of your problem?
           </Typography>
           <JoditEditor
             ref={editor}
-            value={content}
             tabIndex={1}
             onBlur={(newContent) => setContent(newContent)}
             onChange={(newContent) => setContent(newContent)}
@@ -158,7 +166,7 @@ function CreatePost() {
               },
             }}
           >
-            {Suit(data.value, data.id)}
+            {Suit(data.type, data.id)}
           </BoxContent>
         );
       })}
@@ -178,7 +186,9 @@ function CreatePost() {
           display: "flex",
         }}
       >
-        <Button variant="contained">Create Post</Button>
+        <Button variant="contained" onClick={handleCre}>
+          Create Post
+        </Button>
       </BoxContent>
       <Box sx={{ height: 30, width: "100%" }}></Box>
       {/* <Typography variant="body1">{content}</Typography>

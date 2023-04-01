@@ -42,3 +42,18 @@ export const PaperUser = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "light" ? "#D6E0E8" : "#030303",
   },
 }));
+export const BoxTag = styled(Box)(() => ({
+  padding: 5,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  border: "1px solid gray",
+  borderRadius: 10,
+  backgroundColor: "#E1ECF4",
+  color: "black",
+  cursor: "pointer",
+  "&:hover": {
+    border: "1px solid currentColor",
+    backgroundColor: "#D6E0E8",
+  },
+}));

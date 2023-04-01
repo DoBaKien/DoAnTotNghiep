@@ -18,15 +18,10 @@ import {
   BoxName,
   StackContent,
   BoxContent,
+  BoxTag,
 } from "../../Assert/Style";
 import Header from "../../Component/Header/Header";
-import {
-  BoxDetails,
-  BoxTag,
-  BoxText,
-  BoxTitle,
-  StackPost,
-} from "../Home/Style";
+import { BoxDetails, BoxText, BoxTitle, StackPost } from "../Home/Style";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";

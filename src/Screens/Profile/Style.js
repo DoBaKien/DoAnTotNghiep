@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { Box } from "@mui/material";
 import { styled } from "@mui/system";
 
 export const BoxPost = styled(Box)(() => ({

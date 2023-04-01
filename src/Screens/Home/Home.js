@@ -15,7 +15,6 @@ import PostAddIcon from "@mui/icons-material/PostAdd";
 import {
   BoxContent,
   BoxDetails,
-  BoxTag,
   BoxText,
   BoxTitle,
   CrePost,
@@ -24,8 +23,9 @@ import {
   StackName,
   StackPost,
   StyledBadge,
+  TypographyTitle,
 } from "./Style";
-import { BoxHome } from "../../Assert/Style";
+import { BoxHome, BoxTag } from "../../Assert/Style";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 function Home() {
@@ -33,10 +33,13 @@ function Home() {
   const handleCreate = () => {
     navigate("/create");
   };
+  const handlePost = () => {
+    navigate("/post");
+  };
   return (
     <BoxHome color={"text.primary"}>
       <Header />
-      <StackContent direction="row">
+      <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
         <Box>
           <StackCreate direction="row" spacing={2}>
@@ -101,13 +104,17 @@ function Home() {
                 </BoxDetails>
 
                 <BoxTitle>
-                  <Typography component="div" className="title">
+                  <TypographyTitle
+                    component="div"
+                    className="title"
+                    onClick={handlePost}
+                  >
                     SQL Error mismatched input 'sql_query' expecting when using
                     Create Table in Pyspark SQL Error mismatched input
                     'sql_query' expecting when using Create Table in Pyspark SQL
                     Error mismatched input 'sql_query' expecting when using
                     Create Table in Pyspark
-                  </Typography>
+                  </TypographyTitle>
                   <Stack
                     direction={{ xs: "column", lg: "row" }}
                     sx={{ marginTop: 1 }}

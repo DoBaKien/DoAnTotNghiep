@@ -1,4 +1,4 @@
-import { Badge, Box, Stack, styled } from "@mui/material";
+import { Badge, Box, Stack, Typography, styled } from "@mui/material";
 
 export const StackContent = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
@@ -16,7 +16,6 @@ export const BoxContent = styled(Box)(({ theme }) => ({
 export const StackCreate = styled(Stack)(({ theme }) => ({
   width: "60vw",
   height: 80,
-  marginTop: 20,
   borderRadius: 10,
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
   display: "flex",
@@ -68,22 +67,13 @@ export const StackPost = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
   marginBottom: 10,
 }));
-export const BoxTag = styled(Box)(() => ({
-  padding: 5,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  border: "1px solid gray",
-  borderRadius: 10,
-  backgroundColor: "#E1ECF4",
-  color: "black",
-  cursor: "pointer",
-  "&:hover": {
-    border: "1px solid currentColor",
-    backgroundColor: "#D6E0E8",
-  },
-}));
+
 export const StackName = styled(Stack)(() => ({
   width: 220,
   alignItems: "center",
+}));
+export const TypographyTitle = styled(Typography)(({ theme }) => ({
+  "&:hover": {
+    color: theme.palette.mode === "light" ? "#00A2E8" : "#C3C3C3",
+  },
 }));
