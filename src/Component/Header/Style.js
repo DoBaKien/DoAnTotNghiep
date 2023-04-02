@@ -1,4 +1,4 @@
-import { styled, Switch } from "@mui/material";
+import { Box, styled, Switch } from "@mui/material";
 import { Stack } from "@mui/system";
 
 export const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -50,7 +50,6 @@ export const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 
 export const StackHeader = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
-
   justifyContent: "center",
   alignItems: "center",
 }));

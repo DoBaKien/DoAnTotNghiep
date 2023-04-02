@@ -21,7 +21,7 @@ import {
   BoxTag,
 } from "../../Assert/Style";
 import Header from "../../Component/Header/Header";
-import { BoxDetails, BoxText, BoxTitle, StackPost } from "../Home/Style";
+import { BoxDetails, BoxText, BoxTitle, StackPost, TypographyTitle } from "../Home/Style";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
@@ -33,6 +33,9 @@ function Profile() {
   const navigation = useNavigate();
   const handleFollow = () => {
     navigation("/follow");
+  };
+  const handleEditPage = () => {
+    navigation("/editpf");
   };
 
   return (
@@ -76,7 +79,9 @@ function Profile() {
               justifyContent: { lg: "end", xs: "center" },
             }}
           >
-            <Button variant="outlined">Edit Profile</Button>
+            <Button variant="outlined" onClick={handleEditPage}>
+              Edit Profile
+            </Button>
           </Box>
         </StackContent>
       </BoxContent>
@@ -218,13 +223,13 @@ function Profile() {
               </BoxDetails>
 
               <BoxTitle>
-                <Typography component="div" className="title">
+                <TypographyTitle component="div" className="title">
                   SQL Error mismatched input 'sql_query' expecting when using
                   Create Table in Pyspark SQL Error mismatched input 'sql_query'
                   expecting when using Create Table in Pyspark SQL Error
                   mismatched input 'sql_query' expecting when using Create Table
                   in Pyspark
-                </Typography>
+                </TypographyTitle>
                 <Stack
                   direction={{ xs: "column", lg: "row" }}
                   sx={{ marginTop: 1 }}

@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   IconButton,
   InputAdornment,
@@ -15,6 +16,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 import { BoxLogin, BtnLog } from "./Style";
 import PasswordCheck from "./PasswordCheck";
+import { countries } from "../../Assert/DataLocation";
 var regEmail = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z]{2,4})+$/;
 var regpass = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
@@ -82,14 +84,15 @@ function SignUp() {
               fullWidth
             />
 
-            <TextField
-              style={{ marginTop: 20 }}
-              label="Location"
-              variant="outlined"
-              onChange={(e) => setLocation(e.target.value)}
+            <Autocomplete
               fullWidth
+              disablePortal
+              options={countries}
+              sx={{ marginTop: 2 }}
+              renderInput={(params) => (
+                <TextField {...params} placeholder="Location" />
+              )}
             />
-
             <TextField
               label="Email"
               variant="outlined"

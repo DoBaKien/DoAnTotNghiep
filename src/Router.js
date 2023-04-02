@@ -12,6 +12,7 @@ import User from "./Screens/User/User";
 import Profile from "./Screens/Profile/Profile";
 import Follow from "./Screens/Follow/Follow";
 import Post from "./Screens/Post/Post";
+import EditPf from "./Screens/EditPf/EditPf";
 
 function Router() {
   const context = useContext(ThemeUseContext);
@@ -28,6 +29,7 @@ function Router() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/follow" element={<Follow />} />
         <Route path="/post" element={<Post />} />
+        <Route path="/editpf" element={<EditPf />} />
       </Routes>
     </ThemeProvider>
   );

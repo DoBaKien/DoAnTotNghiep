@@ -34,6 +34,9 @@ function Follow() {
   const handleQUestion = () => {
     navigation("/profile");
   };
+  const handleEdit = () => {
+    navigation("/editpf");
+  };
   return (
     <BoxHome color={"text.primary"}>
       <Header />
@@ -75,7 +78,9 @@ function Follow() {
               justifyContent: { lg: "end", xs: "center" },
             }}
           >
-            <Button variant="outlined">Edit Profile</Button>
+            <Button variant="outlined" onClick={handleEdit}>
+              Edit Profile
+            </Button>
           </Box>
         </StackContent>
       </BoxContent>

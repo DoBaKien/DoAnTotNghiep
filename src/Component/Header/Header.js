@@ -13,7 +13,8 @@ import {
 import { useContext, useState } from "react";
 import { ThemeUseContext } from "../Darkmode/ThemeUseContext";
 import { MaterialUISwitch, StackHeader, Search } from "./Style";
-import logo from "../../Assert/stackoverflow.png";
+import logo from "../../Assert/Img/logo.png";
+import logo2 from "../../Assert/Img/logo2.png";
 import { Box } from "@mui/system";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
@@ -44,11 +45,26 @@ function Header() {
       <Box
         component="img"
         sx={{
+          display: { xs: "none", lg: "block" },
           height: 50,
-          width: 150,
+          width: 200,
+          cursor: "pointer",
         }}
+        onClick={() => navigate("/")}
         alt="logo"
         src={logo}
+      />
+      <Box
+        component="img"
+        sx={{
+          display: { xs: "block", lg: "none" },
+          height: 50,
+          width: 50,
+          cursor: "pointer",
+        }}
+        onClick={() => navigate("/")}
+        alt="logo"
+        src={logo2}
       />
       <Search>
         <InputBase

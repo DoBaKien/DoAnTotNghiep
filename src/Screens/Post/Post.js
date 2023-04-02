@@ -150,7 +150,7 @@ function Post() {
               marginBottom: 2,
             }}
           >
-            <Button variant="contained">Create Post</Button>
+            <Button variant="contained">Answer</Button>
           </BoxContent>
         </Box>
       </StackContent>
