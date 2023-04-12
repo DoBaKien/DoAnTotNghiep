@@ -43,7 +43,7 @@ export const PaperUser = styled(Paper)(({ theme }) => ({
   },
 }));
 export const BoxTag = styled(Box)(() => ({
-  padding: 5,
+  padding: "2px 10px 2px 10px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",

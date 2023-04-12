@@ -7,7 +7,12 @@ import { Box, InputAdornment, InputBase, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import "./Tags.css";
+import { useNavigate } from "react-router-dom";
 function Tags() {
+  const navigate = useNavigate();
+  const handle = () => {
+    navigate("/tagdetail");
+  };
   return (
     <BoxHome color={"text.primary"}>
       <Header />
@@ -43,7 +48,7 @@ function Tags() {
               {Array.from(Array(20)).map((_, index) => (
                 <Grid2 xs={4} sm={4} md={4} key={index}>
                   <BoxTags>
-                    <BoxTag>
+                    <BoxTag onClick={handle}>
                       <Typography variant="body1">javascript</Typography>
                     </BoxTag>
                     <Typography sx={{ marginTop: 2 }} className="tag">
