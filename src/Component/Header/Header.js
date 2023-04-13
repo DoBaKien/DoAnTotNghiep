@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Box,
   Divider,
   FormControlLabel,
   IconButton,
@@ -15,7 +16,7 @@ import { ThemeUseContext } from "../Darkmode/ThemeUseContext";
 import { MaterialUISwitch, StackHeader, Search } from "./Style";
 import logo from "../../Assert/Img/logo.png";
 import logo2 from "../../Assert/Img/logo2.png";
-import { Box } from "@mui/system";
+
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Logout, Settings } from "@mui/icons-material";
@@ -40,6 +41,7 @@ function Header() {
     navigate("/profile");
     setAnchorEl(null);
   };
+
   return (
     <StackHeader direction="row" color={"text.primary"} spacing={2}>
       <Box

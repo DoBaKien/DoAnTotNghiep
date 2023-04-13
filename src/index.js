@@ -4,6 +4,9 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./Router";
 import "./index.css";
 import { ThemeProvider } from "./Component/Darkmode/ThemeUseContext";
+import axios from "axios";
+axios.defaults.baseURL = "http://localhost:8080";
+axios.defaults.withCredentials = true;
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <ThemeProvider>

@@ -1,18 +1,64 @@
 import Header from "../../Component/Header/Header";
 import LeftSide from "../../Component/LeftSide/LeftSide";
-
 import { BoxContent, BoxTag, BoxTags, InputFind, StackContent } from "./Style";
 import { BoxHome } from "../../Assert/Style";
 import { Box, InputAdornment, InputBase, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import "./Tags.css";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 function Tags() {
   const navigate = useNavigate();
   const handle = () => {
     navigate("/tagdetail");
   };
+  const [tags, setTags] = useState("");
+  useEffect(() => {
+    axios
+      .get("/tag/getAllTag")
+      .then(function (response) {
+        setTags(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  const tagB = () => {
+    if (tags && tags.length > 0) {
+      return (
+        <Box sx={{ marginTop: 5, marginBottom: 5, padding: 1 }}>
+          <Grid2
+            container
+            spacing={{ xs: 2, md: 3 }}
+            columns={{ xs: 1, sm: 10, lg: 12 }}
+          >
+            {tags.map((tag, index) => (
+              <Grid2 xs={3} sm={7} md={4} key={index}>
+                <BoxTags>
+                  <BoxTag onClick={handle}>
+                    <Typography variant="body1">{tag.name}</Typography>
+                  </BoxTag>
+                  <Typography sx={{ marginTop: 2 }} className="tag">
+                    For questions about programming in ECMAScript
+                    (JavaScript/JS) and its different dialects/implementations
+                    (except for ActionScript). Keep in mind that JavaScript is
+                    NOT the same as Java! Include all labels that are relevant
+                    to your question; e.g., [node.js], [jQuery], [JSON],
+                    [ReactJS], [angular], [ember.js], [vue.js], [typescript],
+                    [svelte], etc.
+                  </Typography>
+                </BoxTags>
+              </Grid2>
+            ))}
+          </Grid2>
+        </Box>
+      );
+    }
+  };
+
   return (
     <BoxHome color={"text.primary"}>
       <Header />
@@ -39,32 +85,7 @@ function Tags() {
               }
             />
           </InputFind>
-          <Box sx={{ marginTop: 5, marginBottom: 5, padding: 1 }}>
-            <Grid2
-              container
-              spacing={{ xs: 1, md: 3 }}
-              columns={{ xs: 4, sm: 8, md: 12 }}
-            >
-              {Array.from(Array(20)).map((_, index) => (
-                <Grid2 xs={4} sm={4} md={4} key={index}>
-                  <BoxTags>
-                    <BoxTag onClick={handle}>
-                      <Typography variant="body1">javascript</Typography>
-                    </BoxTag>
-                    <Typography sx={{ marginTop: 2 }} className="tag">
-                      For questions about programming in ECMAScript
-                      (JavaScript/JS) and its different dialects/implementations
-                      (except for ActionScript). Keep in mind that JavaScript is
-                      NOT the same as Java! Include all labels that are relevant
-                      to your question; e.g., [node.js], [jQuery], [JSON],
-                      [ReactJS], [angular], [ember.js], [vue.js], [typescript],
-                      [svelte], etc.
-                    </Typography>
-                  </BoxTags>
-                </Grid2>
-              ))}
-            </Grid2>
-          </Box>
+          {tagB()}
         </BoxContent>
       </StackContent>
     </BoxHome>

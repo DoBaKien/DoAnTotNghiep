@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   Button,
   Chip,
@@ -13,20 +14,15 @@ import {
   Typography,
 } from "@mui/material";
 import JoditEditor from "jodit-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BoxHome } from "../../Assert/Style";
 import Header from "../../Component/Header/Header";
 import { BoxContent, BoxNav } from "../CreatePost/Style";
 import CloseIcon from "@mui/icons-material/Close";
+import { ProLanguage } from "../../Assert/DataProLanguage";
+import axios from "axios";
 
 function CreatePost() {
-  const editor = useRef(null);
-  const [post, setPost] = useState([{ text: "", code: "", id: 1 }]);
-  const [newPost, setNewPost] = useState({ text: "", code: "" });
-  // const parse = require("html-react-parser");
-
-  const [content, setContent] = useState("");
-
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -37,62 +33,143 @@ function CreatePost() {
       },
     },
   };
-  const names = [
-    "Oliver Hansen",
-    "Van Henry",
-    "April Tucker",
-    "Ralph Hubbard",
-    "Omar Alexander",
-    "Carlos Abbott",
-    "Miriam Wagner",
-    "Bradley Wilkerson",
-    "Virginia Andrews",
-    "Kelly Snyder",
-  ];
+  const [tags, setTags] = useState("");
+  useEffect(() => {
+    axios
+      .get("/tag/getAllTag")
+      .then(function (response) {
+        setTags(response.data);
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
   const [personName, setPersonName] = useState([]);
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setPersonName(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    setPersonName(typeof value === "string" ? value.split(",") : value);
   };
+
+  const [post, setPost] = useState([{ id: 1, type: "text", content: "" }]);
+
+  const editor = useRef(null);
 
   function handleInputChange(event, index, key) {
     const updatedUsers = [...post];
     updatedUsers[index][key] = event;
     setPost(updatedUsers);
   }
-  function addPost() {
-    const user = { ...newPost, id: post.length + 1 };
-    setPost([...post, user]);
-    setNewPost({ text: "", code: "" });
-  }
 
   const handleP = () => {
     console.log(post);
   };
-  function deleteUser(id) {
-    const newUsers = post.filter((user) => user.id !== id);
-    setPost(newUsers);
-  }
+
   function CaseDel(id) {
     if (id !== 1) {
       return (
-        <BoxContent
-          sx={{
-            margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
-          }}
-        >
-          <Button variant="contained" onClick={() => deleteUser(id)}>
-            DElete Box
-          </Button>
-        </BoxContent>
+        <IconButton color="error" onClick={() => deleteUser(id)}>
+          <CloseIcon />
+        </IconButton>
       );
     }
   }
+
+  const handleAdd = (e) => {
+    setPost([...post, { id: post.length + 1, type: e, content: "" }]);
+  };
+  const Suit = (e, id, i) => {
+    if (e === "code") {
+      return (
+        <Box>
+          <Stack direction="row" sx={{ alignItems: "center" }}>
+            <IconButton color="error" onClick={() => deleteUser(id)}>
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6">Code</Typography>
+            <Autocomplete
+              disablePortal
+              options={ProLanguage}
+              sx={{ width: 200, marginLeft: 5, marginBottom: 1 }}
+              onChange={(event, newValue) => {
+                handleInputChange(newValue.label, i, "code");
+              }}
+              renderInput={(params) => (
+                <TextField {...params} label="Language" />
+              )}
+            />
+          </Stack>
+          <TextField
+            id="outlined-multiline-static"
+            multiline
+            rows={4}
+            fullWidth
+            placeholder="Enter code"
+            onChange={(e) => handleInputChange(e.target.value, i, "content")}
+          />
+        </Box>
+      );
+    } else {
+      return (
+        <Box>
+          <Stack direction="row" sx={{ alignItems: "center" }}>
+            {CaseDel(id)}
+            <Typography variant="h6">Text</Typography>
+          </Stack>
+          <Box sx={{ color: "black" }}>
+            <JoditEditor
+              ref={editor}
+              tabIndex={1}
+              onBlur={(newContent) =>
+                handleInputChange(newContent, i, "content")
+              }
+              onChange={(newContent) =>
+                handleInputChange(newContent, i, "content")
+              }
+            />
+          </Box>
+        </Box>
+      );
+    }
+  };
+
+  function deleteUser(id) {
+    const newPost = post.filter((user) => user.id !== id);
+    setPost(newPost);
+  }
+
+  const TagBox = () => {
+    if (tags && tags.length > 0) {
+      return (
+        <Select
+          labelId="demo-multiple-chip-label"
+          id="demo-multiple-chip"
+          multiple
+          value={personName}
+          onChange={handleChange}
+          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+          renderValue={(selected) => (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              {selected.map((value) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )}
+          MenuProps={MenuProps}
+        >
+          {tags.map((tag) => (
+            <MenuItem key={tag.tid} value={tag.name}>
+              {tag.name}
+            </MenuItem>
+          ))}
+        </Select>
+      );
+    }
+  };
+
   return (
     <BoxHome color={"text.primary"}>
       <Header />
@@ -113,59 +190,39 @@ function CreatePost() {
         />
       </BoxContent>
 
-      {post.map((p, index) => (
-        <Box key={index}>
-          {CaseDel(p.id)}
+      {post.map((data, i) => {
+        return (
           <BoxContent
+            key={i}
             sx={{
-              margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
+              margin: {
+                lg: "10px 200px 0px 200px",
+                xs: "10px 10px 0px 10px",
+              },
             }}
           >
-            <Box color={"black"}>
-              <Typography variant="h6" color={"text.primary"}>
-                What are the details of your problem?
-              </Typography>
-              <JoditEditor
-                ref={editor}
-                value={content}
-                tabIndex={1}
-                onBlur={(newContent) =>
-                  handleInputChange(newContent, index, "text")
-                }
-                onChange={(newContent) =>
-                  handleInputChange(newContent, index, "text")
-                }
-              />
-            </Box>
+            {Suit(data.type, data.id, i)}
           </BoxContent>
-          <BoxContent
-            sx={{
-              margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
-            }}
-          >
-            <Box>
-              <Typography variant="h6">Code Example</Typography>
-              <TextField
-                id="outlined-multiline-static"
-                multiline
-                rows={4}
-                fullWidth
-                placeholder="Enter code"
-                onChange={(e) =>
-                  handleInputChange(e.target.value, index, "code")
-                }
-              />
-            </Box>
-          </BoxContent>
-        </Box>
-      ))}
+        );
+      })}
       <BoxContent
         sx={{
           margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
         }}
       >
-        <Button variant="contained" sx={{ marginRight: 1 }} onClick={addPost}>
-          Add more
+        <Button
+          variant="contained"
+          sx={{ marginRight: 1 }}
+          onClick={() => handleAdd("text")}
+        >
+          Add Text
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ marginRight: 1 }}
+          onClick={() => handleAdd("code")}
+        >
+          Add code
         </Button>
       </BoxContent>
       <BoxContent
@@ -176,28 +233,7 @@ function CreatePost() {
         <Typography variant="h6">Tags</Typography>
         <FormControl fullWidth>
           <InputLabel id="demo-multiple-chip-label">Tags</InputLabel>
-          <Select
-            labelId="demo-multiple-chip-label"
-            id="demo-multiple-chip"
-            multiple
-            value={personName}
-            onChange={handleChange}
-            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-            renderValue={(selected) => (
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={value} />
-                ))}
-              </Box>
-            )}
-            MenuProps={MenuProps}
-          >
-            {names.map((name) => (
-              <MenuItem key={name} value={name}>
-                {name}
-              </MenuItem>
-            ))}
-          </Select>
+          {TagBox()}
         </FormControl>
       </BoxContent>
       <BoxContent
@@ -212,8 +248,6 @@ function CreatePost() {
         </Button>
       </BoxContent>
       <Box sx={{ height: 30, width: "100%" }}></Box>
-      {/* <Typography variant="body1">{content}</Typography>
-      <Typography variant="body1">{parse(content)}</Typography> */}
     </BoxHome>
   );
 }

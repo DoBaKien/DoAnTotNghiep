@@ -5,6 +5,7 @@ export const BoxHome = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
   height: "-moz-fit-content",
   justifyContent: "center",
+  minHeight: "100vh",
 }));
 export const BoxContent = styled(Box)(() => ({
   height: "-moz-fit-content",

@@ -7,4 +7,5 @@ export const BoxSide = styled(Box)(({ theme }) => ({
   minWidth: 60,
   border: "1px solid gray",
   borderRadius: 20,
+  minHeight: "90vh",
 }));

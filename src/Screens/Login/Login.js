@@ -17,6 +17,10 @@ import { useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 function Login() {
   const navigate = useNavigate();
@@ -28,7 +32,28 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(userName, password);
+    signInWithEmailAndPassword(auth, userName, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        localStorage.setItem("id", user.uid);
+        return user.getIdToken();
+      })
+      .then((token) => {
+        axios
+          .post("/account/createSessionCookie", token)
+          .then(function (response) {
+            console.log(response);
+            Cookies.set("sessionCookie", response.data);
+            auth.signOut();
+            navigate("/");
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
   const handleSignUp = (e) => {
     navigate("/signup");
@@ -54,6 +79,17 @@ function Login() {
     // }
     setPassword(e);
   };
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDH8wI1KbtyVVaeNlhl2o2gtgF6l-BjFNs",
+    authDomain: "vietstack-kltn2023.firebaseapp.com",
+    projectId: "vietstack-kltn2023",
+    storageBucket: "vietstack-kltn2023.appspot.com",
+    messagingSenderId: "295876770626",
+    appId: "1:295876770626:web:b5d84a6050dd164084a6db",
+  };
+  const vietstack = initializeApp(firebaseConfig);
+  const auth = getAuth(vietstack);
 
   return (
     <Box

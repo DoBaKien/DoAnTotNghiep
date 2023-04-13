@@ -3,7 +3,6 @@ import LeftSide from "../../Component/LeftSide/LeftSide";
 
 import { BoxContent, StackContent } from "./Style";
 import { BoxHome, BoxTag } from "../../Assert/Style";
-import { useNavigate } from "react-router-dom";
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
@@ -11,10 +10,11 @@ import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlig
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import JoditEditor from "jodit-react";
 import { useRef } from "react";
+import { useParams } from "react-router-dom";
 function Post() {
   const editor = useRef(null);
-  const navigate = useNavigate();
-
+  const { qid } = useParams();
+  console.log(qid);
   const codeString = `.title {
     display: block;
     display: -webkit-box;

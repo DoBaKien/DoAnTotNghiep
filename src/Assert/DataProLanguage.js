@@ -1,0 +1,15 @@
+export const ProLanguage = [
+  { id: 1, label: "javascript" },
+  { id: 2, label: "python" },
+  { id: 3, label: "java" },
+  { id: 4, label: "c" },
+  { id: 5, label: "php" },
+  { id: 6, label: "ttml" },
+  { id: 8, label: "css" },
+  { id: 11, label: "ruby" },
+  { id: 12, label: "rust" },
+  { id: 13, label: "sql" },
+  { id: 14, label: "swift" },
+  { id: 15, label: "typescript" },
+  { id: 16, label: "jsx" },
+];

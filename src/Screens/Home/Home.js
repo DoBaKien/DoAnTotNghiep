@@ -28,13 +28,102 @@ import {
 import { BoxHome, BoxTag } from "../../Assert/Style";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
 function Home() {
   const navigate = useNavigate();
+  const [questions, setQuestions] = useState("");
+  useEffect(() => {
+    axios
+      .get("/question/getAllQuestionDTO")
+      .then(function (response) {
+        setQuestions(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
   const handleCreate = () => {
     navigate("/create");
   };
-  const handlePost = () => {
-    navigate("/post");
+  const handlePost = (id) => {
+    navigate(`/post/${id}`);
+  };
+  const post = () => {
+    if (questions && questions.length > 0) {
+      return (
+        <BoxContent>
+          {questions.map((q, i) => (
+            <StackPost
+              key={i}
+              direction="row"
+              spacing={2}
+              divider={
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{ display: { xs: "none", lg: "block" } }}
+                />
+              }
+            >
+              <BoxDetails sx={{ display: { xs: "none", lg: "block" } }}>
+                <BoxText>
+                  <Typography>{q.questionVote} vote</Typography>
+                </BoxText>
+                <BoxText>
+                  <Typography>{q.answerCount} answer</Typography>
+                </BoxText>
+                <BoxText>
+                  <Typography>1 view</Typography>
+                </BoxText>
+              </BoxDetails>
+
+              <BoxTitle>
+                <TypographyTitle
+                  component="div"
+                  className="title"
+                  onClick={() => handlePost(q.question.qid)}
+                  variant="h5"
+                >
+                  {q.question.title}
+                </TypographyTitle>
+                <Stack
+                  direction={{ xs: "column", lg: "row" }}
+                  sx={{ marginTop: 1 }}
+                >
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    sx={{ width: "100%", alignItems: "center" }}
+                  >
+                    {q.tags.map((t, i) => (
+                      <BoxTag key={i}>
+                        <Typography variant="body2">{t.name}</Typography>
+                      </BoxTag>
+                    ))}
+                  </Stack>
+                  <StackName
+                    direction="row"
+                    spacing={2}
+                    sx={{
+                      marginTop: { xs: 1, lg: 0 },
+                      marginBottom: { xs: 1, lg: 0 },
+                    }}
+                  >
+                    <Avatar sx={{ width: 35, height: 35 }}>
+                      {q.user.name}
+                    </Avatar>
+
+                    <Typography>{q.user.name}</Typography>
+                  </StackName>
+                </Stack>
+              </BoxTitle>
+            </StackPost>
+          ))}
+        </BoxContent>
+      );
+    }
   };
   return (
     <BoxHome color={"text.primary"}>
@@ -76,77 +165,7 @@ function Home() {
               <AddLinkIcon fontSize="large" />
             </IconButton>
           </StackCreate>
-
-          <BoxContent>
-            {Array.from(Array(6)).map((_, i) => (
-              <StackPost
-                key={i}
-                direction="row"
-                spacing={2}
-                divider={
-                  <Divider
-                    orientation="vertical"
-                    flexItem
-                    sx={{ display: { xs: "none", lg: "block" } }}
-                  />
-                }
-              >
-                <BoxDetails sx={{ display: { xs: "none", lg: "block" } }}>
-                  <BoxText>
-                    <Typography>1 vote</Typography>
-                  </BoxText>
-                  <BoxText>
-                    <Typography>1 answer</Typography>
-                  </BoxText>
-                  <BoxText>
-                    <Typography>1 view</Typography>
-                  </BoxText>
-                </BoxDetails>
-
-                <BoxTitle>
-                  <TypographyTitle
-                    component="div"
-                    className="title"
-                    onClick={handlePost}
-                  >
-                    SQL Error mismatched input 'sql_query' expecting when using
-                    Create Table in Pyspark SQL Error mismatched input
-                    'sql_query' expecting when using Create Table in Pyspark SQL
-                    Error mismatched input 'sql_query' expecting when using
-                    Create Table in Pyspark
-                  </TypographyTitle>
-                  <Stack
-                    direction={{ xs: "column", lg: "row" }}
-                    sx={{ marginTop: 1 }}
-                  >
-                    <Stack
-                      direction="row"
-                      spacing={2}
-                      sx={{ width: "100%", alignItems: "center" }}
-                    >
-                      {Array.from(Array(3)).map((_, i) => (
-                        <BoxTag key={i}>
-                          <Typography variant="body2">asd {i}</Typography>
-                        </BoxTag>
-                      ))}
-                    </Stack>
-                    <StackName
-                      direction="row"
-                      spacing={2}
-                      sx={{
-                        marginTop: { xs: 1, lg: 0 },
-                        marginBottom: { xs: 1, lg: 0 },
-                      }}
-                    >
-                      <Avatar sx={{ width: 35, height: 35 }}>N</Avatar>
-
-                      <Typography>Name Account</Typography>
-                    </StackName>
-                  </Stack>
-                </BoxTitle>
-              </StackPost>
-            ))}
-          </BoxContent>
+          {post()}
         </Box>
       </StackContent>
     </BoxHome>

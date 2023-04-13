@@ -29,7 +29,7 @@ function Router() {
         <Route path="/users" element={<User />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/follow" element={<Follow />} />
-        <Route path="/post" element={<Post />} />
+        <Route path="/post/:qid" element={<Post />} />
         <Route path="/editpf" element={<EditPf />} />
         <Route path="/tagdetail" element={<TagDetails />} />
       </Routes>
