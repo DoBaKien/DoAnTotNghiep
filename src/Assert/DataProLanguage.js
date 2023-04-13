@@ -4,7 +4,7 @@ export const ProLanguage = [
   { id: 3, label: "java" },
   { id: 4, label: "c" },
   { id: 5, label: "php" },
-  { id: 6, label: "ttml" },
+  { id: 6, label: "html" },
   { id: 8, label: "css" },
   { id: 11, label: "ruby" },
   { id: 12, label: "rust" },

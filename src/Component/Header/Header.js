@@ -72,7 +72,7 @@ function Header() {
         <InputBase
           sx={{ ml: 2, flex: 1, fontSize: 22 }}
           fullWidth
-          placeholder="Search..."
+          placeholder="Tìm kiếm..."
           startAdornment={
             <InputAdornment position="start">
               <SearchIcon />
@@ -135,10 +135,10 @@ function Header() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem onClick={handlePf}>
-          <Avatar /> Profile
+          <Avatar /> Trang cá nhân
         </MenuItem>
         <MenuItem sx={{ justifyContent: "center" }}>
-          Dark Mode
+          Chế độ tối
           <FormControlLabel
             control={<MaterialUISwitch defaultChecked />}
             onChange={context.toggle}
@@ -150,13 +150,13 @@ function Header() {
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
-          Settings
+          Cài đặt
         </MenuItem>
         <MenuItem onClick={handlelogout}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
-          Logout
+          Đăng xuất
         </MenuItem>
       </Menu>
     </StackHeader>

@@ -68,7 +68,7 @@ function Profile() {
               Nameasdasdsaddasasd
             </Typography>
             <Typography sx={{ textAlign: { lg: "start", xs: "center" } }}>
-              Location
+              Đỉa chỉ
             </Typography>
           </BoxName>
           <Box
@@ -80,7 +80,7 @@ function Profile() {
             }}
           >
             <Button variant="outlined" onClick={handleEditPage}>
-              Edit Profile
+              Chỉnh sửa
             </Button>
           </Box>
         </StackContent>
@@ -88,7 +88,7 @@ function Profile() {
 
       <BoxContent sx={{ marginTop: 3 }}>
         <BoxAbout>
-          <Typography variant="h5">About me</Typography>
+          <Typography variant="h5">Về bản thân</Typography>
           <Typography>
             Karakai Jouzu no Takagi-san dựa trên tác phẩm cùng tên, nói về
             Takagi và con gái cô ấy, Chi. mang đến có các bạn những câu chuyện
@@ -120,7 +120,7 @@ function Profile() {
                       <ListItemIcon>
                         <QuestionAnswerIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Question" />
+                      <ListItemText primary="Câu hỏi" />
                     </ListItemButton>
                   </ListItem>
                   <ListItem disablePadding>
@@ -128,7 +128,7 @@ function Profile() {
                       <ListItemIcon>
                         <FavoriteIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Follow" />
+                      <ListItemText primary="Theo dõi" />
                     </ListItemButton>
                   </ListItem>
                   <ListItem disablePadding>
@@ -136,7 +136,7 @@ function Profile() {
                       <ListItemIcon>
                         <LocalOfferIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Tags" />
+                      <ListItemText primary="Thẻ" />
                     </ListItemButton>
                   </ListItem>
                   <ListItem disablePadding>
@@ -144,7 +144,7 @@ function Profile() {
                       <ListItemIcon>
                         <LogoutIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Log out" />
+                      <ListItemText primary="Đăng xuất" />
                     </ListItemButton>
                   </ListItem>
                 </List>
@@ -212,13 +212,13 @@ function Profile() {
             >
               <BoxDetails sx={{ display: { xs: "none", lg: "block" } }}>
                 <BoxText>
-                  <Typography>1 vote</Typography>
+                  <Typography>1 phiếu</Typography>
                 </BoxText>
                 <BoxText>
-                  <Typography>1 answer</Typography>
+                  <Typography>1 trả lời</Typography>
                 </BoxText>
                 <BoxText>
-                  <Typography>1 view</Typography>
+                  <Typography>1 xem</Typography>
                 </BoxText>
               </BoxDetails>
 

@@ -18,16 +18,16 @@ function User() {
   return (
     <BoxHome color={"text.primary"}>
       <Header />
-      <StackContent direction="row">
+      <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
         <BoxContent sx={{ width: { xs: "100vw", lg: "60vw" } }}>
-          <Typography variant="h4">Users</Typography>
+          <Typography variant="h4">Người dùng</Typography>
           <Box sx={{ width: "40vw", marginTop: 2 }}></Box>
           <InputFind>
             <InputBase
               sx={{ ml: 2, flex: 1, fontSize: 22 }}
               fullWidth
-              placeholder="Find by name"
+              placeholder="Tìm bằng tên"
               startAdornment={
                 <InputAdornment position="start">
                   <SearchIcon />

@@ -69,13 +69,13 @@ function Home() {
             >
               <BoxDetails sx={{ display: { xs: "none", lg: "block" } }}>
                 <BoxText>
-                  <Typography>{q.questionVote} vote</Typography>
+                  <Typography>{q.questionVote} phiếu</Typography>
                 </BoxText>
                 <BoxText>
-                  <Typography>{q.answerCount} answer</Typography>
+                  <Typography>{q.answerCount} trả lời</Typography>
                 </BoxText>
                 <BoxText>
-                  <Typography>1 view</Typography>
+                  <Typography>1 xem</Typography>
                 </BoxText>
               </BoxDetails>
 
@@ -130,7 +130,7 @@ function Home() {
       <Header />
       <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
-        <Box>
+        <Box >
           <StackCreate direction="row" spacing={2}>
             <Box>
               <IconButton>

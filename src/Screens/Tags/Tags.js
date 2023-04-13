@@ -14,7 +14,9 @@ function Tags() {
   const handle = () => {
     navigate("/tagdetail");
   };
+  const [search, setSearch] = useState("");
   const [tags, setTags] = useState("");
+  const [tagFind, setTagFind] = useState("");
   useEffect(() => {
     axios
       .get("/tag/getAllTag")
@@ -24,7 +26,15 @@ function Tags() {
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+  }, [search]);
+
+  const ser = (val) => {
+    if (search === "") {
+      return val;
+    } else if (val.name.toLowerCase().includes(search.toLowerCase())) {
+      return val;
+    }
+  };
 
   const tagB = () => {
     if (tags && tags.length > 0) {
@@ -35,24 +45,26 @@ function Tags() {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 1, sm: 10, lg: 12 }}
           >
-            {tags.map((tag, index) => (
-              <Grid2 xs={3} sm={7} md={4} key={index}>
-                <BoxTags>
-                  <BoxTag onClick={handle}>
-                    <Typography variant="body1">{tag.name}</Typography>
-                  </BoxTag>
-                  <Typography sx={{ marginTop: 2 }} className="tag">
-                    For questions about programming in ECMAScript
-                    (JavaScript/JS) and its different dialects/implementations
-                    (except for ActionScript). Keep in mind that JavaScript is
-                    NOT the same as Java! Include all labels that are relevant
-                    to your question; e.g., [node.js], [jQuery], [JSON],
-                    [ReactJS], [angular], [ember.js], [vue.js], [typescript],
-                    [svelte], etc.
-                  </Typography>
-                </BoxTags>
-              </Grid2>
-            ))}
+            {Array.from(tags)
+              .filter(ser)
+              .map((tag, index) => (
+                <Grid2 xs={3} sm={7} md={4} key={index}>
+                  <BoxTags>
+                    <BoxTag onClick={handle}>
+                      <Typography variant="body1">{tag.name}</Typography>
+                    </BoxTag>
+                    <Typography sx={{ marginTop: 2 }} className="tag">
+                      For questions about programming in ECMAScript
+                      (JavaScript/JS) and its different dialects/implementations
+                      (except for ActionScript). Keep in mind that JavaScript is
+                      NOT the same as Java! Include all labels that are relevant
+                      to your question; e.g., [node.js], [jQuery], [JSON],
+                      [ReactJS], [angular], [ember.js], [vue.js], [typescript],
+                      [svelte], etc.
+                    </Typography>
+                  </BoxTags>
+                </Grid2>
+              ))}
           </Grid2>
         </Box>
       );
@@ -62,10 +74,10 @@ function Tags() {
   return (
     <BoxHome color={"text.primary"}>
       <Header />
-      <StackContent direction="row">
+      <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
         <BoxContent sx={{ width: { xs: "100vw", lg: "60vw" } }}>
-          <Typography variant="h4">Tags</Typography>
+          <Typography variant="h4">Thẻ</Typography>
           <Box sx={{ width: "40vw", marginTop: 2 }}>
             <Typography>
               A tag is a keyword or label that categorizes your question with
@@ -77,7 +89,8 @@ function Tags() {
             <InputBase
               sx={{ ml: 2, flex: 1, fontSize: 22 }}
               fullWidth
-              placeholder="Find by name"
+              placeholder="Tìm bằng tên"
+              onChange={(e) => setSearch(e.target.value)}
               startAdornment={
                 <InputAdornment position="start">
                   <SearchIcon />

@@ -2,12 +2,9 @@ import {
   Autocomplete,
   Box,
   Button,
-  Chip,
   FormControl,
   IconButton,
-  InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   Stack,
   TextField,
@@ -23,23 +20,15 @@ import { ProLanguage } from "../../Assert/DataProLanguage";
 import axios from "axios";
 
 function CreatePost() {
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
   const [tags, setTags] = useState("");
+  const [post, setPost] = useState([{ id: 1, type: "text", content: "" }]);
+  const editor = useRef(null);
+  const [title, setTitle] = useState("");
   useEffect(() => {
     axios
       .get("/tag/getAllTag")
       .then(function (response) {
         setTags(response.data);
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -54,10 +43,6 @@ function CreatePost() {
     setPersonName(typeof value === "string" ? value.split(",") : value);
   };
 
-  const [post, setPost] = useState([{ id: 1, type: "text", content: "" }]);
-
-  const editor = useRef(null);
-
   function handleInputChange(event, index, key) {
     const updatedUsers = [...post];
     updatedUsers[index][key] = event;
@@ -66,6 +51,42 @@ function CreatePost() {
 
   const handleP = () => {
     console.log(post);
+    axios
+      .post("/question/create", {
+        title: title,
+      })
+      .then(function (response) {
+        axios
+          .post(`/question/modifyTagPost/${response.data}`, personName)
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        axios
+          .post(`/question/createDetail/${response.data}`, post)
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        axios
+          .post(`/question/createActivityHistory/${response.data}`, {
+            action: "Đặt câu hỏi",
+            description:"Khởi tạo câu hỏi"
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   function CaseDel(id) {
@@ -95,7 +116,7 @@ function CreatePost() {
               options={ProLanguage}
               sx={{ width: 200, marginLeft: 5, marginBottom: 1 }}
               onChange={(event, newValue) => {
-                handleInputChange(newValue.label, i, "code");
+                handleInputChange(newValue.label, i, "programLanguage");
               }}
               renderInput={(params) => (
                 <TextField {...params} label="Language" />
@@ -144,24 +165,9 @@ function CreatePost() {
   const TagBox = () => {
     if (tags && tags.length > 0) {
       return (
-        <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
-          multiple
-          value={personName}
-          onChange={handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
-          MenuProps={MenuProps}
-        >
+        <Select multiple value={personName} onChange={handleChange}>
           {tags.map((tag) => (
-            <MenuItem key={tag.tid} value={tag.name}>
+            <MenuItem key={tag.tid} value={tag.tid}>
               {tag.name}
             </MenuItem>
           ))}
@@ -187,6 +193,7 @@ function CreatePost() {
           variant="outlined"
           fullWidth
           placeholder="Title"
+          onChange={(e) => setTitle(e.target.value)}
         />
       </BoxContent>
 
@@ -231,10 +238,7 @@ function CreatePost() {
         }}
       >
         <Typography variant="h6">Tags</Typography>
-        <FormControl fullWidth>
-          <InputLabel id="demo-multiple-chip-label">Tags</InputLabel>
-          {TagBox()}
-        </FormControl>
+        <FormControl fullWidth>{TagBox()}</FormControl>
       </BoxContent>
       <BoxContent
         sx={{

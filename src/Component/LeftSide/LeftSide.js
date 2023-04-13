@@ -50,7 +50,7 @@ function LeftSide() {
                   <ListItemIcon>
                     <HomeIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Home" />
+                  <ListItemText primary="Trang chủ" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
@@ -58,7 +58,7 @@ function LeftSide() {
                   <ListItemIcon>
                     <QuestionAnswerIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Question" />
+                  <ListItemText primary="Câu hỏi" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
@@ -66,7 +66,7 @@ function LeftSide() {
                   <ListItemIcon>
                     <LocalOfferIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Tags" />
+                  <ListItemText primary="Thẻ" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
@@ -74,7 +74,7 @@ function LeftSide() {
                   <ListItemIcon>
                     <PeopleIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Users" />
+                  <ListItemText primary="Người dùng" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
