@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  Button,
   Divider,
   FormControlLabel,
   IconButton,
@@ -13,7 +14,7 @@ import {
 } from "@mui/material";
 import { useContext, useState } from "react";
 import { ThemeUseContext } from "../Darkmode/ThemeUseContext";
-import { MaterialUISwitch, StackHeader, Search } from "./Style";
+import { MaterialUISwitch, StackHeader, Search, BtnLogin } from "./Style";
 import logo from "../../Assert/Img/logo.png";
 import logo2 from "../../Assert/Img/logo2.png";
 
@@ -21,12 +22,20 @@ import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Logout, Settings } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+
+import { AuthContext } from "../Auth/AuthContext";
+import auth from "../../Assert/Config";
 
 function Header() {
+  const { currentUser } = useContext(AuthContext);
+
   const navigate = useNavigate();
   const context = useContext(ThemeUseContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const cookie = Cookies.get("sessionCookie");
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -34,12 +43,49 @@ function Header() {
     setAnchorEl(null);
   };
   const handlelogout = () => {
-    navigate("/login");
+    auth.signOut();
+    Cookies.remove("sessionCookie");
     setAnchorEl(null);
   };
   const handlePf = () => {
-    navigate("/profile");
+    navigate(`/profile/${currentUser}`);
     setAnchorEl(null);
+  };
+  const handleLogin = () => {
+    navigate("/login");
+  };
+
+  const CheckAuth = () => {
+    if (cookie === undefined) {
+      return (
+        <Box
+          sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
+        >
+          <BtnLogin variant="contained" onClick={handleLogin}>
+            Đăng nhập
+          </BtnLogin>
+        </Box>
+      );
+    } else {
+      return (
+        <Box
+          sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
+        >
+          <Tooltip title="Account settings">
+            <IconButton
+              onClick={handleClick}
+              size="small"
+              sx={{ ml: 2 }}
+              aria-controls={open ? "account-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+            >
+              <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+            </IconButton>
+          </Tooltip>
+        </Box>
+      );
+    }
   };
 
   return (
@@ -68,6 +114,7 @@ function Header() {
         alt="logo"
         src={logo2}
       />
+
       <Search>
         <InputBase
           sx={{ ml: 2, flex: 1, fontSize: 22 }}
@@ -84,21 +131,7 @@ function Header() {
       <IconButton>
         <NotificationsIcon />
       </IconButton>
-
-      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
-        <Tooltip title="Account settings">
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            sx={{ ml: 2 }}
-            aria-controls={open ? "account-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-          >
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-          </IconButton>
-        </Tooltip>
-      </Box>
+      {CheckAuth()}
 
       <Menu
         anchorEl={anchorEl}

@@ -9,15 +9,15 @@ const PasswordCheck = ({ password }) => {
   const createPassLabel = () => {
     switch (testRes.score) {
       case 0:
-        return "Very weak";
+        return "Rất yếu";
       case 1:
-        return "Weak";
+        return "Yếu";
       case 2:
-        return "Fear";
+        return "Bình thường";
       case 3:
-        return "Good";
+        return "Tốt";
       case 4:
-        return "Strong";
+        return "Mạnh";
       default:
         return "";
     }
@@ -50,7 +50,7 @@ const PasswordCheck = ({ password }) => {
       style={{ height: "7px", width: "100%", backgroundColor: "lightgray" }}
     >
       <div className="progress-bar" style={changePasswordColor()}></div>
-      <p style={{ color: funcProgressColor(), textAlign: "end" }}>
+      <p style={{ color: funcProgressColor(), textAlign: "end", marginTop: 0 }}>
         {createPassLabel()}
       </p>
     </div>

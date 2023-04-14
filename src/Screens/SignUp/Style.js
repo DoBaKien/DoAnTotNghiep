@@ -1,5 +1,4 @@
-
-import { Button, Stack, styled } from "@mui/material";
+import { Box, Button, Stack, styled } from "@mui/material";
 
 export const BoxLogin = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
@@ -19,4 +18,16 @@ export const BtnLog = styled(Button)(() => ({
   "&:hover": {
     backgroundColor: "#CC0003",
   },
+}));
+export const ModalContent = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  top: "40%",
+  left: "50%",
+  maxWidth: "600px",
+  minWidth: "300px",
+  borderRadius: "3px",
+  padding: "14px 28px",
+  lineHeight: 1.4,
+  transform: "translate(-50%, -50%)",
+  backgroundColor: theme.palette.mode === "light" ? "white" : "#636363",
 }));

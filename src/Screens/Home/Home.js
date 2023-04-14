@@ -130,7 +130,7 @@ function Home() {
       <Header />
       <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
-        <Box >
+        <Box>
           <StackCreate direction="row" spacing={2}>
             <Box>
               <IconButton>
@@ -148,7 +148,7 @@ function Home() {
               <InputBase
                 sx={{ ml: 2, flex: 1, fontSize: 22 }}
                 fullWidth
-                placeholder="Create Post."
+                placeholder="Đặt câu hỏi"
                 onClick={handleCreate}
               />
             </CrePost>

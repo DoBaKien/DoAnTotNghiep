@@ -26,55 +26,54 @@ function EditPf() {
     setPre(null);
   };
 
-  const handleCancel = () => {};
 
   return (
     <BoxHome color={"text.primary"}>
       <Header />
 
       <BoxTitle>
-        <Typography variant="h4">User Setting</Typography>
+        <Typography variant="h4">Chỉnh sửa thông tin</Typography>
         <Divider variant="inset" />
       </BoxTitle>
 
       <BoxContent>
         <Box>
-          <Typography variant="h5">Display name</Typography>
+          <Typography variant="h5">Tên hiển thị</Typography>
           <Typography variant="body2" color="gray">
-            Set a display name. This does not change your username.
+            Đặt tên hiển thị. Điều này không thay đổi tên người dùng của bạn.
           </Typography>
           <TextField
             sx={{ marginTop: 1 }}
-            placeholder="Display name"
+            placeholder="Tên hiển thị"
             fullWidth
           />
         </Box>
         <Box sx={{ marginTop: 3 }}>
-          <Typography variant="h5">Location</Typography>
+          <Typography variant="h5">Địa chỉ</Typography>
           <Autocomplete
             fullWidth
             disablePortal
             options={countries}
             sx={{ marginTop: 1 }}
             renderInput={(params) => (
-              <TextField {...params} placeholder="Location" />
+              <TextField {...params} placeholder="Địa chỉ" />
             )}
           />
         </Box>
         <Box sx={{ marginTop: 3 }}>
-          <Typography variant="h5">About</Typography>
+          <Typography variant="h5">Về bản thân</Typography>
           <Typography variant="body2" color="gray">
-            A brief description of yourself shown on your profile.
+            Một mô tả ngắn gọn về bản thân được hiển thị trên hồ sơ của bạn.
           </Typography>
           <TextField
             multiline
             sx={{ marginTop: 1 }}
-            placeholder="Display name"
+            placeholder="Về bản thân"
             fullWidth
             rows={4}
           />
           <Typography variant="body2" color="gray">
-            200 Characters remaining
+            Giới hạn 200 từ
           </Typography>
         </Box>
         <Stack
@@ -117,9 +116,11 @@ function EditPf() {
           }}
         >
           <Button variant="contained" sx={{ marginRight: 2 }}>
-            Save profile
+            Lưu thông tin
           </Button>
-          <Button variant="text" onClick={() => navigate(-1)}>Cancel</Button>
+          <Button variant="text" onClick={() => navigate(-1)}>
+            Cancel
+          </Button>
         </Box>
       </BoxContent>
     </BoxHome>

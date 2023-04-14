@@ -21,15 +21,27 @@ import {
   BoxTag,
 } from "../../Assert/Style";
 import Header from "../../Component/Header/Header";
-import { BoxDetails, BoxText, BoxTitle, StackPost, TypographyTitle } from "../Home/Style";
+import {
+  BoxDetails,
+  BoxText,
+  BoxTitle,
+  StackPost,
+  TypographyTitle,
+} from "../Home/Style";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { BoxPost } from "./Style";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useContext, useState } from "react";
+import { AuthContext } from "../../Component/Auth/AuthContext";
+import axios from "axios";
 
 function Profile() {
+  const { currentUser } = useContext(AuthContext);
+
+  const [data, setData] = useState("");
   const navigation = useNavigate();
   const handleFollow = () => {
     navigation("/follow");
@@ -37,6 +49,19 @@ function Profile() {
   const handleEditPage = () => {
     navigation("/editpf");
   };
+  useEffect(() => {
+    if (currentUser !== null) {
+      axios
+        .get(`/user/findByUid/${currentUser}`)
+        .then(function (response) {
+          setData(response.data);
+          console.log(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  }, [currentUser]);
 
   return (
     <BoxHome color={"text.primary"}>
@@ -51,26 +76,20 @@ function Profile() {
           >
             <Avatar sx={{ width: 100, height: 100 }}>A</Avatar>
           </Box>
-          <BoxName>
+          <BoxName sx={{ paddingLeft: { lg: 5, xs: 0 } }}>
             <Typography
-              variant="h5"
+              variant="h3"
               sx={{
-                display: { lg: "none", xs: "block" },
                 textAlign: { lg: "start", xs: "center" },
               }}
             >
-              Nameasdasdsaddasasd
-            </Typography>
-            <Typography
-              variant="h3"
-              sx={{ display: { lg: "block", xs: "none" } }}
-            >
-              Nameasdasdsaddasasd
+              {data.name}
             </Typography>
             <Typography sx={{ textAlign: { lg: "start", xs: "center" } }}>
-              Đỉa chỉ
+              Địa chỉ
             </Typography>
           </BoxName>
+
           <Box
             sx={{
               width: "100%",

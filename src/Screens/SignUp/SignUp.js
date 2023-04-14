@@ -16,27 +16,53 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 import { BoxLogin, BtnLog } from "./Style";
 import PasswordCheck from "./PasswordCheck";
-import { countries } from "../../Assert/DataLocation";
+
+import Header from "../../Component/Header/Header";
+import Modal from "./Modal";
+import axios from "axios";
+import Swal from "sweetalert2";
 var regEmail = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z]{2,4})+$/;
 var regpass = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 
 function SignUp() {
   const navigate = useNavigate();
   const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [showPass, setShowPass] = useState(false);
-
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
+  const [modal, setModal] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email, password, name, location);
+    console.log(email, password, name);
+    axios
+      .post("/account/register", {
+        email: email,
+        password: password,
+      })
+      .then(function (response) {
+        console.log(response.data);
+        if (response.data === "OTP sent") {
+          setModal(!modal);
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Kiểm tra lại",
+            text: "Tài khoản Email đã dược đăng ký",
+          });
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  const handleLogin = (e) => {
+    navigate("/login");
   };
   const handleSignUp = (e) => {
-    navigate("/login");
+    setModal(!modal);
   };
 
   const handleChangleEmail = (e) => {
@@ -63,102 +89,139 @@ function SignUp() {
     <Box
       bgcolor={"background.default"}
       color={"text.primary"}
-      sx={{
-        height: "100vh",
-        alignItems: "center",
-        justifyContent: "center",
-        display: "flex",
-      }}
+      sx={{ height: "100vh" }}
     >
-      <BoxLogin>
-        <Box sx={{ textAlign: "center" }}>
-          <Typography variant="h3">Sign Up</Typography>
-        </Box>
-        <Box>
-          <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-            <TextField
-              style={{ marginTop: 20 }}
-              label="Name"
-              variant="outlined"
-              onChange={(e) => setName(e.target.value)}
-              fullWidth
-            />
+      <Header />
+      <Box
+        sx={{
+          height: "92vh",
+          alignItems: "center",
+          justifyContent: "center",
+          display: "flex",
+        }}
+      >
+        {modal && (
+          <Modal
+            setModal={setModal}
+            name={name}
+            email={email}
+            password={password}
+          />
+        )}
+        <BoxLogin>
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="h3">Đăng ký</Typography>
+          </Box>
+          <Box>
+            <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+              <TextField
+                style={{ marginTop: 20 }}
+                label="Tên hiển thị"
+                variant="outlined"
+                onChange={(e) => setName(e.target.value)}
+                fullWidth
+              />
 
-            <Autocomplete
-              fullWidth
-              disablePortal
-              options={countries}
-              sx={{ marginTop: 2 }}
-              renderInput={(params) => (
-                <TextField {...params} placeholder="Location" />
-              )}
-            />
-            <TextField
-              label="Email"
-              variant="outlined"
-              fullWidth
-              required
-              style={{ marginTop: 20 }}
-              onChange={(e) => handleChangleEmail(e.target.value)}
-              error={emailError}
-            />
+              <TextField
+                label="Email"
+                variant="outlined"
+                fullWidth
+                required
+                style={{ marginTop: 20 }}
+                onChange={(e) => handleChangleEmail(e.target.value)}
+                error={emailError}
+              />
 
-            <TextField
-              required
-              label="Password"
-              error={passwordError}
-              onChange={(e) => handleChanglePassword(e.target.value)}
-              style={{ marginTop: 20, marginBottom: 20 }}
-              fullWidth
-              type={showPass ? "text" : "password"}
-              variant="outlined"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Tooltip
-                      title={showPass ? "Show" : "Hidden"}
-                      placement="top-start"
-                    >
-                      <IconButton onClick={() => setShowPass(!showPass)}>
-                        {showPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                      </IconButton>
-                    </Tooltip>
-                  </InputAdornment>
-                ),
-              }}
-            />
+              <TextField
+                required
+                label="Mật khẩu"
+                error={passwordError}
+                onChange={(e) => handleChanglePassword(e.target.value)}
+                style={{ marginTop: 20, marginBottom: 10 }}
+                fullWidth
+                type={showPass ? "text" : "password"}
+                variant="outlined"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip
+                        title={showPass ? "Hiện" : "Ẩn"}
+                        placement="top-start"
+                      >
+                        <IconButton onClick={() => setShowPass(!showPass)}>
+                          {showPass ? (
+                            <VisibilityIcon />
+                          ) : (
+                            <VisibilityOffIcon />
+                          )}
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-            <PasswordCheck password={password} />
+              <PasswordCheck password={password} />
+              <TextField
+                required
+                label="Mật khẩu"
+                error={passwordError}
+                onChange={(e) => handleChanglePassword(e.target.value)}
+                style={{ marginTop: 30, marginBottom: 20 }}
+                fullWidth
+                type={showPass ? "text" : "password"}
+                variant="outlined"
+                helperText="Nhập lại mật khẩu"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip
+                        title={showPass ? "Hiện" : "Ẩn"}
+                        placement="top-start"
+                      >
+                        <IconButton onClick={() => setShowPass(!showPass)}>
+                          {showPass ? (
+                            <VisibilityIcon />
+                          ) : (
+                            <VisibilityOffIcon />
+                          )}
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-            <Box
-              style={{
-                justifyContent: "center",
-                textAlign: "center",
-                marginTop: 20,
-              }}
-            >
-              <BtnLog type="submit" variant="contained">
-                Sign Up
-              </BtnLog>
-            </Box>
-          </form>
-        </Box>
+              <Box
+                style={{
+                  justifyContent: "center",
+                  textAlign: "center",
+                  marginTop: 20,
+                }}
+              >
+                <BtnLog type="submit" variant="contained">
+                  Đăng ký
+                </BtnLog>
+              </Box>
+            </form>
+          </Box>
 
-        <Stack
-          direction="row"
-          spacing={1}
-          style={{
-            justifyContent: "center",
-            textAlign: "center",
-            marginTop: 20,
-          }}
-        >
-          <Typography variant="body2"> Already have an account ? </Typography>
-          <Link component="button" variant="body2" onClick={handleSignUp}>
-            Login
-          </Link>
-        </Stack>
-      </BoxLogin>
+          <Stack
+            direction="row"
+            spacing={1}
+            style={{
+              justifyContent: "center",
+              textAlign: "center",
+              marginTop: 20,
+            }}
+          >
+            <Typography variant="body2"> Bạn đã có tài khoản ? </Typography>
+            <Link component="button" variant="body2" onClick={handleLogin}>
+              Đăng nhập
+            </Link>
+          </Stack>
+        </BoxLogin>
+      </Box>
     </Box>
   );
 }

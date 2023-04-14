@@ -13,8 +13,28 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function User() {
+  const navigation = useNavigate();
+  const [users, setUsers] = useState("");
+  useEffect(() => {
+    axios
+      .get(`/user/getAllUser`)
+      .then(function (response) {
+        setUsers(response.data);
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  const handlePf = (id) => {
+    navigation(`/profile/${id}`);
+  };
   return (
     <BoxHome color={"text.primary"}>
       <Header />
@@ -41,9 +61,9 @@ function User() {
               spacing={{ xs: 1, md: 3 }}
               columns={{ xs: 4, sm: 8, md: 12 }}
             >
-              {Array.from(Array(20)).map((_, index) => (
+              {Array.from(users).map((user, index) => (
                 <Grid2 xs={4} sm={4} md={4} key={index}>
-                  <PaperUser>
+                  <PaperUser onClick={() => handlePf(user.uid)}>
                     <Stack direction="row" spacing={2}>
                       <Box
                         sx={{
@@ -54,7 +74,9 @@ function User() {
                           display: "flex",
                         }}
                       >
-                        <Avatar sx={{ width: 50, height: 50 }}>A</Avatar>
+                        <Avatar sx={{ width: 50, height: 50 }}>
+                          {user.name}
+                        </Avatar>
                       </Box>
                       <Box
                         sx={{
@@ -62,8 +84,10 @@ function User() {
                           height: 60,
                         }}
                       >
-                        <Typography sx={{ marginBottom: 1 }}>Name</Typography>
-                        <Typography>Loacation</Typography>
+                        <Typography sx={{ marginBottom: 1 }}>
+                          {user.name}
+                        </Typography>
+                        <Typography>Location</Typography>
                       </Box>
                     </Stack>
                   </PaperUser>

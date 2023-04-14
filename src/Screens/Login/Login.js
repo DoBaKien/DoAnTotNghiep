@@ -17,10 +17,11 @@ import { useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import axios from "axios";
 import Cookies from "js-cookie";
+import Header from "../../Component/Header/Header";
+import auth from "../../Assert/Config";
 
 function Login() {
   const navigate = useNavigate();
@@ -42,9 +43,7 @@ function Login() {
         axios
           .post("/account/createSessionCookie", token)
           .then(function (response) {
-            console.log(response);
-            Cookies.set("sessionCookie", response.data);
-            auth.signOut();
+            Cookies.set("sessionCookie", response.data, { expires: 365 });
             navigate("/");
           })
           .catch(function (error) {
@@ -80,115 +79,115 @@ function Login() {
     setPassword(e);
   };
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDH8wI1KbtyVVaeNlhl2o2gtgF6l-BjFNs",
-    authDomain: "vietstack-kltn2023.firebaseapp.com",
-    projectId: "vietstack-kltn2023",
-    storageBucket: "vietstack-kltn2023.appspot.com",
-    messagingSenderId: "295876770626",
-    appId: "1:295876770626:web:b5d84a6050dd164084a6db",
-  };
-  const vietstack = initializeApp(firebaseConfig);
-  const auth = getAuth(vietstack);
-
   return (
     <Box
       bgcolor={"background.default"}
       color={"text.primary"}
       sx={{
         height: "100vh",
-        alignItems: "center",
-        justifyContent: "center",
-        display: "flex",
       }}
     >
-      <BoxLogin>
-        <Box sx={{ textAlign: "center", marginBottom: 5 }}>
-          <Typography variant="h3">Login</Typography>
-        </Box>
-        <BoxGG variant="outlined">
-          <CardActionArea>
-            <CardContent sx={{ alignItems: "center" }}>
-              <Stack
-                direction="row"
-                sx={{
-                  justifyContent: "center",
+      <Header />
+      <Box
+        sx={{
+          alignItems: "center",
+          justifyContent: "center",
+          display: "flex",
+          height: "93vh",
+        }}
+      >
+        <BoxLogin>
+          <Box sx={{ textAlign: "center", marginBottom: 5 }}>
+            <Typography variant="h3">Đăng nhập</Typography>
+          </Box>
+          <BoxGG variant="outlined">
+            <CardActionArea>
+              <CardContent sx={{ alignItems: "center" }}>
+                <Stack
+                  direction="row"
+                  sx={{
+                    justifyContent: "center",
+                  }}
+                >
+                  <GoogleIcon sx={{ marginRight: 2 }} />
+                  <Typography>Tiếp tục với Google</Typography>
+                </Stack>
+              </CardContent>
+            </CardActionArea>
+          </BoxGG>
+          <Divider sx={{ margin: 5 }}>Hoặc</Divider>
+
+          <Box>
+            <form noValidate autoComplete="on" onSubmit={handleSubmit}>
+              <TextField
+                label="Email"
+                variant="outlined"
+                fullWidth
+                onChange={(e) => handleChangleUserName(e.target.value)}
+                error={userNameError}
+              />
+
+              <TextField
+                label="Mật khẩu"
+                error={passwordError}
+                onChange={(e) => handleChanglePassword(e.target.value)}
+                style={{ marginTop: 20, marginBottom: 20 }}
+                fullWidth
+                type={showPass ? "text" : "password"}
+                variant="outlined"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip title={showPass ? "Hiện" : "Ẩn"}>
+                        <IconButton onClick={() => setShowPass(!showPass)}>
+                          {showPass ? (
+                            <VisibilityIcon />
+                          ) : (
+                            <VisibilityOffIcon />
+                          )}
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
                 }}
-              >
-                <GoogleIcon sx={{ marginRight: 2 }} />
-                <Typography>Continue with Google</Typography>
-              </Stack>
-            </CardContent>
-          </CardActionArea>
-        </BoxGG>
-        <Divider sx={{ margin: 5 }}>OR</Divider>
+              />
 
-        <Box>
-          <form noValidate autoComplete="off" onSubmit={handleSubmit}>
-            <TextField
-              label="User Name"
-              variant="outlined"
-              fullWidth
-              onChange={(e) => handleChangleUserName(e.target.value)}
-              error={userNameError}
-            />
+              <Box style={{ justifyContent: "center", textAlign: "center" }}>
+                <BtnLog type="submit" variant="contained">
+                  đăng nhập
+                </BtnLog>
+              </Box>
+            </form>
+          </Box>
 
-            <TextField
-              label="Password"
-              error={passwordError}
-              onChange={(e) => handleChanglePassword(e.target.value)}
-              style={{ marginTop: 20, marginBottom: 20 }}
-              fullWidth
-              type={showPass ? "text" : "password"}
-              variant="outlined"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <Tooltip title={showPass ? "Show" : "Hidden"}>
-                      <IconButton onClick={() => setShowPass(!showPass)}>
-                        {showPass ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                      </IconButton>
-                    </Tooltip>
-                  </InputAdornment>
-                ),
-              }}
-            />
+          <Box
+            style={{
+              justifyContent: "center",
+              textAlign: "center",
+              marginTop: 20,
+            }}
+          >
+            <Link component="button" variant="body2">
+              Quên mật khẩu?
+            </Link>
+          </Box>
 
-            <Box style={{ justifyContent: "center", textAlign: "center" }}>
-              <BtnLog type="submit" variant="contained">
-                log in
-              </BtnLog>
-            </Box>
-          </form>
-        </Box>
-
-        <Box
-          style={{
-            justifyContent: "center",
-            textAlign: "center",
-            marginTop: 20,
-          }}
-        >
-          <Link component="button" variant="body2">
-            Forgotten password?
-          </Link>
-        </Box>
-
-        <Stack
-          direction="row"
-          spacing={1}
-          style={{
-            justifyContent: "center",
-            textAlign: "center",
-            marginTop: 20,
-          }}
-        >
-          <Typography variant="body2"> Don't have an account ? </Typography>
-          <Link component="button" variant="body2" onClick={handleSignUp}>
-            Sign Up
-          </Link>
-        </Stack>
-      </BoxLogin>
+          <Stack
+            direction="row"
+            spacing={1}
+            style={{
+              justifyContent: "center",
+              textAlign: "center",
+              marginTop: 20,
+            }}
+          >
+            <Typography variant="body2"> Bạn không có tài khoản ? </Typography>
+            <Link component="button" variant="body2" onClick={handleSignUp}>
+              Đăng ký
+            </Link>
+          </Stack>
+        </BoxLogin>
+      </Box>
     </Box>
   );
 }

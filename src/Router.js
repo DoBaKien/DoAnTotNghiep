@@ -27,7 +27,7 @@ function Router() {
         <Route path="/create" element={<CreatePost />} />
         <Route path="/tags" element={<Tags />} />
         <Route path="/users" element={<User />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/:id" element={<Profile />} />
         <Route path="/follow" element={<Follow />} />
         <Route path="/post/:qid" element={<Post />} />
         <Route path="/editpf" element={<EditPf />} />

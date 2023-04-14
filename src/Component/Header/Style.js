@@ -1,4 +1,4 @@
-import {  styled, Switch } from "@mui/material";
+import { Button, styled, Switch } from "@mui/material";
 import { Stack } from "@mui/system";
 
 export const MaterialUISwitch = styled(Switch)(({ theme }) => ({
@@ -61,4 +61,12 @@ export const Search = styled("div")(({ theme }) => ({
   "&:hover": {
     border: "1px solid currentColor",
   },
+}));
+export const BtnLogin = styled(Button)(({ theme }) => ({
+  color: "white",
+  backgroundColor: "#E54B4B",
+  "&:hover": {
+    backgroundColor: "#C74141",
+  },
+  borderRadius: 30,
 }));

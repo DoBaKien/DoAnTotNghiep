@@ -1,4 +1,3 @@
-
 import { Button, Card, Stack, styled } from "@mui/material";
 
 export const BoxGG = styled(Card)(({ theme }) => ({
@@ -12,6 +11,7 @@ export const BoxLogin = styled(Stack)(({ theme }) => ({
   border: "1px solid gray",
   padding: 20,
   borderRadius: 20,
+  width: 500,
 }));
 
 export const BtnLog = styled(Button)(() => ({

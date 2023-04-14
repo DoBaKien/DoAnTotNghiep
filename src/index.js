@@ -5,13 +5,17 @@ import App from "./Router";
 import "./index.css";
 import { ThemeProvider } from "./Component/Darkmode/ThemeUseContext";
 import axios from "axios";
+import { AuthProvider } from "./Component/Auth/AuthContext";
+
 axios.defaults.baseURL = "http://localhost:8080";
 axios.defaults.withCredentials = true;
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <ThemeProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </AuthProvider>
   </ThemeProvider>
 );

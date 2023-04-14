@@ -19,7 +19,6 @@ export const StackContent = styled(Stack)(({ theme }) => ({
   padding: 10,
 }));
 export const BoxName = styled(Box)(() => ({
-  marginLeft: 20,
   padding: 10,
 }));
 
