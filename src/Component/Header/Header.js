@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Divider,
   FormControlLabel,
   IconButton,
@@ -29,7 +28,7 @@ import auth from "../../Assert/Config";
 
 function Header() {
   const { currentUser } = useContext(AuthContext);
-
+ 
   const navigate = useNavigate();
   const context = useContext(ThemeUseContext);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -45,6 +44,7 @@ function Header() {
   const handlelogout = () => {
     auth.signOut();
     Cookies.remove("sessionCookie");
+    localStorage.removeItem("id");
     setAnchorEl(null);
   };
   const handlePf = () => {

@@ -10,11 +10,11 @@ import {
 import { BoxHome } from "../../Assert/Style";
 import Header from "../../Component/Header/Header";
 import { BoxContent, BoxTitle } from "./Style";
-import { countries } from "../../Assert/DataLocation";
 
 import { useState } from "react";
 import Avatar from "react-avatar-edit";
 import { useNavigate } from "react-router-dom";
+import { dataLocation } from "../../Assert/DataLocation";
 function EditPf() {
   const [src, setScr] = useState(null);
   const [pre, setPre] = useState(null);
@@ -25,7 +25,6 @@ function EditPf() {
   const onClose = () => {
     setPre(null);
   };
-
 
   return (
     <BoxHome color={"text.primary"}>
@@ -53,7 +52,7 @@ function EditPf() {
           <Autocomplete
             fullWidth
             disablePortal
-            options={countries}
+            options={dataLocation}
             sx={{ marginTop: 1 }}
             renderInput={(params) => (
               <TextField {...params} placeholder="Địa chỉ" />

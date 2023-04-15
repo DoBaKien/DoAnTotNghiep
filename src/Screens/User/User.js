@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 function User() {
   const navigation = useNavigate();
   const [users, setUsers] = useState("");
+  const [search, setSearch] = useState("");
   useEffect(() => {
     axios
       .get(`/user/getAllUser`)
@@ -35,6 +36,14 @@ function User() {
   const handlePf = (id) => {
     navigation(`/profile/${id}`);
   };
+  const ser = (val) => {
+    if (search === "") {
+      return val;
+    } else if (val.name.toLowerCase().includes(search.toLowerCase())) {
+      return val;
+    }
+  };
+
   return (
     <BoxHome color={"text.primary"}>
       <Header />
@@ -48,6 +57,7 @@ function User() {
               sx={{ ml: 2, flex: 1, fontSize: 22 }}
               fullWidth
               placeholder="Tìm bằng tên"
+              onChange={(e) => setSearch(e.target.value)}
               startAdornment={
                 <InputAdornment position="start">
                   <SearchIcon />
@@ -61,38 +71,40 @@ function User() {
               spacing={{ xs: 1, md: 3 }}
               columns={{ xs: 4, sm: 8, md: 12 }}
             >
-              {Array.from(users).map((user, index) => (
-                <Grid2 xs={4} sm={4} md={4} key={index}>
-                  <PaperUser onClick={() => handlePf(user.uid)}>
-                    <Stack direction="row" spacing={2}>
-                      <Box
-                        sx={{
-                          width: 50,
-                          height: 60,
-                          alignItems: "center",
-                          justifyContent: "center",
-                          display: "flex",
-                        }}
-                      >
-                        <Avatar sx={{ width: 50, height: 50 }}>
-                          {user.name}
-                        </Avatar>
-                      </Box>
-                      <Box
-                        sx={{
-                          width: "100%",
-                          height: 60,
-                        }}
-                      >
-                        <Typography sx={{ marginBottom: 1 }}>
-                          {user.name}
-                        </Typography>
-                        <Typography>Location</Typography>
-                      </Box>
-                    </Stack>
-                  </PaperUser>
-                </Grid2>
-              ))}
+              {Array.from(users)
+                .filter(ser)
+                .map((user, index) => (
+                  <Grid2 xs={4} sm={4} md={4} key={index}>
+                    <PaperUser onClick={() => handlePf(user.uid)}>
+                      <Stack direction="row" spacing={2}>
+                        <Box
+                          sx={{
+                            width: 50,
+                            height: 60,
+                            alignItems: "center",
+                            justifyContent: "center",
+                            display: "flex",
+                          }}
+                        >
+                          <Avatar sx={{ width: 50, height: 50 }}>
+                            {user.name}
+                          </Avatar>
+                        </Box>
+                        <Box
+                          sx={{
+                            width: "100%",
+                            height: 60,
+                          }}
+                        >
+                          <Typography sx={{ marginBottom: 1 }}>
+                            {user.name}
+                          </Typography>
+                          <Typography>Location</Typography>
+                        </Box>
+                      </Stack>
+                    </PaperUser>
+                  </Grid2>
+                ))}
             </Grid2>
           </Box>
         </BoxContent>

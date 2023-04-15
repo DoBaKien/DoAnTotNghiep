@@ -16,7 +16,7 @@ function Tags() {
   };
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState("");
-  const [tagFind, setTagFind] = useState("");
+
   useEffect(() => {
     axios
       .get("/tag/getAllTag")

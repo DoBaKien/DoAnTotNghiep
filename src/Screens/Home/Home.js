@@ -6,6 +6,7 @@ import {
   InputBase,
   Stack,
   Divider,
+  CircularProgress,
 } from "@mui/material";
 import Header from "../../Component/Header/Header";
 import LeftSide from "../../Component/LeftSide/LeftSide";
@@ -122,6 +123,19 @@ function Home() {
             </StackPost>
           ))}
         </BoxContent>
+      );
+    } else {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            height: "81vh",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
       );
     }
   };

@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { BoxGG, BtnLog, BoxLogin } from "./Style";
 import GoogleIcon from "@mui/icons-material/Google";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +22,10 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Header from "../../Component/Header/Header";
 import auth from "../../Assert/Config";
+import Swal from "sweetalert2";
 
+var regEmail = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z]{2,4})+$/;
+var regpass = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 function Login() {
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
@@ -33,49 +36,54 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, userName, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        localStorage.setItem("id", user.uid);
-        return user.getIdToken();
-      })
-      .then((token) => {
-        axios
-          .post("/account/createSessionCookie", token)
-          .then(function (response) {
-            Cookies.set("sessionCookie", response.data, { expires: 365 });
-            navigate("/");
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      })
-      .catch((error) => {
-        console.error(error);
+    console.log(userName, password);
+    if (userName === "" || password === "") {
+      Swal.fire({
+        icon: "error",
+        text: "Vui lòng nhập đầy đủ thông tin",
       });
+    } else {
+      signInWithEmailAndPassword(auth, userName, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          localStorage.setItem("id", user.uid);
+          return user.getIdToken();
+        })
+        .then((token) => {
+          axios
+            .post("/account/createSessionCookie", token)
+            .then(function (response) {
+              Cookies.set("sessionCookie", response.data, { expires: 365 });
+              navigate("/");
+            });
+        })
+        .catch((error) => {
+          Swal.fire("Sai thông tin đăng nhập");
+        });
+    }
   };
   const handleSignUp = (e) => {
     navigate("/signup");
   };
   const handleChangleUserName = (e) => {
-    // if (regUserName.test(e)) {
-    //   setUserName(e);
-    //   setUserNameError(false);
-    // } else {
-    //   setUserName("");
-    //   setUserNameError(true);
-    // }
+    if (regEmail.test(e)) {
+      setUserName(e);
+      setUserNameError(false);
+    } else {
+      setUserName("");
+      setUserNameError(true);
+    }
     setUserName(e);
   };
 
   const handleChanglePassword = (e) => {
-    // if (regpass.test(e)) {
-    //   setPassword(e);
-    //   setPasswordError(false);
-    // } else {
-    //   setPassword("");
-    //   setPasswordError(true);
-    // }
+    if (regpass.test(e)) {
+      setPassword(e);
+      setPasswordError(false);
+    } else {
+      setPassword("");
+      setPasswordError(true);
+    }
     setPassword(e);
   };
 

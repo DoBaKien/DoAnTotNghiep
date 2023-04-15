@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
@@ -32,37 +32,44 @@ function SignUp() {
   const [showPass, setShowPass] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
+  const [rePass, setRePass] = useState("");
+  const [rePassErr, setRePassErr] = useState(false);
+  const [help, setHelp] = useState("");
   const [modal, setModal] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(email, password, name);
-    axios
-      .post("/account/register", {
-        email: email,
-        password: password,
-      })
-      .then(function (response) {
-        console.log(response.data);
-        if (response.data === "OTP sent") {
-          setModal(!modal);
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Kiểm tra lại",
-            text: "Tài khoản Email đã dược đăng ký",
-          });
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
+    if (email === "" || password === "" || name === "") {
+      Swal.fire({
+        icon: "error",
+        text: "Vui lòng nhập đầy đủ thông tin",
       });
+    } else {
+      axios
+        .post("/account/register", {
+          email: email,
+          password: password,
+        })
+        .then(function (response) {
+          console.log(response.data);
+          if (response.data === "OTP sent") {
+            setModal(!modal);
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Kiểm tra lại",
+              text: "Tài khoản Email đã dược đăng ký",
+            });
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   };
-  const handleLogin = (e) => {
+  const handleLogin = () => {
     navigate("/login");
-  };
-  const handleSignUp = (e) => {
-    setModal(!modal);
   };
 
   const handleChangleEmail = (e) => {
@@ -84,6 +91,24 @@ function SignUp() {
       setPasswordError(true);
     }
   };
+  const handleChangleRePassword = (e) => {
+    if (regpass.test(e)) {
+      setRePass(e);
+      setRePassErr(false);
+    } else {
+      setRePass(e);
+      setRePassErr(true);
+    }
+  };
+  useEffect(() => {
+    if (rePass === "") {
+      setHelp("Nhập lại mật khẩu");
+    } else if (rePass !== "") {
+      setHelp("Mật khẩu trùng khớp");
+    } else if (rePass.includes(password)) {
+      setHelp("Mật khẩu trùng khớp");
+    }
+  }, [rePass, password]);
 
   return (
     <Box
@@ -164,14 +189,14 @@ function SignUp() {
               <PasswordCheck password={password} />
               <TextField
                 required
-                label="Mật khẩu"
-                error={passwordError}
-                onChange={(e) => handleChanglePassword(e.target.value)}
+                label="Nhập lại mật khẩu"
+                error={rePassErr}
+                onChange={(e) => handleChangleRePassword(e.target.value)}
                 style={{ marginTop: 30, marginBottom: 20 }}
                 fullWidth
                 type={showPass ? "text" : "password"}
                 variant="outlined"
-                helperText="Nhập lại mật khẩu"
+                helperText={help}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">

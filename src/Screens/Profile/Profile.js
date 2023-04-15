@@ -33,13 +33,14 @@ import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { BoxPost } from "./Style";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useContext, useState } from "react";
 import { AuthContext } from "../../Component/Auth/AuthContext";
 import axios from "axios";
 
 function Profile() {
   const { currentUser } = useContext(AuthContext);
+  const id = useParams();
 
   const [data, setData] = useState("");
   const navigation = useNavigate();
@@ -50,18 +51,27 @@ function Profile() {
     navigation("/editpf");
   };
   useEffect(() => {
-    if (currentUser !== null) {
-      axios
-        .get(`/user/findByUid/${currentUser}`)
-        .then(function (response) {
-          setData(response.data);
-          console.log(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    axios
+      .get(`/user/findByUid/${id.id}`)
+      .then(function (response) {
+        setData(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, [id]);
+
+  const btnEdit = () => {
+    if (id.id === currentUser) {
+      return (
+        <>
+          <Button variant="outlined" onClick={handleEditPage}>
+            Chỉnh sửa
+          </Button>
+        </>
+      );
     }
-  }, [currentUser]);
+  };
 
   return (
     <BoxHome color={"text.primary"}>
@@ -98,9 +108,7 @@ function Profile() {
               justifyContent: { lg: "end", xs: "center" },
             }}
           >
-            <Button variant="outlined" onClick={handleEditPage}>
-              Chỉnh sửa
-            </Button>
+            {btnEdit()}
           </Box>
         </StackContent>
       </BoxContent>
