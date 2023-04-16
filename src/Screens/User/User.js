@@ -26,7 +26,6 @@ function User() {
       .get(`/user/getAllUser`)
       .then(function (response) {
         setUsers(response.data);
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);

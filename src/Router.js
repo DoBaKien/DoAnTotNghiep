@@ -17,8 +17,13 @@ import NotFound from "./Component/NotFound/NotFound";
 
 import Cookies from "js-cookie";
 
+import { AuthContext } from "./Component/Auth/AuthContext";
+import AdminCheck from "./Assert/AdminCheck";
+import ManagerUser from "./Screens/Admin/User/ManagerUser";
+
 function Router() {
   const context = useContext(ThemeUseContext);
+  const { role } = useContext(AuthContext);
 
   return (
     <ThemeProvider theme={context.darkTheme}>
@@ -34,6 +39,7 @@ function Router() {
             )
           }
         />
+
         <Route path="/signup" element={<SignUp />} />
         <Route path="/create" element={<CreatePost />} />
         <Route path="/tags" element={<Tags />} />
@@ -44,6 +50,9 @@ function Router() {
         <Route path="/editpf" element={<EditPf />} />
         <Route path="/tagdetail" element={<TagDetails />} />
         <Route path="*" element={<NotFound />} />
+
+        <Route path="/admin" element={<AdminCheck role={role} />} />
+        <Route path="/manageruser" element={<ManagerUser role={role} />} />
       </Routes>
     </ThemeProvider>
   );

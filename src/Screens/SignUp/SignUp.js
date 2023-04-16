@@ -1,5 +1,4 @@
 import {
-  Autocomplete,
   Box,
   IconButton,
   InputAdornment,

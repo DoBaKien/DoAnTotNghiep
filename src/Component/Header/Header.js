@@ -27,8 +27,8 @@ import { AuthContext } from "../Auth/AuthContext";
 import auth from "../../Assert/Config";
 
 function Header() {
-  const { currentUser } = useContext(AuthContext);
- 
+  const { currentUser, test, setTest } = useContext(AuthContext);
+
   const navigate = useNavigate();
   const context = useContext(ThemeUseContext);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -46,6 +46,7 @@ function Header() {
     Cookies.remove("sessionCookie");
     localStorage.removeItem("id");
     setAnchorEl(null);
+    setTest(!test);
   };
   const handlePf = () => {
     navigate(`/profile/${currentUser}`);
@@ -53,6 +54,7 @@ function Header() {
   };
   const handleLogin = () => {
     navigate("/login");
+    setTest(!test);
   };
 
   const CheckAuth = () => {

@@ -7,8 +7,9 @@ import {
   ListItemIcon,
   ListItemText,
   Switch,
+  styled,
 } from "@mui/material";
-import { BoxSide } from "./Style.js";
+
 import HomeIcon from "@mui/icons-material/Home";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
@@ -20,6 +21,16 @@ import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useNavigate } from "react-router-dom";
 function LeftSide() {
+  const BoxSide = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
+    width: 220,
+    marginRight: 50,
+    minWidth: 60,
+    border: "1px solid gray",
+    borderRadius: 20,
+    minHeight: "90vh",
+  }));
+
   const context = useContext(ThemeUseContext);
   const navigate = useNavigate();
   const handleHome = () => {
@@ -30,6 +41,9 @@ function LeftSide() {
   };
   const handleUsers = () => {
     navigate("/users");
+  };
+  const handleAdmin = () => {
+    navigate("/admin");
   };
 
   return (
@@ -54,7 +68,7 @@ function LeftSide() {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={handleAdmin}>
                   <ListItemIcon>
                     <QuestionAnswerIcon />
                   </ListItemIcon>

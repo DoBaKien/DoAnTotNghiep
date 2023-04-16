@@ -2,31 +2,38 @@ import React, { useEffect, useState } from "react";
 
 import { onAuthStateChanged } from "firebase/auth";
 import auth from "../../Assert/Config";
-export const AuthContext = React.createContext();
+import { createContext } from "react";
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [role, setRole] = useState(null);
+  const [currentUser, setCurrentUser] = useState("");
+  const [role, setRole] = useState("");
+  const [test, setTest] = useState(true);
+  const [show, setShow] = useState(true);
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setCurrentUser(user.uid);
-        user.getIdTokenResult().then(function (idTokenResult) {
-          var uid = idTokenResult.claims.uid;
-          var role = idTokenResult.claims.role;
-          setRole(role);
-        });
+        const idTokenResult = await user.getIdTokenResult();
+        const role = idTokenResult.claims.role;
+        setRole(role);
       } else {
         localStorage.removeItem("id");
       }
     });
-  }, []);
+
+    return () => unsubscribe();
+  }, [test]);
 
   return (
     <AuthContext.Provider
       value={{
         currentUser,
         role,
+        test,
+        setTest,
+        show,
+        setShow,
       }}
     >
       {children}

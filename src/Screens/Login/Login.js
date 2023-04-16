@@ -36,7 +36,6 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(userName, password);
     if (userName === "" || password === "") {
       Swal.fire({
         icon: "error",
