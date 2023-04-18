@@ -48,7 +48,6 @@ function Login() {
         .then((userCredential) => {
           const user = userCredential.user;
           localStorage.setItem("id", user.uid);
-
           return user.getIdToken();
         })
         .then((token) => {
@@ -107,7 +106,7 @@ function Login() {
           alignItems: "center",
           justifyContent: "center",
           display: "flex",
-          height: "93vh",
+          marginTop:5
         }}
       >
         <BoxLogin>

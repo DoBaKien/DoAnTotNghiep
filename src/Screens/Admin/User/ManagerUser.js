@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import Header from "../../../Component/Admin/Header";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, GridToolbar } from "@mui/x-data-grid";
 import { useContext } from "react";
 import { AuthContext } from "../../../Component/Auth/AuthContext";
 import { BoxHome, StackContent } from "../Style";
@@ -8,11 +8,14 @@ import LeftAdmin from "../../../Component/Admin/Left";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
+import SecurityIcon from "@mui/icons-material/Security";
 
+import DeleteIcon from "@mui/icons-material/Delete";
+import FileCopyIcon from "@mui/icons-material/FileCopy";
 function ManagerUser() {
   const { show, setShow } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
-
+  const [pageSize, setPageSize] = useState(10);
   useEffect(() => {
     axios
       .get(`/user/getAllUser`)
@@ -23,41 +26,44 @@ function ManagerUser() {
         console.log(error);
       });
   }, []);
-  const rows = [
-    {
-      uid: "ZyyMhGnI9iXIMxUJRXjGEKQskqs2",
-      name: "Snow",
-      location: "Jon",
-      role: "Admin",
-    },
-    {
-      uid: "ayyMhGnI9iXIMxUJRXjGEKQskqs2",
-      name: "Lannister",
-      role: "User",
-      location: "Cersei",
-    },
-    {
-      uid: "syyMhGnI9iXIMxUJRXjGEKQskqs2",
-      name: "Lannister",
-      role: "User",
-      location: "Jaime",
-    },
-    {
-      uid: "cyyMhGnI9iXIMxUJRXjGEKQskqs2",
-      name: "Stark",
-      role: "User",
-      location: "Arya",
-    },
-    {
-      uid: "s2yMhGnI9iXIMxUJRXjGEKQskqs2",
-      name: "Targaryen",
-      role: "User",
-      location: "Bà Rịa - Vùng Tàu",
-      email: "kiendoba1905@gmail.com",
-    },
-  ];
+
+  const handleRoleAdmin = (id) => {
+    console.log(id);
+    axios
+      .post(`/account/admin/adminClaim/${id}`)
+      .then(function (response) {
+        axios
+          .get(`/user/getAllUser`)
+          .then(function (response) {
+            setUsers(response.data);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  const handleRoleUser = (id) => {
+    axios
+      .post(`/account/admin/userClaim/${id}`)
+      .then(function (response) {
+        axios
+          .get(`/user/getAllUser`)
+          .then(function (response) {
+            setUsers(response.data);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   const columns = [
-    { field: "uid", headerName: "ID", width: 280 },
+    { field: "uid", headerName: "ID", width: 200 },
     {
       field: "name",
       headerName: "Tên",
@@ -67,6 +73,7 @@ function ManagerUser() {
       field: "email",
       headerName: "Email",
       width: 300,
+      editable: true,
     },
     {
       field: "location",
@@ -78,7 +85,51 @@ function ManagerUser() {
       headerName: "Quyền",
       width: 120,
     },
+    {
+      field: "actions",
+      headerName: "Action",
+      type: "actions",
+      width: 80,
+      getActions: (params) => {
+        let actions = [
+          <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />,
+          <GridActionsCellItem
+            icon={<SecurityIcon />}
+            label="Disable User"
+            showInMenu
+            onClick={() => {}}
+          />,
+        ];
+
+        if (params.row.role === "User") {
+          actions.push(
+            <GridActionsCellItem
+              icon={<SecurityIcon />}
+              label="Quyền Admin"
+              showInMenu
+              onClick={() => {
+                handleRoleAdmin(params.id);
+              }}
+            />
+          );
+        } else {
+          actions.push(
+            <GridActionsCellItem
+              icon={<SecurityIcon />}
+              label="Quyền User"
+              showInMenu
+              onClick={() => {
+                handleRoleUser(params.id);
+              }}
+            />
+          );
+        }
+
+        return actions;
+      },
+    },
   ];
+
   function getRowId(row) {
     return row.uid;
   }
@@ -86,30 +137,32 @@ function ManagerUser() {
   const datatable = () => {
     if (Array.isArray(users) && users.length !== 0) {
       return (
-        <Box
-          height="80vh"
-          // sx={{ maxWidth: 1200, minWidth: 500, margin: "0 auto" }}
-        >
+        <Box height="80vh">
           <DataGrid
-            rowHeight={50}
+            rowHeight={150}
+            rows={users}
             getRowId={getRowId}
-            rows={rows}
             columns={columns}
-            pageSizeOptions={[10, 50, 100]}
+            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+            rowsPerPageOptions={[5, 10, 20]}
+            pageSize={pageSize}
             checkboxSelection
             components={{
               Toolbar: GridToolbar,
-            }}
-            initialState={{
-              ...users.initialState,
-              pagination: { paginationModel: { pageSize: 10 } },
             }}
             componentsProps={{
               toolbar: {
                 showQuickFilter: true,
                 quickFilterProps: { debounceMs: 500 },
-                csvOptions: { fields: ["name", "location", "role", "uid"] },
+                csvOptions: {
+                  fields: ["uid", "name", "location", "role"],
+                  utf8WithBom: true,
+                  fileName: "UserData",
+                },
               },
+            }}
+            initialState={{
+              ...users.initialState,
             }}
             getRowHeight={() => "auto"}
             sx={{
@@ -117,10 +170,10 @@ function ManagerUser() {
                 py: 1,
               },
               "&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell": {
-                py: "8px",
+                py: "15px",
               },
               "&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell": {
-                py: "10px",
+                py: "22px",
               },
             }}
           />

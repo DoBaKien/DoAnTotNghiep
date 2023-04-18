@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import auth from "../../Assert/Config";
 import { createContext } from "react";
+import Cookies from "js-cookie";
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -19,6 +21,7 @@ export const AuthProvider = ({ children }) => {
         setRole(role);
       } else {
         localStorage.removeItem("id");
+        Cookies.remove("sessionCookie");
       }
     });
 

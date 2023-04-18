@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import Header from "../../../Component/Admin/Header";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid,  GridToolbar } from "@mui/x-data-grid";
 import { useContext } from "react";
 import { AuthContext } from "../../../Component/Auth/AuthContext";
 import { BoxHome, ExpandableCell, StackContent, ValueDate } from "../Style";
@@ -34,6 +34,7 @@ function ManagerQuest() {
       field: "title",
       headerName: "Tiêu đề",
       width: 280,
+      editable: true,
       renderCell: (params) => <ExpandableCell {...params} />,
     },
     {
@@ -52,6 +53,7 @@ function ManagerQuest() {
       width: 180,
       renderCell: (params) => <ValueDate {...params} />,
     },
+    
   ];
 
   const datatable = () => {
@@ -99,6 +101,9 @@ function ManagerQuest() {
                 py: "10px",
               },
             }}
+            onCellDoubleClick={() => console.log("test")}
+            onCellEditCommit={() => console.log("123123")}
+            onEditCellChange={() => console.log("asdasdcass")}
           />
         </Box>
       );

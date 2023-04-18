@@ -16,7 +16,7 @@ import { ThemeUseContext } from "../Darkmode/ThemeUseContext";
 import { MaterialUISwitch, StackHeader, Search, BtnLogin } from "./Style";
 import logo from "../../Assert/Img/logo.png";
 import logo2 from "../../Assert/Img/logo2.png";
-
+import LoginIcon from "@mui/icons-material/Login";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Logout, Settings } from "@mui/icons-material";
@@ -63,9 +63,22 @@ function Header() {
         <Box
           sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
         >
-          <BtnLogin variant="contained" onClick={handleLogin}>
+          <BtnLogin
+            variant="contained"
+            onClick={handleLogin}
+            sx={{ display: { xs: "none", lg: "block" } }}
+          >
             Đăng nhập
           </BtnLogin>
+          <Tooltip title="Đăng nhập">
+            <IconButton
+              variant="contained"
+              onClick={handleLogin}
+              sx={{ display: { xs: "block", lg: "none" } }}
+            >
+              <LoginIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
       );
     } else {
