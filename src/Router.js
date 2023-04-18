@@ -18,8 +18,12 @@ import NotFound from "./Component/NotFound/NotFound";
 import Cookies from "js-cookie";
 
 import { AuthContext } from "./Component/Auth/AuthContext";
-import AdminCheck from "./Assert/AdminCheck";
-import ManagerUser from "./Screens/Admin/User/ManagerUser";
+import {
+  AdminCheck,
+  QuestionPageCheck,
+  TagPageCheck,
+  UserPageCheck,
+} from "./Assert/AdminCheck";
 
 function Router() {
   const context = useContext(ThemeUseContext);
@@ -52,7 +56,12 @@ function Router() {
         <Route path="*" element={<NotFound />} />
 
         <Route path="/admin" element={<AdminCheck role={role} />} />
-        <Route path="/manageruser" element={<ManagerUser role={role} />} />
+        <Route path="/manageruser" element={<UserPageCheck role={role} />} />
+        <Route path="/managertag" element={<TagPageCheck role={role} />} />
+        <Route
+          path="/managerquestion"
+          element={<QuestionPageCheck role={role} />}
+        />
       </Routes>
     </ThemeProvider>
   );

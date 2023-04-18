@@ -11,43 +11,45 @@ import {
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import PeopleIcon from "@mui/icons-material/People";
-
 import ReportIcon from "@mui/icons-material/Report";
-import { useContext } from "react";
-import { ThemeUseContext } from "../Darkmode/ThemeUseContext.js";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { useNavigate } from "react-router-dom";
 import logo from "../../Assert/Img/logo.png";
+
 function LeftAdmin() {
   const BoxSide = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
     border: "1px solid gray",
     borderRadius: 20,
     height: "95vh",
-    marginTop:10
+    marginTop: 10,
   }));
 
-  const context = useContext(ThemeUseContext);
   const navigate = useNavigate();
   const handleDB = () => {
     navigate("/admin");
   };
-  const handleTags = () => {};
+  const handleQuestion = () => {
+    navigate("/managerquestion");
+  };
   const handleUsers = () => {};
   const handleUser = () => {
     navigate("/manageruser");
   };
+  const handleTag = () => {
+    navigate("/managerTag");
+  };
 
   return (
     <BoxSide>
-      <Box p={1} sx={{ width: 240 }}>
+      <Box p={1} sx={{ width: 250 }}>
         <Box>
           <List>
             <Box
               component="img"
               sx={{
                 height: 50,
-                width: 200,
+
                 cursor: "pointer",
                 marginBottom: 5,
               }}
@@ -74,7 +76,7 @@ function LeftAdmin() {
             </ListItem>
             <Divider />
             <ListItem disablePadding>
-              <ListItemButton onClick={handleTags}>
+              <ListItemButton onClick={handleQuestion}>
                 <ListItemIcon>
                   <QuestionAnswerIcon />
                 </ListItemIcon>
@@ -83,7 +85,7 @@ function LeftAdmin() {
             </ListItem>
             <Divider />
             <ListItem disablePadding>
-              <ListItemButton onClick={handleUsers}>
+              <ListItemButton onClick={handleTag}>
                 <ListItemIcon>
                   <LocalOfferIcon />
                 </ListItemIcon>
