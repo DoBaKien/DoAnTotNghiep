@@ -58,7 +58,7 @@ function Login() {
               if (role === "Admin") {
                 navigate("/admin");
               } else {
-                navigate("/");
+                navigate(-1);
               }
             });
         })

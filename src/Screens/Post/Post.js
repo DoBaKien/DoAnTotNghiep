@@ -1,30 +1,25 @@
 import Header from "../../Component/Header/Header";
 import LeftSide from "../../Component/LeftSide/LeftSide";
-
 import { BoxContent, DateV, StackContent } from "./Style";
 import { BoxHome, BoxTag } from "../../Assert/Style";
-import {
-  Box,
-  Button,
-  IconButton,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, IconButton, Stack, Typography } from "@mui/material";
 import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlight";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import JoditEditor from "jodit-react";
-import { useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import { Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
-
+import { AuthContext } from "../../Component/Auth/AuthContext";
+import HistoryIcon from "@mui/icons-material/History";
+import ReportIcon from "@mui/icons-material/Report";
+import { AnswerAction } from "./AnswerAction";
+import { AnswerDetails } from "./AnswerDetails";
+import parse from "html-react-parser";
 function Post() {
-  const editor = useRef(null);
   const { qid } = useParams();
   const [details, setDetails] = useState("");
   const [title, setTitle] = useState("");
@@ -32,6 +27,9 @@ function Post() {
   const [user, setUser] = useState("");
   const [vote, setVote] = useState(0);
   const [check, setCheck] = useState("");
+  const { currentUser } = useContext(AuthContext);
+  const [answer, setAnswer] = useState("");
+
   useEffect(() => {
     axios
       .get(`question/getQuestionDetailByQid/${qid}`)
@@ -66,14 +64,17 @@ function Post() {
         console.log(error);
       });
 
-    axios
-      .get(`question/getUserVoteValue/${qid}`)
-      .then(function (response) {
-        setCheck(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    if (currentUser !== "") {
+      axios
+        .get(`question/getUserVoteValue/${qid}`)
+        .then(function (response) {
+          setCheck(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
     axios
       .get(`question/getTotalVoteValue/${qid}`)
       .then(function (response) {
@@ -82,36 +83,71 @@ function Post() {
       .catch(function (error) {
         console.log(error);
       });
-  }, [qid]);
+
+    if (currentUser === "") {
+      axios
+        .get(`answer/getAnswerDTOByQid/${qid}`)
+        .then(function (response) {
+          setAnswer(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      axios
+        .get(`answer/getAnswerDTOByQidCk/${qid}`)
+        .then(function (response) {
+          setAnswer(response.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  }, [qid, currentUser]);
 
   const VoteAction = (value) => {
-    axios
-      .post(`question/castQuestionVoteUD/${qid}`, { value })
-      .then(function (response) {
-        Swal.fire("Thành công", `Bạn vote thành công`, "success");
-        if (check === 0 && value === "Up") {
-          setVote((prevState) => prevState + 1);
-          setCheck("Up");
-        } else if (check === "Up" && value === "Up") {
-          setVote((prevState) => prevState - 1);
-          setCheck(0);
-        } else if (check === "Down" && value === "Up") {
-          setVote((prevState) => prevState + 2);
-          setCheck("Up");
-        } else if (check === 0 && value === "Down") {
-          setVote((prevState) => prevState - 1);
-          setCheck("Down");
-        } else if (check === "Down" && value === "Down") {
-          setVote((prevState) => prevState + 1);
-          setCheck(0);
-        } else if (check === "Up" && value === "Down") {
-          setVote((prevState) => prevState - 2);
-          setCheck("Down");
+    if (currentUser !== "") {
+      axios
+        .post(`question/castQuestionVoteUD/${qid}`, { value })
+        .then(function (response) {
+          Swal.fire("Thành công", `Bạn vote thành công`, "success");
+          axios
+            .get(`question/getTotalVoteValue/${qid}`)
+            .then(function (response) {
+              setVote(response.data);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          axios
+            .get(`question/getUserVoteValue/${qid}`)
+            .then(function (response) {
+              setCheck(response.data);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      Swal.fire({
+        title: "Lỗi",
+        text: "Bạn phải đăng nhập trước",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "Đăng nhập",
+        cancelButtonText: "Hủy",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          return <Navigate to="/" />;
         }
-      })
-      .catch(function (error) {
-        console.log(error);
       });
+    }
   };
 
   return (
@@ -143,15 +179,27 @@ function Post() {
                   justifyContent: "center",
                 }}
               >
-                <IconButton onClick={() => VoteAction("Up")}>
+                <IconButton
+                  onClick={() => VoteAction("Up")}
+                  color={check === "Up" ? "primary" : ""}
+                >
                   <NorthIcon />
                 </IconButton>
 
                 <Typography variant="h6" sx={{ marginBottom: 0.6 }}>
                   {vote}
                 </Typography>
-                <IconButton onClick={() => VoteAction("Down")}>
+                <IconButton
+                  onClick={() => VoteAction("Down")}
+                  color={check === "Down" ? "primary" : ""}
+                >
                   <SouthIcon />
+                </IconButton>
+                <IconButton>
+                  <HistoryIcon />
+                </IconButton>
+                <IconButton>
+                  <ReportIcon />
                 </IconButton>
               </Box>
               <Box sx={{ marginLeft: 3 }}>
@@ -159,7 +207,7 @@ function Post() {
                   if (detail.type === "text") {
                     return (
                       <Box sx={{ marginBottom: 2 }} key={i}>
-                        <Typography>{detail.content}</Typography>
+                        <div>{parse(detail.content)}</div>
                       </Box>
                     );
                   } else {
@@ -192,35 +240,8 @@ function Post() {
               ))}
             </Stack>
           </BoxContent>
-
-          <BoxContent color={"black"} sx={{ marginTop: 2 }}>
-            <Typography variant="h6" color={"text.primary"}>
-              Your Answer
-            </Typography>
-            <JoditEditor ref={editor} tabIndex={1} />
-          </BoxContent>
-
-          <BoxContent sx={{ marginTop: 2 }}>
-            <Typography variant="h6">Code Example</Typography>
-            <TextField
-              id="outlined-multiline-static"
-              multiline
-              rows={4}
-              fullWidth
-              placeholder="Enter code"
-            />
-          </BoxContent>
-
-          <BoxContent
-            sx={{
-              marginTop: 2,
-              justifyContent: "center",
-              display: "flex",
-              marginBottom: 2,
-            }}
-          >
-            <Button variant="contained">Answer</Button>
-          </BoxContent>
+          {AnswerDetails(qid, answer)}
+          {AnswerAction(qid, setAnswer)}
         </Box>
       </StackContent>
     </BoxHome>
