@@ -27,6 +27,8 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import Swal from "sweetalert2";
+import Cookies from "js-cookie";
+import { Navigate } from "react-router-dom";
 
 function CreatePost() {
   const [tags, setTags] = useState("");
@@ -61,43 +63,61 @@ function CreatePost() {
   }
 
   const handleP = () => {
-    axios
-      .post("/question/create", {
-        title: title,
-      })
-      .then(function (response) {
-        axios
-          .post(`/question/modifyTagPost/${response.data}`, personName)
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-        axios
-          .post(`/question/createDetail/${response.data}`, post)
-          .then(function (response) {
-            console.log(response);
-            Swal.fire("Thành công", `Bạn đăng bài thành công`, "success");
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-        axios
-          .post(`/question/createActivityHistory/${response.data}`, {
-            action: "Đặt câu hỏi",
-            description: "Khởi tạo câu hỏi",
-          })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      })
-      .catch(function (error) {
-        console.log(error);
+    if (Cookies.get("sessionCookie") !== undefined) {
+      axios
+        .post("/question/create", {
+          title: title,
+        })
+        .then(function (response) {
+          axios
+            .post(`/question/modifyTagPost/${response.data}`, personName)
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          axios
+            .post(`/question/createDetail/${response.data}`, post)
+            .then(function (response) {
+              console.log(response);
+              Swal.fire("Thành công", `Bạn đăng bài thành công`, "success");
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          axios
+            .post(`/question/createActivityHistory/${response.data}`, {
+              action: "Đặt câu hỏi",
+              description: "Khởi tạo câu hỏi",
+            })
+            .then(function (response) {
+              console.log(response);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      Swal.fire({
+        title: "Lỗi",
+        text: "Bạn phải đăng nhập trước",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "Đăng nhập",
+        cancelButtonText: "Hủy",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          return <Navigate to="/" />;
+        }
       });
+    }
   };
   function deleteUser(id) {
     const newPost = post.filter((user) => user.id !== id);

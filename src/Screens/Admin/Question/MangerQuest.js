@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import Header from "../../../Component/Admin/Header";
-import { DataGrid,  GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useContext } from "react";
 import { AuthContext } from "../../../Component/Auth/AuthContext";
 import { BoxHome, ExpandableCell, StackContent, ValueDate } from "../Style";
@@ -8,11 +8,12 @@ import LeftAdmin from "../../../Component/Admin/Left";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ManagerQuest() {
   const { show, setShow } = useContext(AuthContext);
   const [questions, setQuestions] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     axios
       .get("/question/getAllQuestionDTO")
@@ -23,6 +24,9 @@ function ManagerQuest() {
         console.log(error);
       });
   }, []);
+  const handleOnCellClick = (params) => {
+    navigate(`/post/${params.id}`);
+  };
 
   const columns = [
     {
@@ -53,7 +57,6 @@ function ManagerQuest() {
       width: 180,
       renderCell: (params) => <ValueDate {...params} />,
     },
-    
   ];
 
   const datatable = () => {
@@ -101,9 +104,7 @@ function ManagerQuest() {
                 py: "10px",
               },
             }}
-            onCellDoubleClick={() => console.log("test")}
-            onCellEditCommit={() => console.log("123123")}
-            onEditCellChange={() => console.log("asdasdcass")}
+            onCellDoubleClick={handleOnCellClick}
           />
         </Box>
       );

@@ -85,7 +85,11 @@ function Header() {
     } else {
       return (
         <Box
-          sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            textAlign: "center",
+          }}
         >
           <Tooltip title="Account settings">
             <IconButton

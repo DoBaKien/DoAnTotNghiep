@@ -3,7 +3,7 @@ import { Box, Stack, Typography, styled } from "@mui/material";
 export const StackContent = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
   height: "-moz-fit-content",
-  width: "80vw",
+  width: "80%",
   margin: "0 auto",
 }));
 export const BoxContent = styled(Box)(({ theme }) => ({

@@ -48,9 +48,9 @@ function User() {
       <Header />
       <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
-        <BoxContent sx={{ width: { xs: "100vw", lg: "60vw" } }}>
+        <BoxContent>
           <Typography variant="h4">Người dùng</Typography>
-          <Box sx={{ width: "40vw", marginTop: 2 }}></Box>
+
           <InputFind>
             <InputBase
               sx={{ ml: 2, flex: 1, fontSize: 22 }}
@@ -68,12 +68,12 @@ function User() {
             <Grid2
               container
               spacing={{ xs: 1, md: 3 }}
-              columns={{ xs: 4, sm: 8, md: 12 }}
+              columns={{ xs: 1, sm: 10, lg: 12 }}
             >
               {Array.from(users)
                 .filter(ser)
                 .map((user, index) => (
-                  <Grid2 xs={4} sm={4} md={4} key={index}>
+                  <Grid2 xs={3} sm={7} md={4} key={index}>
                     <PaperUser onClick={() => handlePf(user.uid)}>
                       <Stack direction="row" spacing={2}>
                         <Box

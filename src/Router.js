@@ -52,7 +52,7 @@ function Router() {
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/follow" element={<Follow />} />
         <Route path="/post/:qid" element={<Post />} />
-        <Route path="/editpf" element={<EditPf />} />
+        <Route path="/editpf/:id" element={<EditPf />} />
         <Route path="/tagdetail" element={<TagDetails />} />
         <Route path="/history/:type/:id" element={<History />} />
         <Route path="*" element={<NotFound />} />

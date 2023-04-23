@@ -24,9 +24,10 @@ import { AuthContext } from "../../Component/Auth/AuthContext";
 import HistoryIcon from "@mui/icons-material/History";
 import ReportIcon from "@mui/icons-material/Report";
 
-import { AnswerDetails } from "./AnswerDetails";
+import AnswerDetails from "./AnswerDetails";
 import parse from "html-react-parser";
 import AnswerAction from "./AnswerAction";
+import Cookies from "js-cookie";
 
 function Post() {
   const { qid } = useParams();
@@ -74,14 +75,15 @@ function Post() {
       });
 
     if (currentUser !== "") {
-      axios
-        .get(`question/getUserVoteValue/${qid}`)
-        .then(function (response) {
+      const getUserVoteValue = async () => {
+        try {
+          const response = await axios.get(`question/getUserVoteValue/${qid}`);
           setCheck(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      getUserVoteValue();
     }
 
     const GetTotalVoteValue = async () => {
@@ -119,7 +121,7 @@ function Post() {
   }, [qid, currentUser]);
 
   const VoteAction = (value) => {
-    if (currentUser !== "") {
+    if (Cookies.get("sessionCookie") !== undefined) {
       axios
         .post(`question/castQuestionVoteUD/${qid}`, { value })
         .then(function (response) {
@@ -169,11 +171,10 @@ function Post() {
       <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
         <Box>
-          <BoxContent sx={{ width: "60vw" }}>
+          <BoxContent>
             <Typography variant="h5">{title.title}</Typography>
             <Stack
               direction={{ xs: "column", md: "row" }}
-              // sx={{  }}
               spacing={{ xs: 1, md: 4 }}
               sx={{ textAlign: { xs: "center", md: "" }, marginTop: 2 }}
             >
@@ -267,16 +268,18 @@ function Post() {
             <Stack
               direction="row"
               spacing={2}
-              sx={{ width: "100%", alignItems: "center" }}
+              sx={{ width: "100%", alignItems: "center", padding: 2 }}
             >
               {Array.from(tags).map((tag, i) => (
-                <BoxTag key={i}>
+                <BoxTag key={i} sx={{ padding: "1 0.5" }}>
                   <Typography variant="body2">{tag.name}</Typography>
                 </BoxTag>
               ))}
             </Stack>
           </BoxContent>
-          {AnswerDetails(answer)}
+
+          <AnswerDetails answer={answer} />
+
           <AnswerAction qid={qid} setAnswer={setAnswer} />
         </Box>
       </StackContent>

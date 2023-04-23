@@ -1,316 +1,127 @@
 export const dataLocation = [
-  {
-    label: "An Giang",
+  "An Giang",
 
-    index: "89",
-  },
-  {
-    label: "Kon Tum",
+  "Kon Tum",
 
-    index: "62",
-  },
-  {
-    label: "Đắk Nông",
+  "Đắk Nông",
 
-    index: "67",
-  },
-  {
-    label: "Sóc Trăng",
+  "Sóc Trăng",
 
-    index: "94",
-  },
-  {
-    label: "Bình Phước",
+  "Bình Phước",
 
-    index: "70",
-  },
-  {
-    label: "Hưng Yên",
+  "Hưng Yên",
 
-    index: "33",
-  },
-  {
-    label: "Thanh Hóa",
+  "Thanh Hóa",
 
-    index: "38",
-  },
-  {
-    label: "Quảng Trị",
+  "Quảng Trị",
 
-    index: "45",
-  },
-  {
-    label: "Tuyên Quang",
+  "Tuyên Quang",
 
-    index: "08",
-  },
-  {
-    label: "Quảng Ngãi",
+  "Quảng Ngãi",
 
-    index: "51",
-  },
-  {
-    label: "Hà Nội",
+  "Hà Nội",
 
-    index: "01",
-  },
-  {
-    label: "Lào Cai",
+  "Lào Cai",
 
-    index: "10",
-  },
-  {
-    label: "Vĩnh Long",
+  "Vĩnh Long",
 
-    index: "86",
-  },
-  {
-    label: "Lâm Đồng",
+  "Lâm Đồng",
 
-    index: "68",
-  },
-  {
-    label: "Bình Định",
+  "Bình Định",
 
-    index: "52",
-  },
-  {
-    label: "Nghệ An",
+  "Nghệ An",
 
-    index: "40",
-  },
-  {
-    label: "Kiên Giang",
+  "Kiên Giang",
 
-    index: "91",
-  },
-  {
-    label: "Hà Giang",
+  "Hà Giang",
 
-    index: "02",
-  },
-  {
-    label: "Phú Yên",
+  "Phú Yên",
 
-    index: "54",
-  },
-  {
-    label: "Lạng Sơn",
+  "Lạng Sơn",
 
-    index: "20",
-  },
-  {
-    label: "Đà Nẵng",
+  "Đà Nẵng",
 
-    index: "48",
-  },
-  {
-    label: "Sơn La",
+  "Sơn La",
 
-    index: "14",
-  },
-  {
-    label: "Tây Ninh",
+  "Tây Ninh",
 
-    index: "72",
-  },
-  {
-    label: "Nam Định",
+  "Nam Định",
 
-    index: "36",
-  },
-  {
-    label: "Lai Châu",
+  "Lai Châu",
 
-    index: "12",
-  },
-  {
-    label: "Bến Tre",
+  "Bến Tre",
 
-    index: "83",
-  },
-  {
-    label: "Khánh Hòa",
+  "Khánh Hòa",
 
-    index: "56",
-  },
-  {
-    label: "Bình Thuận",
+  "Bình Thuận",
 
-    index: "60",
-  },
-  {
-    label: "Cao Bằng",
+  "Cao Bằng",
 
-    index: "04",
-  },
-  {
-    label: "Hải Phòng",
-    index: "31",
-  },
-  {
-    label: "Ninh Bình",
+  "Hải Phòng",
 
-    index: "37",
-  },
-  {
-    label: "Yên Bái",
+  "Ninh Bình",
 
-    index: "15",
-  },
-  {
-    label: "Gia Lai",
+  "Yên Bái",
 
-    index: "64",
-  },
-  {
-    label: "Hoà Bình",
+  "Gia Lai",
 
-    index: "17",
-  },
-  {
-    label: "Bà Rịa - Vũng Tàu",
+  "Hoà Bình",
 
-    index: "77",
-  },
-  {
-    label: "Cà Mau",
+  "Bà Rịa - Vũng Tàu",
 
-    index: "96",
-  },
-  {
-    label: "Bình Dương",
+  "Cà Mau",
 
-    index: "74",
-  },
-  {
-    label: "Cần Thơ",
+  "Bình Dương",
 
-    index: "92",
-  },
-  {
-    label: "Thừa Thiên Huế",
+  "Cần Thơ",
 
-    index: "46",
-  },
-  {
-    label: "Đồng Nai",
+  "Thừa Thiên Huế",
 
-    index: "75",
-  },
-  {
-    label: "Tiền Giang",
+  "Đồng Nai",
 
-    index: "82",
-  },
-  {
-    label: "Điện Biên",
+  "Tiền Giang",
 
-    index: "11",
-  },
-  {
-    label: "Vĩnh Phúc",
+  "Điện Biên",
 
-    index: "26",
-  },
-  {
-    label: "Quảng Nam",
+  "Vĩnh Phúc",
 
-    index: "49",
-  },
-  {
-    label: "Đắk Lắk",
+  "Quảng Nam",
 
-    index: "66",
-  },
-  {
-    label: "Thái Nguyên",
+  "Đắk Lắk",
 
-    index: "19",
-  },
-  {
-    label: "Hải Dương",
+  "Thái Nguyên",
 
-    index: "30",
-  },
-  {
-    label: "Bạc Liêu",
+  "Hải Dương",
 
-    index: "95",
-  },
-  {
-    label: "Trà Vinh",
+  "Bạc Liêu",
 
-    index: "84",
-  },
-  {
-    label: "Thái Bình",
+  "Trà Vinh",
 
-    index: "34",
-  },
-  {
-    label: "Hà Tĩnh",
+  "Thái Bình",
 
-    index: "42",
-  },
-  {
-    label: "Ninh Thuận",
+  "Hà Tĩnh",
 
-    index: "58",
-  },
-  {
-    label: "Đồng Tháp",
+  "Ninh Thuận",
 
-    index: "87",
-  },
-  {
-    label: "Long An",
+  "Đồng Tháp",
 
-    index: "80",
-  },
-  {
-    label: "Hậu Giang",
+  "Long An",
 
-    index: "93",
-  },
-  {
-    label: "Quảng Ninh",
+  "Hậu Giang",
 
-    index: "22",
-  },
-  {
-    label: "Phú Thọ",
+  "Quảng Ninh",
 
-    index: "25",
-  },
-  {
-    label: "Quảng Bình",
+  "Phú Thọ",
 
-    index: "44",
-  },
-  {
-    label: "TP. Hồ Chí Minh",
+  "Quảng Bình",
 
-    index: "79",
-  },
-  {
-    label: "Hà Nam",
+  "TP. Hồ Chí Minh",
 
-    index: "35",
-  },
-  {
-    label: "Bắc Ninh",
+  "Hà Nam",
 
-    index: "27",
-  },
-  {
-    label: "Bắc Giang",
+  "Bắc Ninh",
 
-    index: "24",
-  },
-  {
-    label: "Bắc Kạn",
+  "Bắc Giang",
 
-    index: "06",
-  },
+  "Bắc Kạn",
 ];

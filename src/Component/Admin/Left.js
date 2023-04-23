@@ -26,6 +26,9 @@ function LeftAdmin() {
   }));
 
   const navigate = useNavigate();
+  const handleHome = () => {
+    navigate("/");
+  };
   const handleDB = () => {
     navigate("/admin");
   };
@@ -46,6 +49,7 @@ function LeftAdmin() {
         <Box>
           <List>
             <Box
+              onClick={handleHome}
               component="img"
               sx={{
                 height: 50,

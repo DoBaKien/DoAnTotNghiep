@@ -2,6 +2,7 @@ import { BoxContent, BoxUser } from "./Style";
 import {
   Avatar,
   Box,
+  CardMedia,
   CircularProgress,
   IconButton,
   Stack,
@@ -15,12 +16,14 @@ import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import HistoryIcon from "@mui/icons-material/History";
 import ReportIcon from "@mui/icons-material/Report";
-export const AnswerDetails = (answer) => {
+import { memo } from "react";
+
+function AnswerDetails(props) {
   const ad = () => {
-    if (answer && answer.length > 0) {
+    if (props.answer && props.answer.length > 0) {
       return (
         <>
-          {answer.map((item, i) => (
+          {props.answer.map((item, i) => (
             <BoxContent sx={{ marginTop: 2 }} key={i}>
               <Stack direction="row">
                 <Box
@@ -53,7 +56,7 @@ export const AnswerDetails = (answer) => {
                   </Tooltip>
                 </Box>
                 <Box sx={{ marginTop: 0.5 }}>
-                  <BoxUser direction="row" spacing={2}>
+                  <BoxUser direction="row" spacing={2} sx={{ marginBottom: 1 }}>
                     <Avatar>{item.user.name}</Avatar>
                     <Typography>{item.user.name}</Typography>
                   </BoxUser>
@@ -65,9 +68,12 @@ export const AnswerDetails = (answer) => {
                             <div>{parse(subItem.content)}</div>
                           </Box>
                         );
-                      } else {
+                      } else if (subItem.type === "code") {
                         return (
-                          <Box key={i}>
+                          <Box
+                            key={i}
+                            sx={{ width: { xs: "40vw", md: "50vw" } }}
+                          >
                             <SyntaxHighlighter
                               language={subItem.programLanguage}
                               style={atomOneDark}
@@ -76,7 +82,19 @@ export const AnswerDetails = (answer) => {
                             </SyntaxHighlighter>
                           </Box>
                         );
+                      } else if (subItem.type === "image") {
+                        return (
+                          <Box key={i} sx={{ marginBottom: 2 }}>
+                            <CardMedia
+                              sx={{ width: { xs: "40vw", md: "50vw" } }}
+                              alt=""
+                              component="img"
+                              src={subItem.content}
+                            ></CardMedia>
+                          </Box>
+                        );
                       }
+                      return null;
                     })}
                   </Box>
                 </Box>
@@ -85,13 +103,13 @@ export const AnswerDetails = (answer) => {
           ))}
         </>
       );
-    } else if (answer === "") {
+    } else if (props.answer === "") {
       return (
         <BoxContent>
           <CircularProgress />
         </BoxContent>
       );
-    } else if (answer.length === 0) {
+    } else if (props.answer.length === 0) {
       return (
         <BoxContent>
           <Typography variant="h6">Không có câu trả lời</Typography>
@@ -106,4 +124,5 @@ export const AnswerDetails = (answer) => {
       {ad()}
     </Box>
   );
-};
+}
+export default memo(AnswerDetails);

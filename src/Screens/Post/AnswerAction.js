@@ -25,15 +25,39 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { memo } from "react";
+import Cookies from "js-cookie";
+import Swal from "sweetalert2";
+import { Navigate } from "react-router-dom";
 
-function AnswerAction(qid, setAnswer) {
+function AnswerAction(props) {
   const { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
+
   const editor = useRef(null);
   const [post, setPost] = useState([{ id: 1, type: "text", content: "" }]);
   const [fileImage, setFileImage] = useState("");
   var hours = new Date().getHours();
 
+  const checkLog = () => {
+    if (Cookies.get("sessionCookie") === undefined) {
+      Swal.fire({
+        title: "Lỗi",
+        text: "Bạn phải đăng nhập trước",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "Đăng nhập",
+        cancelButtonText: "Hủy",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          return <Navigate to="/" />;
+        }
+      });
+    } else {
+      handleAnswer();
+    }
+  };
   const handleAdd = (e) => {
     setPost([...post, { id: post.length + 1, type: e, content: "" }]);
     window.scrollTo(0, document.body.scrollHeight);
@@ -111,12 +135,13 @@ function AnswerAction(qid, setAnswer) {
   const handleAnswer = () => {
     console.log(post);
     axios
-      .post(`/answer/create/${qid}`, {})
+      .post(`/answer/create/${props.qid}`, {})
       .then(function (response) {
         axios
           .post(`/answer/createDetail/${response.data}`, post)
           .then(function (response) {
-            console.log(response);
+            Swal.fire("Thành công", "Bạn trả lời thành công", "success");
+            setPost([{ id: 1, type: "text", content: "" }]);
             axios
               .post(`/answer/createActivityHistory/${response.data}`, {
                 action: "Trả lời",
@@ -130,18 +155,18 @@ function AnswerAction(qid, setAnswer) {
               });
             if (currentUser === "") {
               axios
-                .get(`answer/getAnswerDTOByQid/${qid}`)
+                .get(`answer/getAnswerDTOByQid/${props.qid}`)
                 .then(function (response) {
-                  setAnswer(response.data);
+                  props.setAnswer(response.data);
                 })
                 .catch(function (error) {
                   console.log(error);
                 });
             } else {
               axios
-                .get(`answer/getAnswerDTOByQidCk/${qid}`)
+                .get(`answer/getAnswerDTOByQidCk/${props.qid}`)
                 .then(function (response) {
-                  setAnswer(response.data);
+                  props.setAnswer(response.data);
                 })
                 .catch(function (error) {
                   console.log(error);
@@ -152,7 +177,7 @@ function AnswerAction(qid, setAnswer) {
             console.log(error);
           });
         axios
-          .post(`/question/createActivityHistory/${qid}`, {
+          .post(`/question/createActivityHistory/${props.qid}`, {
             action: "Trả lời",
             description: "Khởi tạo câu trả lời",
           })
@@ -166,13 +191,6 @@ function AnswerAction(qid, setAnswer) {
       .catch(function (error) {
         console.log(error);
       });
-  };
-  const checkLog = () => {
-    if (currentUser === "") {
-      console.log("asd");
-    } else {
-      console.log("dang nhap");
-    }
   };
 
   const Suit = (e, id, i, da) => {
@@ -276,27 +294,33 @@ function AnswerAction(qid, setAnswer) {
         })}
       </>
       <BoxContent sx={{ marginTop: 2 }}>
-        <Button
-          variant="contained"
-          sx={{ marginRight: 1 }}
-          onClick={() => handleAdd("text")}
+        <Stack
+          gap={1}
+          sx={{ justifyContent: "center", display: "flex" }}
+          direction={{ xs: "column", md: "row" }}
         >
-          Add Text
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ marginRight: 1 }}
-          onClick={() => handleAdd("code")}
-        >
-          Add code
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ marginRight: 1 }}
-          onClick={() => handleAdd("image")}
-        >
-          Add image
-        </Button>
+          <Button
+            variant="contained"
+            sx={{ marginRight: 1, width: 200 }}
+            onClick={() => handleAdd("text")}
+          >
+            Add Text
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ marginRight: 1, width: 200 }}
+            onClick={() => handleAdd("code")}
+          >
+            Add code
+          </Button>
+          <Button
+            variant="contained"
+            sx={{ marginRight: 1, width: 200 }}
+            onClick={() => handleAdd("image")}
+          >
+            Add image
+          </Button>
+        </Stack>
       </BoxContent>
       <BoxContent
         sx={{

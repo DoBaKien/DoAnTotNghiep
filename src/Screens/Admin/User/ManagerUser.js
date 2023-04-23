@@ -11,7 +11,8 @@ import { useState } from "react";
 import SecurityIcon from "@mui/icons-material/Security";
 
 import DeleteIcon from "@mui/icons-material/Delete";
-import FileCopyIcon from "@mui/icons-material/FileCopy";
+import { useNavigate } from "react-router-dom";
+
 function ManagerUser() {
   const { show, setShow } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
@@ -95,7 +96,7 @@ function ManagerUser() {
           <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />,
           <GridActionsCellItem
             icon={<SecurityIcon />}
-            label="Disable User"
+            label="Vô hiệu quá"
             showInMenu
             onClick={() => {}}
           />,
@@ -105,7 +106,7 @@ function ManagerUser() {
           actions.push(
             <GridActionsCellItem
               icon={<SecurityIcon />}
-              label="Quyền Admin"
+              label="Cấp Quyền Admin"
               showInMenu
               onClick={() => {
                 handleRoleAdmin(params.id);
@@ -116,7 +117,7 @@ function ManagerUser() {
           actions.push(
             <GridActionsCellItem
               icon={<SecurityIcon />}
-              label="Quyền User"
+              label="Cấp Quyền User"
               showInMenu
               onClick={() => {
                 handleRoleUser(params.id);
@@ -133,7 +134,10 @@ function ManagerUser() {
   function getRowId(row) {
     return row.uid;
   }
-
+  const navigate = useNavigate();
+  const handleOnCellClick = (params) => {
+    navigate(`/profile/${params.id}`);
+  };
   const datatable = () => {
     if (Array.isArray(users) && users.length !== 0) {
       return (
@@ -164,6 +168,7 @@ function ManagerUser() {
             initialState={{
               ...users.initialState,
             }}
+            onCellDoubleClick={handleOnCellClick}
             getRowHeight={() => "auto"}
             sx={{
               "&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell": {
