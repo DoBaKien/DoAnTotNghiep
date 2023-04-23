@@ -21,7 +21,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Header from "../../Component/Header/Header";
-import auth from "../../Assert/Config";
+import { auth } from "../../Assert/Config";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../Component/Auth/AuthContext";
 
@@ -106,7 +106,7 @@ function Login() {
           alignItems: "center",
           justifyContent: "center",
           display: "flex",
-          marginTop:5
+          marginTop: 5,
         }}
       >
         <BoxLogin>
@@ -131,7 +131,7 @@ function Login() {
           <Divider sx={{ margin: 5 }}>Hoặc</Divider>
 
           <Box>
-            <form noValidate autoComplete="on" onSubmit={handleSubmit}>
+            <form noValidate onSubmit={handleSubmit}>
               <TextField
                 label="Email"
                 variant="outlined"

@@ -4,7 +4,7 @@ import { ModalContent } from "./Style";
 import axios from "axios";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import auth from "../../Assert/Config";
+import { auth } from "../../Assert/Config";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 function Modal({ setModal, name, email, password }) {

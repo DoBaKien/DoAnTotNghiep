@@ -8,8 +8,16 @@ export const StackContent = styled(Stack)(({ theme }) => ({
 }));
 export const BoxContent = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
-  padding: 10,
+
   width: "60vw",
+}));
+export const BoxUser = styled(Stack)(({ theme }) => ({
+  border: theme.palette.mode === "light" ? "1px solid black" : "1px solid gray",
+  width: 200,
+  maxWidth: 500,
+  alignItems: "center",
+  borderRadius: 10,
+  padding: 5,
 }));
 export const DateV = (value) => {
   const dateObject = new Date(value);

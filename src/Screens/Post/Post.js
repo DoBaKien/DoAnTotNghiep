@@ -2,13 +2,20 @@ import Header from "../../Component/Header/Header";
 import LeftSide from "../../Component/LeftSide/LeftSide";
 import { BoxContent, DateV, StackContent } from "./Style";
 import { BoxHome, BoxTag } from "../../Assert/Style";
-import { Box, IconButton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  CardMedia,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
-import SyntaxHighlighter from "react-syntax-highlighter/dist/esm/default-highlight";
+import SyntaxHighlighter from "react-syntax-highlighter";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useContext } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -16,9 +23,11 @@ import Swal from "sweetalert2";
 import { AuthContext } from "../../Component/Auth/AuthContext";
 import HistoryIcon from "@mui/icons-material/History";
 import ReportIcon from "@mui/icons-material/Report";
-import { AnswerAction } from "./AnswerAction";
+
 import { AnswerDetails } from "./AnswerDetails";
 import parse from "html-react-parser";
+import AnswerAction from "./AnswerAction";
+
 function Post() {
   const { qid } = useParams();
   const [details, setDetails] = useState("");
@@ -75,33 +84,37 @@ function Post() {
         });
     }
 
-    axios
-      .get(`question/getTotalVoteValue/${qid}`)
-      .then(function (response) {
+    const GetTotalVoteValue = async () => {
+      try {
+        const response = await axios.get(`question/getTotalVoteValue/${qid}`);
         setVote(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    GetTotalVoteValue();
     if (currentUser === "") {
-      axios
-        .get(`answer/getAnswerDTOByQid/${qid}`)
-        .then(function (response) {
+      const GetAnswer = async () => {
+        try {
+          const response = await axios.get(`answer/getAnswerDTOByQid/${qid}`);
           setAnswer(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      GetAnswer();
     } else {
-      axios
-        .get(`answer/getAnswerDTOByQidCk/${qid}`)
-        .then(function (response) {
+      const GetAnswer = async () => {
+        try {
+          const response = await axios.get(`answer/getAnswerDTOByQidCk/${qid}`);
           setAnswer(response.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      GetAnswer();
     }
   }, [qid, currentUser]);
 
@@ -158,12 +171,17 @@ function Post() {
         <Box>
           <BoxContent sx={{ width: "60vw" }}>
             <Typography variant="h5">{title.title}</Typography>
-            <Stack direction="row" sx={{ marginTop: 2 }}>
+            <Stack
+              direction={{ xs: "column", md: "row" }}
+              // sx={{  }}
+              spacing={{ xs: 1, md: 4 }}
+              sx={{ textAlign: { xs: "center", md: "" }, marginTop: 2 }}
+            >
               {DateV(title.date)}
-              <Typography variant="subtitle1" sx={{ marginLeft: 8 }}>
+              <Typography variant="subtitle1">
                 Trạng thái: {title.status}
               </Typography>
-              <Typography variant="subtitle1" sx={{ marginLeft: 8 }}>
+              <Typography variant="subtitle1">
                 Người đăng: {user.name}
               </Typography>
             </Stack>
@@ -195,12 +213,18 @@ function Post() {
                 >
                   <SouthIcon />
                 </IconButton>
-                <IconButton>
-                  <HistoryIcon />
-                </IconButton>
-                <IconButton>
-                  <ReportIcon />
-                </IconButton>
+                <Link to={`/history/question/${qid}`}>
+                  <Tooltip title="Lịch sử chỉnh sửa" placement="left">
+                    <IconButton>
+                      <HistoryIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Link>
+                <Tooltip title="Báo cáo" placement="left">
+                  <IconButton>
+                    <ReportIcon />
+                  </IconButton>
+                </Tooltip>
               </Box>
               <Box sx={{ marginLeft: 3 }}>
                 {Array.from(details).map((detail, i) => {
@@ -210,18 +234,30 @@ function Post() {
                         <div>{parse(detail.content)}</div>
                       </Box>
                     );
-                  } else {
+                  } else if (detail.type === "code") {
                     return (
-                      <Box key={i} sx={{ marginBottom: 2 }}>
-                        <SyntaxHighlighter
-                          language={detail.programLanguage}
-                          style={atomOneDark}
-                        >
+                      <Box
+                        key={i}
+                        sx={{ width: { xs: "40vw", md: "50vw" }, marginTop: 2 }}
+                      >
+                        <SyntaxHighlighter language={"jsx"} style={atomOneDark}>
                           {detail.content}
                         </SyntaxHighlighter>
                       </Box>
                     );
+                  } else if (detail.type === "image") {
+                    return (
+                      <Box key={i} sx={{ marginBottom: 2 }}>
+                        <CardMedia
+                          alt=""
+                          component="img"
+                          src={detail.content}
+                          sx={{ width: { xs: "40vw", md: "50vw" } }}
+                        ></CardMedia>
+                      </Box>
+                    );
                   }
+                  return null;
                 })}
               </Box>
             </Stack>
@@ -240,8 +276,8 @@ function Post() {
               ))}
             </Stack>
           </BoxContent>
-          {AnswerDetails(qid, answer)}
-          {AnswerAction(qid, setAnswer)}
+          {AnswerDetails(answer)}
+          <AnswerAction qid={qid} setAnswer={setAnswer} />
         </Box>
       </StackContent>
     </BoxHome>

@@ -15,8 +15,8 @@ import { useState } from "react";
 import Avatar from "react-avatar-edit";
 import { useNavigate } from "react-router-dom";
 import { dataLocation } from "../../Assert/DataLocation";
+
 function EditPf() {
-  const [src, setScr] = useState(null);
   const [pre, setPre] = useState(null);
   const navigate = useNavigate();
   const onCrop = (view) => {
@@ -95,7 +95,9 @@ function EditPf() {
               height={200}
               onCrop={onCrop}
               onClose={onClose}
-              src={src}
+              src={null}
+              label="Choose avatar"
+              hidden
             />
           </Box>
           <Box

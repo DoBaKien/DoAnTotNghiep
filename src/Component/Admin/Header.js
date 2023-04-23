@@ -25,7 +25,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useContext } from "react";
 import { ThemeUseContext } from "../Darkmode/ThemeUseContext";
 import { MaterialUISwitch } from "../Header/Style";
-import auth from "../../Assert/Config";
+import { auth } from "../../Assert/Config";
 import Cookies from "js-cookie";
 function Header({ show, setShow }) {
   const navigate = useNavigate();

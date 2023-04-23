@@ -18,12 +18,23 @@ import { BoxContent, BoxNav } from "../CreatePost/Style";
 import CloseIcon from "@mui/icons-material/Close";
 import { ProLanguage } from "../../Assert/DataProLanguage";
 import axios from "axios";
+import { PhotoCamera } from "@mui/icons-material";
+import { storage } from "../../Assert/Config";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import Swal from "sweetalert2";
 
 function CreatePost() {
   const [tags, setTags] = useState("");
   const [post, setPost] = useState([{ id: 1, type: "text", content: "" }]);
   const editor = useRef(null);
   const [title, setTitle] = useState("");
+  const [fileImage, setFileImage] = useState("");
+
   useEffect(() => {
     axios
       .get("/tag/getAllTag")
@@ -50,7 +61,6 @@ function CreatePost() {
   }
 
   const handleP = () => {
-    console.log(post);
     axios
       .post("/question/create", {
         title: title,
@@ -68,6 +78,7 @@ function CreatePost() {
           .post(`/question/createDetail/${response.data}`, post)
           .then(function (response) {
             console.log(response);
+            Swal.fire("Thành công", `Bạn đăng bài thành công`, "success");
           })
           .catch(function (error) {
             console.log(error);
@@ -75,7 +86,7 @@ function CreatePost() {
         axios
           .post(`/question/createActivityHistory/${response.data}`, {
             action: "Đặt câu hỏi",
-            description:"Khởi tạo câu hỏi"
+            description: "Khởi tạo câu hỏi",
           })
           .then(function (response) {
             console.log(response);
@@ -88,6 +99,10 @@ function CreatePost() {
         console.log(error);
       });
   };
+  function deleteUser(id) {
+    const newPost = post.filter((user) => user.id !== id);
+    setPost(newPost);
+  }
 
   function CaseDel(id) {
     if (id !== 1) {
@@ -99,10 +114,60 @@ function CreatePost() {
     }
   }
 
+  const metadata = {
+    contentType: "image/jpeg",
+  };
+
+  function deleteImage(id) {
+    const newPost = post.filter((user) => user.id !== id);
+    setPost(newPost);
+    const desertRef = ref(storage, "images/" + fileImage);
+    deleteObject(desertRef)
+      .then(() => {
+        console.log("asd");
+        setFileImage("");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  const uploadImage = async (file, index, key) => {
+    const storageRef = ref(storage, "images/" + file.name);
+    setFileImage(file.name);
+    const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        // A full list of error codes is available at
+        // https://firebase.google.com/docs/storage/web/handle-errors
+        console.log(error);
+      },
+      () => {
+        // Upload completed successfully, now we can get the download URL
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          const updatedUsers = [...post];
+          updatedUsers[index][key] = downloadURL;
+          setPost(updatedUsers);
+        });
+      }
+    );
+  };
+  const handleImageUpload = async (e, index, key) => {
+    const file = e.target.files[0];
+    await uploadImage(file, index, key);
+  };
   const handleAdd = (e) => {
     setPost([...post, { id: post.length + 1, type: e, content: "" }]);
   };
-  const Suit = (e, id, i) => {
+  const Suit = (e, id, i, da) => {
     if (e === "code") {
       return (
         <Box>
@@ -133,7 +198,7 @@ function CreatePost() {
           />
         </Box>
       );
-    } else {
+    } else if (e === "text") {
       return (
         <Box>
           <Stack direction="row" sx={{ alignItems: "center" }}>
@@ -154,13 +219,40 @@ function CreatePost() {
           </Box>
         </Box>
       );
+    } else if (e === "image") {
+      return (
+        <Box>
+          <IconButton color="error" onClick={() => deleteImage(id)}>
+            <CloseIcon />
+          </IconButton>
+          <Button
+            variant="contained"
+            component="label"
+            startIcon={<PhotoCamera />}
+            sx={{ marginLeft: 5 }}
+          >
+            Upload
+            <input
+              hidden
+              accept="image/*"
+              multiple
+              type="file"
+              onChange={(e) => handleImageUpload(e, i, "content")}
+            />
+          </Button>
+
+          <Box
+            sx={{
+              justifyContent: "center",
+              display: "flex",
+            }}
+          >
+            {da && <img src={da} alt="Selected" style={{ width: "50%" }} />}
+          </Box>
+        </Box>
+      );
     }
   };
-
-  function deleteUser(id) {
-    const newPost = post.filter((user) => user.id !== id);
-    setPost(newPost);
-  }
 
   const TagBox = () => {
     if (tags && tags.length > 0) {
@@ -208,7 +300,7 @@ function CreatePost() {
               },
             }}
           >
-            {Suit(data.type, data.id, i)}
+            {Suit(data.type, data.id, i, data.content)}
           </BoxContent>
         );
       })}
@@ -230,6 +322,13 @@ function CreatePost() {
           onClick={() => handleAdd("code")}
         >
           Add code
+        </Button>
+        <Button
+          variant="contained"
+          sx={{ marginRight: 1 }}
+          onClick={() => handleAdd("image")}
+        >
+          Add image
         </Button>
       </BoxContent>
       <BoxContent
