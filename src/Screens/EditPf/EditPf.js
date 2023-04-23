@@ -25,7 +25,8 @@ function EditPf() {
   const [location, setLocation] = useState(dataLocation[0]);
   const [pre, setPre] = useState(null);
   const navigate = useNavigate();
-
+  const maxLength = 200;
+  const count = about.length;
   useEffect(() => {
     axios
       .get(`/user/findByUid/${id}`)
@@ -112,13 +113,12 @@ function EditPf() {
               sx={{ marginTop: 1 }}
               placeholder="Về bản thân"
               fullWidth
-              rows={4}
+              rows={2}
               value={about}
+              inputProps={{ maxLength: maxLength }}
               onChange={(e) => setAbout(e.target.value)}
+              helperText={`Còn lại ${maxLength - count}/${maxLength} ký tự`}
             />
-            <Typography variant="body2" color="gray">
-              Giới hạn 200 từ
-            </Typography>
           </Box>
           <Stack
             direction={{ xs: "column", lg: "row" }}
