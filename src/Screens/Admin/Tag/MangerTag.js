@@ -1,12 +1,14 @@
 import {
   Box,
+  Button,
   CircularProgress,
   IconButton,
   Tooltip,
   Typography,
 } from "@mui/material";
 import Header from "../../../Component/Admin/Header";
-import { DataGrid, GridActionsCellItem, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import AddIcon from "@mui/icons-material/Add";
 import { useContext } from "react";
 import { AuthContext } from "../../../Component/Auth/AuthContext";
 import { BoxHome, ExpandableCell, StackContent } from "../Style";
@@ -16,11 +18,15 @@ import axios from "axios";
 import { useState } from "react";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ModalBox from "./ModalBox";
+import ModalEdit from "./ModalEdit";
+
 function ManagerTag() {
   const { show, setShow } = useContext(AuthContext);
-
   const [tags, setTags] = useState("");
-
+  const [modal, setModal] = useState(false);
+  const [modalE, setModalE] = useState(false);
+  const [id, setId] = useState("");
   useEffect(() => {
     axios
       .get("/tag/getAllTag")
@@ -31,6 +37,11 @@ function ManagerTag() {
         console.log(error);
       });
   }, []);
+
+  const handleEdit = (value) => {
+    setId(value);
+    setModalE(!modalE);
+  };
 
   const columns = [
     { field: "tid", headerName: "ID", width: 100 },
@@ -52,13 +63,18 @@ function ManagerTag() {
       width: 100,
       getActions: (params) => {
         let actions = [
-          <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Vô hiệu quá"
-            showInMenu
-            onClick={() => {}}
-          />,
+          <>
+            <Tooltip title="Xóa thẻ" placement="left">
+              <IconButton>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Sửa thẻ" placement="right">
+              <IconButton onClick={() => handleEdit(params.id)}>
+                <DriveFileRenameOutlineIcon />
+              </IconButton>
+            </Tooltip>
+          </>,
         ];
 
         return actions;
@@ -143,6 +159,15 @@ function ManagerTag() {
             <Box sx={{ padding: "5px 5px 5px" }}>
               <Typography variant="h4">Quản lý thẻ</Typography>
             </Box>
+            <Button
+              size="small"
+              startIcon={<AddIcon />}
+              onClick={() => setModal(!modal)}
+            >
+              Thêm thẻ
+            </Button>
+            <ModalBox setModal={setModal} modal={modal} />
+            <ModalEdit setModalE={setModalE} modalE={modalE} id={id} />
             {datatable()}
           </Box>
         </Box>

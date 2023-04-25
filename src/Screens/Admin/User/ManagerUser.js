@@ -1,4 +1,10 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import Header from "../../../Component/Admin/Header";
 import { DataGrid, GridActionsCellItem, GridToolbar } from "@mui/x-data-grid";
 import { useContext } from "react";
@@ -9,14 +15,20 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
 import SecurityIcon from "@mui/icons-material/Security";
-
+import PersonOffIcon from "@mui/icons-material/PersonOff";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import ModalEdit from "./ModalEdit";
 
 function ManagerUser() {
   const { show, setShow } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [pageSize, setPageSize] = useState(10);
+  const [id, setId] = useState("");
+  const [modal, setModal] = useState(false);
+
   useEffect(() => {
     axios
       .get(`/user/getAllUser`)
@@ -29,10 +41,10 @@ function ManagerUser() {
   }, []);
 
   const handleRoleAdmin = (id) => {
-    console.log(id);
     axios
       .post(`/account/admin/adminClaim/${id}`)
       .then(function (response) {
+        Swal.fire("Thành công", "Cấp quyền Admin thành công", "success");
         axios
           .get(`/user/getAllUser`)
           .then(function (response) {
@@ -50,6 +62,7 @@ function ManagerUser() {
     axios
       .post(`/account/admin/userClaim/${id}`)
       .then(function (response) {
+        Swal.fire("Thành công", "Cấp quyền User thành công", "success");
         axios
           .get(`/user/getAllUser`)
           .then(function (response) {
@@ -63,6 +76,11 @@ function ManagerUser() {
         console.log(error);
       });
   };
+  const handleEdit = (value) => {
+    setId(value);
+    setModal(!modal);
+  };
+
   const columns = [
     { field: "uid", headerName: "ID", width: 200 },
     {
@@ -74,7 +92,6 @@ function ManagerUser() {
       field: "email",
       headerName: "Email",
       width: 300,
-      editable: true,
     },
     {
       field: "location",
@@ -93,10 +110,22 @@ function ManagerUser() {
       width: 80,
       getActions: (params) => {
         let actions = [
-          <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />,
+          <>
+            <Tooltip title="Sửa ngươi dùng" placement="left">
+              <IconButton onClick={() => handleEdit(params.id)}>
+                <DriveFileRenameOutlineIcon />
+              </IconButton>
+            </Tooltip>
+          </>,
           <GridActionsCellItem
-            icon={<SecurityIcon />}
+            icon={<PersonOffIcon />}
             label="Vô hiệu quá"
+            showInMenu
+            onClick={() => {}}
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Xóa người dùng"
             showInMenu
             onClick={() => {}}
           />,
@@ -141,7 +170,7 @@ function ManagerUser() {
   const datatable = () => {
     if (Array.isArray(users) && users.length !== 0) {
       return (
-        <Box height="80vh">
+        <Box height="80vh" sx={{ zIndex: 1 }}>
           <DataGrid
             rowHeight={150}
             rows={users}
@@ -217,6 +246,7 @@ function ManagerUser() {
             <Box sx={{ padding: "5px 5px 5px" }}>
               <Typography variant="h4">Quản lý người dùng</Typography>
             </Box>
+            <ModalEdit setModal={setModal} modal={modal} id={id} />
             {datatable()}
           </Box>
         </Box>

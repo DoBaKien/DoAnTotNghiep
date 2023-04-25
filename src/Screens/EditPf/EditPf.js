@@ -26,7 +26,10 @@ function EditPf() {
   const [pre, setPre] = useState(null);
   const navigate = useNavigate();
   const maxLength = 200;
-  const count = about.length;
+  let count = 0;
+  if (about) {
+    count = about.length;
+  }
   const maxLengthName = 30;
   const countName = name.length;
   useEffect(() => {
@@ -37,7 +40,6 @@ function EditPf() {
         setAbout(response.data.about);
         setLocation(response.data.location);
         setPre(response.data.avatar);
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -121,7 +123,7 @@ function EditPf() {
               placeholder="Về bản thân"
               fullWidth
               rows={2}
-              value={about}
+              value={about || ""}
               inputProps={{ maxLength: maxLength }}
               onChange={(e) => setAbout(e.target.value)}
               helperText={`Còn lại ${maxLength - count}/${maxLength} ký tự`}

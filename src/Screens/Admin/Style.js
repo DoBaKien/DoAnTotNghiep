@@ -1,4 +1,4 @@
-import { Box, Paper, Stack, styled, Link } from "@mui/material";
+import { Box, Paper, Stack, styled, Link, Button } from "@mui/material";
 import { useState } from "react";
 
 import PropTypes from "prop-types";
@@ -45,3 +45,15 @@ export const ValueDate = ({ value }) => {
   const date = `${hours}:${minutes} - ${day}/${month}/${year}`;
   return <div>{date}</div>;
 };
+export const ModalContent = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  top: "40%",
+  left: "50%",
+  maxWidth: "600px",
+  minWidth: "300px",
+  borderRadius: "3px",
+  padding: "14px 28px",
+  lineHeight: 1.4,
+  transform: "translate(-50%, -50%)",
+  backgroundColor: theme.palette.mode === "light" ? "white" : "#636363",
+}));

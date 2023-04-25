@@ -1,4 +1,5 @@
 export const dataLocation = [
+  "",
   "An Giang",
 
   "Kon Tum",
