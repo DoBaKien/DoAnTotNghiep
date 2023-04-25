@@ -1,6 +1,12 @@
-import { Box, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import Header from "../../../Component/Admin/Header";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridActionsCellItem, GridToolbar } from "@mui/x-data-grid";
 import { useContext } from "react";
 import { AuthContext } from "../../../Component/Auth/AuthContext";
 import { BoxHome, ExpandableCell, StackContent } from "../Style";
@@ -8,7 +14,8 @@ import LeftAdmin from "../../../Component/Admin/Left";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
-
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import DeleteIcon from "@mui/icons-material/Delete";
 function ManagerTag() {
   const { show, setShow } = useContext(AuthContext);
 
@@ -19,7 +26,6 @@ function ManagerTag() {
       .get("/tag/getAllTag")
       .then(function (response) {
         setTags(response.data);
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -27,7 +33,7 @@ function ManagerTag() {
   }, []);
 
   const columns = [
-    { field: "tid", headerName: "ID", width: 280 },
+    { field: "tid", headerName: "ID", width: 100 },
     {
       field: "name",
       headerName: "Tên",
@@ -36,10 +42,30 @@ function ManagerTag() {
     {
       field: "description",
       headerName: "Mô tả",
-      width: 450,
+      width: 500,
       renderCell: (params) => <ExpandableCell {...params} />,
     },
+    {
+      field: "actions",
+      headerName: "Action",
+      type: "actions",
+      width: 100,
+      getActions: (params) => {
+        let actions = [
+          <GridActionsCellItem icon={<DeleteIcon />} label="Delete" />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Vô hiệu quá"
+            showInMenu
+            onClick={() => {}}
+          />,
+        ];
+
+        return actions;
+      },
+    },
   ];
+
   function getRowId(row) {
     return row.tid;
   }
@@ -82,6 +108,19 @@ function ManagerTag() {
               },
             }}
           />
+        </Box>
+      );
+    } else {
+      return (
+        <Box
+          sx={{
+            height: "80vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
         </Box>
       );
     }

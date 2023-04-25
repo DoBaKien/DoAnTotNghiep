@@ -41,14 +41,18 @@ function Post() {
   const [answer, setAnswer] = useState("");
 
   useEffect(() => {
-    axios
-      .get(`question/getQuestionDetailByQid/${qid}`)
-      .then(function (response) {
+    const getQuestionDetailByQid = async () => {
+      try {
+        const response = await axios.get(
+          `question/getQuestionDetailByQid/${qid}`
+        );
         setDetails(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getQuestionDetailByQid();
+
     axios
       .get(`question/getQuestionById/${qid}`)
       .then(function (response) {
@@ -65,14 +69,16 @@ function Post() {
       .catch(function (error) {
         console.log(error);
       });
-    axios
-      .get(`question/getQuestionTagByQid/${qid}`)
-      .then(function (response) {
+
+    const getQuestionTagByQid = async () => {
+      try {
+        const response = await axios.get(`question/getQuestionTagByQid/${qid}`);
         setTags(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getQuestionTagByQid();
 
     if (currentUser !== "") {
       const getUserVoteValue = async () => {

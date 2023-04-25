@@ -27,6 +27,8 @@ function EditPf() {
   const navigate = useNavigate();
   const maxLength = 200;
   const count = about.length;
+  const maxLengthName = 30;
+  const countName = name.length;
   useEffect(() => {
     axios
       .get(`/user/findByUid/${id}`)
@@ -49,7 +51,7 @@ function EditPf() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(name, location, about);
+
     axios
       .put(`user/updateUser`, {
         name: name,
@@ -59,6 +61,7 @@ function EditPf() {
       })
       .then((res) => {
         Swal.fire("Thành công", "Bạn cập nhật thông tin thành công", "success");
+        navigate(-1);
       })
       .catch(function (error) {
         console.log(error);
@@ -85,6 +88,10 @@ function EditPf() {
               fullWidth
               value={name}
               onChange={(e) => setName(e.target.value)}
+              inputProps={{ maxLength: maxLengthName }}
+              helperText={`Còn lại ${
+                maxLengthName - countName
+              }/${maxLengthName} ký tự`}
             />
           </Box>
           <Box sx={{ marginTop: 3 }}>

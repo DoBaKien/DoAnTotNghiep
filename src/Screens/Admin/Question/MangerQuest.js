@@ -32,7 +32,7 @@ function ManagerQuest() {
     {
       field: "id",
       headerName: "ID",
-      width: 100,
+      width: 80,
     },
     {
       field: "title",

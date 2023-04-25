@@ -17,7 +17,7 @@ import SouthIcon from "@mui/icons-material/South";
 import HistoryIcon from "@mui/icons-material/History";
 import ReportIcon from "@mui/icons-material/Report";
 import { memo } from "react";
-
+import "../Home/Home.css";
 function AnswerDetails(props) {
   const ad = () => {
     if (props.answer && props.answer.length > 0) {
@@ -56,9 +56,16 @@ function AnswerDetails(props) {
                   </Tooltip>
                 </Box>
                 <Box sx={{ marginTop: 0.5 }}>
-                  <BoxUser direction="row" spacing={2} sx={{ marginBottom: 1 }}>
-                    <Avatar>{item.user.name}</Avatar>
-                    <Typography>{item.user.name}</Typography>
+                  <BoxUser
+                    direction="row"
+                    spacing={2}
+                    sx={{ marginBottom: 1, width: { xs: 150, md: 300 } }}
+                  >
+                    <Avatar
+                      alt="Avatar"
+                      src={item.user.avatar || item.user.name}
+                    />
+                    <Typography className="title">{item.user.name}</Typography>
                   </BoxUser>
                   <Box>
                     {item.answerDetails.map((subItem, i) => {

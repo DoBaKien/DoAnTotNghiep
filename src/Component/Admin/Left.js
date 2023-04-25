@@ -1,5 +1,6 @@
 import {
   Box,
+  Collapse,
   Divider,
   List,
   ListItem,
@@ -15,7 +16,10 @@ import ReportIcon from "@mui/icons-material/Report";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { useNavigate } from "react-router-dom";
 import logo from "../../Assert/Img/logo.png";
-
+import { useState } from "react";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import CommentIcon from "@mui/icons-material/Comment";
+import AnnouncementIcon from "@mui/icons-material/Announcement";
 function LeftAdmin() {
   const BoxSide = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
@@ -26,6 +30,11 @@ function LeftAdmin() {
   }));
 
   const navigate = useNavigate();
+  const [open, setOpen] = useState(true);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
   const handleHome = () => {
     navigate("/");
   };
@@ -35,7 +44,7 @@ function LeftAdmin() {
   const handleQuestion = () => {
     navigate("/managerquestion");
   };
-  const handleUsers = () => {};
+
   const handleUser = () => {
     navigate("/manageruser");
   };
@@ -97,14 +106,35 @@ function LeftAdmin() {
               </ListItemButton>
             </ListItem>
             <Divider />
-            <ListItem disablePadding>
-              <ListItemButton onClick={handleUsers}>
-                <ListItemIcon>
-                  <ReportIcon />
-                </ListItemIcon>
-                <ListItemText primary="Quản Lý Báo Cáo" />
-              </ListItemButton>
-            </ListItem>
+            <ListItemButton onClick={handleClick}>
+              <ListItemIcon>
+                <ReportIcon />
+              </ListItemIcon>
+              <ListItemText primary="Quản Lý Báo cáo" />
+              {open ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <QuestionAnswerIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Báo Cáo Câu Hỏi" />
+                </ListItemButton>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <AnnouncementIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Báo Cáo Trả Lời" />
+                </ListItemButton>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <CommentIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Báo Cáo Bình Luận" />
+                </ListItemButton>
+              </List>
+            </Collapse>
             <Divider />
           </List>
         </Box>

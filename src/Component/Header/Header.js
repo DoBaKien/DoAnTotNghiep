@@ -11,7 +11,7 @@ import {
   MenuItem,
   Tooltip,
 } from "@mui/material";
-import { useContext, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import { ThemeUseContext } from "../Darkmode/ThemeUseContext";
 import { MaterialUISwitch, StackHeader, Search, BtnLogin } from "./Style";
 import logo from "../../Assert/Img/logo.png";
@@ -25,6 +25,7 @@ import Cookies from "js-cookie";
 
 import { AuthContext } from "../Auth/AuthContext";
 import { auth } from "../../Assert/Config";
+import axios from "axios";
 
 function Header() {
   const { currentUser, test, setTest } = useContext(AuthContext);
@@ -34,6 +35,21 @@ function Header() {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const cookie = Cookies.get("sessionCookie");
+  const [data, setData] = useState("");
+
+  useEffect(() => {
+    const findByUid = async () => {
+      try {
+        const response = await axios.get(`/user/findByUid/${currentUser}`);
+        setData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    if (currentUser !== "") {
+      findByUid();
+    }
+  }, [currentUser]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -100,7 +116,15 @@ function Header() {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
-              <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+              {data.avatar !== null ? (
+                <Avatar
+                  alt="Avatar"
+                  src={data.avatar}
+                  sx={{ width: 32, height: 32 }}
+                />
+              ) : (
+                <Avatar>V</Avatar>
+              )}
             </IconButton>
           </Tooltip>
         </Box>
@@ -188,7 +212,12 @@ function Header() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem onClick={handlePf}>
-          <Avatar /> Trang cá nhân
+          {data.avatar !== null ? (
+            <Avatar alt="Avatar" src={data.avatar} />
+          ) : (
+            <Avatar>V</Avatar>
+          )}
+          Trang cá nhân
         </MenuItem>
         <MenuItem sx={{ justifyContent: "center" }}>
           Chế độ tối
@@ -216,4 +245,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default memo(Header);

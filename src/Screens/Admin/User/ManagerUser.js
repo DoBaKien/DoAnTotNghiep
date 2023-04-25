@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import Header from "../../../Component/Admin/Header";
 import { DataGrid, GridActionsCellItem, GridToolbar } from "@mui/x-data-grid";
 import { useContext } from "react";
@@ -182,6 +182,19 @@ function ManagerUser() {
               },
             }}
           />
+        </Box>
+      );
+    } else {
+      return (
+        <Box
+          sx={{
+            height: "80vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
         </Box>
       );
     }

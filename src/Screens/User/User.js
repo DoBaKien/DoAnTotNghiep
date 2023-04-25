@@ -16,7 +16,7 @@ import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import "../Home/Home.css";
 function User() {
   const navigation = useNavigate();
   const [users, setUsers] = useState("");
@@ -85,20 +85,27 @@ function User() {
                             display: "flex",
                           }}
                         >
-                          <Avatar sx={{ width: 50, height: 50 }}>
-                            {user.name}
-                          </Avatar>
+                          <Avatar
+                            alt="Avatar"
+                            src={user.avatar || user.name}
+                            sx={{ width: 50, height: 50 }}
+                          />
                         </Box>
                         <Box
                           sx={{
-                            width: "100%",
                             height: 60,
                           }}
                         >
-                          <Typography sx={{ marginBottom: 1 }}>
+                          <Typography
+                            variant="body1"
+                            sx={{ marginBottom: 0.5 }}
+                            className="title"
+                          >
                             {user.name}
                           </Typography>
-                          <Typography>Location</Typography>
+                          <Typography variant="caption">
+                            {user.location || "Không có"}
+                          </Typography>
                         </Box>
                       </Stack>
                     </PaperUser>

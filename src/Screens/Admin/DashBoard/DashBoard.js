@@ -1,12 +1,12 @@
 import { Box, Typography } from "@mui/material";
-import Header from "../../Component/Admin/Header";
-import LeftAdmin from "../../Component/Admin/Left";
-import { BoxHome, StackContent, Item } from "./Style";
+import Header from "../../../Component/Admin/Header";
+import LeftAdmin from "../../../Component/Admin/Left";
+import { BoxHome, StackContent, Item } from "../Style";
 
 import Grid from "@mui/material/Unstable_Grid2";
 import { useContext } from "react";
-import { AuthContext } from "../../Component/Auth/AuthContext";
-function AdminPage() {
+import { AuthContext } from "../../../Component/Auth/AuthContext";
+function DashBoard() {
   const { show, setShow } = useContext(AuthContext);
 
   return (
@@ -45,4 +45,4 @@ function AdminPage() {
   );
 }
 
-export default AdminPage;
+export default DashBoard;

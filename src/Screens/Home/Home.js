@@ -145,7 +145,7 @@ function Home() {
       <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
         <Box>
-          <StackCreate direction="row" spacing={2}>
+          <StackCreate direction="row" spacing={{ xs: 1, lg: 2 }}>
             <Box>
               <IconButton>
                 <StyledBadge
