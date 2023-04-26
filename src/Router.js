@@ -25,6 +25,7 @@ import {
   UserPageCheck,
 } from "./Assert/AdminCheck";
 import History from "./Screens/History/History";
+import EditPost from "./Screens/EditPost/EditPost";
 
 function Router() {
   const context = useContext(ThemeUseContext);
@@ -56,6 +57,7 @@ function Router() {
         <Route path="/tagdetail" element={<TagDetails />} />
         <Route path="/history/:type/:id" element={<History />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/editpost/:qid" element={<EditPost />} />
 
         <Route path="/admin" element={<AdminCheck role={role} />} />
         <Route path="/manageruser" element={<UserPageCheck role={role} />} />

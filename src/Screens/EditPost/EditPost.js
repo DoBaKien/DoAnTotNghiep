@@ -26,17 +26,22 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import Swal from "sweetalert2";
-import Cookies from "js-cookie";
-import { Navigate } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../Component/Auth/AuthContext";
+import NotFound from "../../Component/NotFound/NotFound";
 
-function CreatePost() {
+function EditPost() {
   const { currentUser } = useContext(AuthContext);
+  const { qid } = useParams();
   const [tags, setTags] = useState("");
-  const [post, setPost] = useState([{ id: 1, type: "text", content: "" }]);
+  const [tagsSelect, setTagsSelect] = useState("");
+  const [user, setUser] = useState("");
+  const [post, setPost] = useState([
+    { qdid: 1, type: "text", content: "", qid: qid },
+  ]);
   const editor = useRef(null);
   const [title, setTitle] = useState("");
+
   const [fileImage, setFileImage] = useState("");
 
   useEffect(() => {
@@ -48,7 +53,41 @@ function CreatePost() {
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+    const getQuestionTagByQid = async () => {
+      try {
+        const response = await axios.get(`question/getQuestionTagByQid/${qid}`);
+        setTagsSelect(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getQuestionTagByQid();
+    axios
+      .get(`question/getQuestionById/${qid}`)
+      .then(function (response) {
+        setTitle(response.data.title);
+        setUser(response.data.uid);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    const getQuestionDetailByQid = async () => {
+      try {
+        const response = await axios.get(
+          `question/getQuestionDetailByQid/${qid}`
+        );
+        setPost(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getQuestionDetailByQid();
+  }, [qid]);
+
+  const handlePost = () => {
+    console.log(post);
+  };
 
   const [personName, setPersonName] = useState([]);
   const handleChange = (event) => {
@@ -64,65 +103,9 @@ function CreatePost() {
     setPost(updatedUsers);
   }
 
-  const handleP = () => {
-    if (Cookies.get("sessionCookie") !== undefined) {
-      axios
-        .post("/question/create", {
-          title: title,
-        })
-        .then(function (response) {
-          axios
-            .post(`/question/modifyTagPost/${response.data}`, personName)
-            .then(function (response) {
-              console.log(response);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-          axios
-            .post(`/question/createDetail/${response.data}`, post)
-            .then(function (response) {
-              console.log(response);
-              Swal.fire("Thành công", `Bạn đăng bài thành công`, "success");
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-          axios
-            .post(`/question/createActivityHistory/${response.data}`, {
-              action: "Đặt câu hỏi",
-              description: "Khởi tạo câu hỏi",
-            })
-            .then(function (response) {
-              console.log(response);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    } else {
-      Swal.fire({
-        title: "Lỗi",
-        text: "Bạn phải đăng nhập trước",
-        icon: "error",
-        showCancelButton: true,
-        confirmButtonText: "Đăng nhập",
-        cancelButtonText: "Hủy",
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        reverseButtons: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          return <Navigate to="/" />;
-        }
-      });
-    }
-  };
   function deleteUser(id) {
-    const newPost = post.filter((user) => user.id !== id);
+    console.log(id);
+    const newPost = post.filter((user) => user.qdid !== id);
     setPost(newPost);
   }
 
@@ -140,22 +123,35 @@ function CreatePost() {
     contentType: "image/jpeg",
   };
 
-  function deleteImage(id) {
-    const newPost = post.filter((user) => user.id !== id);
+  function deleteImage(id, language) {
+    const newPost = post.filter((user) => user.qdid !== id);
     setPost(newPost);
-    const desertRef = ref(storage, "images/" + fileImage);
-    deleteObject(desertRef)
-      .then(() => {
-        console.log("asd");
-        setFileImage("");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    console.log(language);
+    if (language === "") {
+      const desertRef = ref(storage, "images/" + fileImage);
+      deleteObject(desertRef)
+        .then(() => {
+          console.log("asd");
+          setFileImage("");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      const desertRef = ref(storage, "images/" + language);
+      deleteObject(desertRef)
+        .then(() => {
+          console.log("asd");
+          setFileImage("");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }
   const uploadImage = async (file, index, key) => {
-    const storageRef = ref(storage, "images/" + file.name + currentUser);
-    setFileImage(file.name + currentUser);
+    const storageRef = ref(storage, "images/" + file.name);
+    setFileImage(file.name);
     const uploadTask = uploadBytesResumable(storageRef, file, metadata);
 
     uploadTask.on(
@@ -177,7 +173,8 @@ function CreatePost() {
           console.log("File available at", downloadURL);
           const updatedUsers = [...post];
           updatedUsers[index][key] = downloadURL;
-          updatedUsers[index]["programLanguage"] = file.name + currentUser;
+          updatedUsers[index]["programLanguage"] = file.name;
+
           setPost(updatedUsers);
         });
       }
@@ -185,12 +182,13 @@ function CreatePost() {
   };
   const handleImageUpload = async (e, index, key) => {
     const file = e.target.files[0];
+    console.log(file.name);
     await uploadImage(file, index, key);
   };
   const handleAdd = (e) => {
-    setPost([...post, { id: post.length + 1, type: e, content: "" }]);
+    setPost([...post, { id: post.length + 1, type: e, content: "", qid: qid }]);
   };
-  const Suit = (e, id, i, da) => {
+  const Suit = (e, id, i, da, language) => {
     if (e === "code") {
       return (
         <Box>
@@ -203,6 +201,7 @@ function CreatePost() {
               disablePortal
               options={ProLanguage}
               sx={{ width: 200, marginLeft: 5, marginBottom: 1 }}
+              value={language}
               onInputChange={(event, newValue) => {
                 handleInputChange(newValue, i, "programLanguage");
               }}
@@ -216,6 +215,7 @@ function CreatePost() {
             multiline
             rows={4}
             fullWidth
+            value={da}
             placeholder="Enter code"
             onChange={(e) => handleInputChange(e.target.value, i, "content")}
           />
@@ -232,6 +232,7 @@ function CreatePost() {
             <JoditEditor
               ref={editor}
               tabIndex={1}
+              value={da}
               onBlur={(newContent) =>
                 handleInputChange(newContent, i, "content")
               }
@@ -245,7 +246,7 @@ function CreatePost() {
     } else if (e === "image") {
       return (
         <Box>
-          <IconButton color="error" onClick={() => deleteImage(id)}>
+          <IconButton color="error" onClick={() => deleteImage(id, language)}>
             <CloseIcon />
           </IconButton>
           <Button
@@ -290,92 +291,108 @@ function CreatePost() {
       );
     }
   };
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   return (
-    <BoxHome color={"text.primary"}>
-      <Header />
-      <BoxNav>
-        <Typography variant="h3">ASK A QUESTION</Typography>
-      </BoxNav>
-      <BoxContent
-        sx={{
-          margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
-        }}
-      >
-        <Typography variant="h6">Title</Typography>
-        <TextField
-          id="outlined-basic"
-          variant="outlined"
-          fullWidth
-          placeholder="Title"
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </BoxContent>
-
-      {post.map((data, i) => {
-        return (
+    <>
+      {user === currentUser ? (
+        <BoxHome color={"text.primary"}>
+          <Header />
+          <BoxNav>
+            <Typography variant="h3">ASK A QUESTION</Typography>
+          </BoxNav>
           <BoxContent
-            key={i}
             sx={{
-              margin: {
-                lg: "10px 200px 0px 200px",
-                xs: "10px 10px 0px 10px",
-              },
+              margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
             }}
           >
-            {Suit(data.type, data.id, i, data.content)}
+            <Typography variant="h6">Title</Typography>
+            <TextField
+              id="outlined-basic"
+              variant="outlined"
+              fullWidth
+              placeholder="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </BoxContent>
-        );
-      })}
-      <BoxContent
-        sx={{
-          margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
-        }}
-      >
-        <Button
-          variant="contained"
-          sx={{ marginRight: 1 }}
-          onClick={() => handleAdd("text")}
-        >
-          Add Text
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ marginRight: 1 }}
-          onClick={() => handleAdd("code")}
-        >
-          Add code
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ marginRight: 1 }}
-          onClick={() => handleAdd("image")}
-        >
-          Add image
-        </Button>
-      </BoxContent>
-      <BoxContent
-        sx={{
-          margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
-        }}
-      >
-        <Typography variant="h6">Tags</Typography>
-        <FormControl fullWidth>{TagBox()}</FormControl>
-      </BoxContent>
-      <BoxContent
-        sx={{
-          margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
-          justifyContent: "center",
-          display: "flex",
-        }}
-      >
-        <Button variant="contained" onClick={handleP}>
-          Create Post
-        </Button>
-      </BoxContent>
-      <Box sx={{ height: 30, width: "100%" }}></Box>
-    </BoxHome>
+
+          {post.map((data, i) => {
+            return (
+              <BoxContent
+                key={i}
+                sx={{
+                  margin: {
+                    lg: "10px 200px 0px 200px",
+                    xs: "10px 10px 0px 10px",
+                  },
+                }}
+              >
+                {Suit(
+                  data.type,
+                  data.qdid,
+                  i,
+                  data.content,
+                  data.programLanguage
+                )}
+              </BoxContent>
+            );
+          })}
+          <BoxContent
+            sx={{
+              margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{ marginRight: 1 }}
+              onClick={() => handleAdd("text")}
+            >
+              Add Text
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ marginRight: 1 }}
+              onClick={() => handleAdd("code")}
+            >
+              Add code
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ marginRight: 1 }}
+              onClick={() => handleAdd("image")}
+            >
+              Add image
+            </Button>
+          </BoxContent>
+          <BoxContent
+            sx={{
+              margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
+            }}
+          >
+            <Typography variant="h6">Tags</Typography>
+            <FormControl fullWidth>{TagBox()}</FormControl>
+          </BoxContent>
+          <BoxContent
+            sx={{
+              margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
+              justifyContent: "center",
+              display: "flex",
+            }}
+          >
+            <Button variant="contained" onClick={handlePost}>
+              Create Post
+            </Button>
+          </BoxContent>
+          <Box sx={{ height: 30, width: "100%" }}></Box>
+        </BoxHome>
+      ) : (
+        <NotFound />
+      )}
+    </>
   );
 }
 
-export default CreatePost;
+export default EditPost;

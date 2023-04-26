@@ -206,8 +206,8 @@ function AnswerAction(props) {
               disablePortal
               options={ProLanguage}
               sx={{ width: 200, marginLeft: 5, marginBottom: 1 }}
-              onChange={(event, newValue) => {
-                handleInputChange(newValue.label, i, "programLanguage");
+              onInputChange={(event, newValue) => {
+                handleInputChange(newValue, i, "programLanguage");
               }}
               renderInput={(params) => (
                 <TextField {...params} label="Language" />
@@ -296,7 +296,11 @@ function AnswerAction(props) {
       <BoxContent sx={{ marginTop: 2 }}>
         <Stack
           gap={1}
-          sx={{ justifyContent: "center", display: "flex" }}
+          sx={{
+            justifyContent: "center",
+            display: "flex",
+            alignItems: "center",
+          }}
           direction={{ xs: "column", md: "row" }}
         >
           <Button

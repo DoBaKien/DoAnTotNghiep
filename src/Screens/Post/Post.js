@@ -4,6 +4,7 @@ import { BoxContent, DateV, StackContent } from "./Style";
 import { BoxHome, BoxTag } from "../../Assert/Style";
 import {
   Box,
+  Button,
   CardMedia,
   IconButton,
   Stack,
@@ -15,7 +16,7 @@ import SouthIcon from "@mui/icons-material/South";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useContext } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -30,6 +31,7 @@ import AnswerAction from "./AnswerAction";
 import Cookies from "js-cookie";
 
 function Post() {
+  const navigate = useNavigate();
   const { qid } = useParams();
   const [details, setDetails] = useState("");
   const [title, setTitle] = useState("");
@@ -48,7 +50,7 @@ function Post() {
         );
         setDetails(response.data);
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     };
     getQuestionDetailByQid();
@@ -57,6 +59,7 @@ function Post() {
       .get(`question/getQuestionById/${qid}`)
       .then(function (response) {
         setTitle(response.data);
+
         axios
           .get(`user/findByUid/${response.data.uid}`)
           .then(function (response) {
@@ -124,7 +127,7 @@ function Post() {
 
       GetAnswer();
     }
-  }, [qid, currentUser]);
+  }, [qid, currentUser, navigate]);
 
   const VoteAction = (value) => {
     if (Cookies.get("sessionCookie") !== undefined) {
@@ -192,6 +195,40 @@ function Post() {
                 Người đăng: {user.name}
               </Typography>
             </Stack>
+          </BoxContent>
+
+          <BoxContent sx={{ marginTop: 2 }}>
+            {user.uid === currentUser ? (
+              <Stack
+                gap={1}
+                sx={{
+                  justifyContent: "center",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+                direction={{ xs: "column", md: "row" }}
+              >
+                <Button
+                  variant="contained"
+                  sx={{ marginRight: 1, width: 200 }}
+                  onClick={() => navigate(`/editpost/${qid}`)}
+                >
+                  Sửa bài viết
+                </Button>
+                <Button variant="contained" sx={{ marginRight: 1, width: 200 }}>
+                  Chấp nhận
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  sx={{ marginRight: 1, width: 200 }}
+                >
+                  Xóa bài viết
+                </Button>
+              </Stack>
+            ) : (
+              <>zcx</>
+            )}
           </BoxContent>
 
           <BoxContent sx={{ marginTop: 2 }}>
