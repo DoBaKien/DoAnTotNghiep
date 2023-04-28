@@ -26,7 +26,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AuthContext } from "../../Component/Auth/AuthContext";
 import NotFound from "../../Component/NotFound/NotFound";
 
@@ -34,7 +34,7 @@ function EditPost() {
   const { currentUser } = useContext(AuthContext);
   const { qid } = useParams();
   const [tags, setTags] = useState("");
-  const [tagsSelect, setTagsSelect] = useState("");
+
   const [user, setUser] = useState("");
   const [post, setPost] = useState([
     { qdid: 1, type: "text", content: "", qid: qid },
@@ -53,15 +53,7 @@ function EditPost() {
       .catch(function (error) {
         console.log(error);
       });
-    const getQuestionTagByQid = async () => {
-      try {
-        const response = await axios.get(`question/getQuestionTagByQid/${qid}`);
-        setTagsSelect(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getQuestionTagByQid();
+
     axios
       .get(`question/getQuestionById/${qid}`)
       .then(function (response) {
@@ -77,7 +69,6 @@ function EditPost() {
           `question/getQuestionDetailByQid/${qid}`
         );
         setPost(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -86,6 +77,7 @@ function EditPost() {
   }, [qid]);
 
   const handlePost = () => {
+    console.log(personName);
     console.log(post);
   };
 
@@ -291,9 +283,6 @@ function EditPost() {
       );
     }
   };
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
 
   return (
     <>

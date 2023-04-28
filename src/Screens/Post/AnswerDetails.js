@@ -16,13 +16,43 @@ import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import HistoryIcon from "@mui/icons-material/History";
 import ReportIcon from "@mui/icons-material/Report";
-import { memo } from "react";
+import { memo, useState } from "react";
 import "../Home/Home.css";
+import ModalReport from "../../Assert/ModalReport";
+import Cookies from "js-cookie";
+import Swal from "sweetalert2";
+import { Navigate, useNavigate } from "react-router-dom";
 function AnswerDetails(props) {
+  const [modal, setModal] = useState(false);
+  const [aid, setAid] = useState("");
+  const navigate = useNavigate();
+  const handleReport = (id) => {
+    if (Cookies.get("sessionCookie") !== undefined) {
+      setModal(!modal);
+      setAid(id);
+    } else {
+      Swal.fire({
+        title: "Lỗi",
+        text: "Bạn phải đăng nhập trước",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "Đăng nhập",
+        cancelButtonText: "Hủy",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          return <Navigate to="/" />;
+        }
+      });
+    }
+  };
+
   const ad = () => {
     if (props.answer && props.answer.length > 0) {
       return (
-        <>
+        <Box>
           {props.answer.map((item, i) => (
             <BoxContent sx={{ marginTop: 2 }} key={i}>
               <Stack direction="row">
@@ -50,7 +80,7 @@ function AnswerDetails(props) {
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Báo cáo" placement="left">
-                    <IconButton>
+                    <IconButton onClick={() => handleReport(item.answer.aid)}>
                       <ReportIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
@@ -59,6 +89,7 @@ function AnswerDetails(props) {
                   <BoxUser
                     direction="row"
                     spacing={2}
+                    onClick={() => navigate(`/profile/${item.user.uid}`)}
                     sx={{ marginBottom: 1, width: { xs: 150, md: 300 } }}
                   >
                     <Avatar
@@ -108,7 +139,7 @@ function AnswerDetails(props) {
               </Stack>
             </BoxContent>
           ))}
-        </>
+        </Box>
       );
     } else if (props.answer === "") {
       return (
@@ -127,6 +158,12 @@ function AnswerDetails(props) {
 
   return (
     <Box sx={{ marginTop: 2 }}>
+      <ModalReport
+        setModal={setModal}
+        modal={modal}
+        qid={aid}
+        type="câu trả lời"
+      />
       <Typography variant="h5">Câu trả lời</Typography>
       {ad()}
     </Box>

@@ -3,11 +3,13 @@ import LeftSide from "../../Component/LeftSide/LeftSide";
 import { BoxContent, DateV, StackContent } from "./Style";
 import { BoxHome, BoxTag } from "../../Assert/Style";
 import {
+  Avatar,
   Box,
   Button,
   CardMedia,
   IconButton,
   Stack,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -16,7 +18,7 @@ import SouthIcon from "@mui/icons-material/South";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useContext } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -29,6 +31,7 @@ import AnswerDetails from "./AnswerDetails";
 import parse from "html-react-parser";
 import AnswerAction from "./AnswerAction";
 import Cookies from "js-cookie";
+import ModalReport from "../../Assert/ModalReport";
 
 function Post() {
   const navigate = useNavigate();
@@ -41,7 +44,7 @@ function Post() {
   const [check, setCheck] = useState("");
   const { currentUser } = useContext(AuthContext);
   const [answer, setAnswer] = useState("");
-
+  const [modal, setModal] = useState(false);
   useEffect(() => {
     const getQuestionDetailByQid = async () => {
       try {
@@ -174,9 +177,31 @@ function Post() {
     }
   };
 
+  const handleReport = () => {
+    if (Cookies.get("sessionCookie") !== undefined) {
+      setModal(!modal);
+    } else {
+      Swal.fire({
+        title: "Lỗi",
+        text: "Bạn phải đăng nhập trước",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "Đăng nhập",
+        cancelButtonText: "Hủy",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          return <Navigate to="/" />;
+        }
+      });
+    }
+  };
   return (
     <BoxHome color={"text.primary"}>
       <Header />
+      <ModalReport setModal={setModal} modal={modal} qid={qid} type="câu hỏi" />
       <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
         <Box>
@@ -227,7 +252,7 @@ function Post() {
                 </Button>
               </Stack>
             ) : (
-              <>zcx</>
+              <></>
             )}
           </BoxContent>
 
@@ -257,15 +282,15 @@ function Post() {
                 >
                   <SouthIcon />
                 </IconButton>
-                <Link to={`/history/question/${qid}`}>
-                  <Tooltip title="Lịch sử chỉnh sửa" placement="left">
-                    <IconButton>
-                      <HistoryIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Link>
-                <Tooltip title="Báo cáo" placement="left">
+
+                <Tooltip title="Lịch sử chỉnh sửa" placement="left">
                   <IconButton>
+                    <HistoryIcon />
+                  </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Báo cáo" placement="left">
+                  <IconButton onClick={handleReport}>
                     <ReportIcon />
                   </IconButton>
                 </Tooltip>
@@ -320,10 +345,60 @@ function Post() {
               ))}
             </Stack>
           </BoxContent>
+          <Typography sx={{ marginTop: 1 }} variant="h5">
+            Bình luận
+          </Typography>
+          <BoxContent sx={{ marginTop: 1 }}>
+            <Stack direction="row" gap={2} sx={{ padding: 1 }}>
+              <Box>
+                <Avatar alt="Avatar">V</Avatar>
+              </Box>
+              <Box>
+                <Typography variant="body1">Đỗ Bá Kiên</Typography>
+                <Typography variant="body2">
+                  I am the Flutter maintainer who fixed both of the issues that
+                  are being confused in these SO answers, both caused by changes
+                  of behavior in Xcode 14.3. The originally reported missing
+                  libarclite_iphoneos was fixed in Flutter 3.7.11
+                  github.com/flutter/flutter/issues/124340. The other unrelated
+                  issue is the failure to archive, which was tracked in
+                  github.com/flutter/flutter/issues/123890 and fixed in Flutter
+                  3.7.10. In either case, remove any changes you've made to your
+                  Podfile and run flutter upgrade
+                </Typography>
+              </Box>
+            </Stack>
+          </BoxContent>
+
+          <BoxContent>
+            <Box sx={{ marginLeft: 8 }}>
+              <TextField
+                id="standard-basic"
+                variant="standard"
+                placeholder="Viết bình luận"
+              />
+            </Box>
+          </BoxContent>
 
           <AnswerDetails answer={answer} />
 
-          <AnswerAction qid={qid} setAnswer={setAnswer} />
+          {Cookies.get("sessionCookie") !== undefined ? (
+            <AnswerAction qid={qid} setAnswer={setAnswer} />
+          ) : (
+            <BoxContent
+              sx={{
+                marginTop: 2,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: 100,
+              }}
+            >
+              <Button variant="contained" color="error">
+                Đăng nhập để bình luận
+              </Button>
+            </BoxContent>
+          )}
         </Box>
       </StackContent>
     </BoxHome>

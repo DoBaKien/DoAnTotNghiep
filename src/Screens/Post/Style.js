@@ -13,7 +13,7 @@ export const BoxContent = styled(Box)(({ theme }) => ({
 }));
 export const BoxUser = styled(Stack)(({ theme }) => ({
   border: theme.palette.mode === "light" ? "1px solid black" : "1px solid gray",
-
+  cursor: "pointer",
   alignItems: "center",
   borderRadius: 10,
   padding: 5,
