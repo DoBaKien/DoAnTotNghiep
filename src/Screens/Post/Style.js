@@ -29,3 +29,8 @@ export const DateV = (value) => {
 
   return <Typography variant="subtitle1">Ngày đăng: {date}</Typography>;
 };
+
+export const BoxUserPost = styled(Stack)(() => ({
+  display: "flex",
+  alignItems: "center",
+}));

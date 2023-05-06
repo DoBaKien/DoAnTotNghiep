@@ -1,6 +1,9 @@
 import {
   Box,
   Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
   Modal,
   Stack,
   TextField,
@@ -49,6 +52,14 @@ function ModalReport({ setModal, modal, qid, type, aid }) {
                 defaultValue={qid}
                 style={{ marginTop: 20, marginBottom: 20 }}
               />
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox defaultChecked />}
+                  label="Label"
+                />
+                <FormControlLabel control={<Checkbox />} label="Required" />
+                <FormControlLabel control={<Checkbox />} label="Disabled" />
+              </FormGroup>
               <Stack
                 direction="row"
                 spacing={10}

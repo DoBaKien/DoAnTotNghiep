@@ -82,32 +82,32 @@ function ManagerUser() {
   };
 
   const columns = [
-    { field: "uid", headerName: "ID", width: 200 },
+    { field: "uid", headerName: "ID", flex: 0.5 },
     {
       field: "name",
       headerName: "Tên",
-      width: 280,
+      flex: 1,
     },
     {
       field: "email",
       headerName: "Email",
-      width: 300,
+      flex: 1,
     },
     {
       field: "location",
       headerName: "Địa chỉ",
-      width: 180,
+      flex: 0.8,
     },
     {
       field: "role",
       headerName: "Quyền",
-      width: 120,
+      flex: 0.5,
     },
     {
       field: "actions",
       headerName: "Action",
       type: "actions",
-      width: 80,
+      flex: 0.5,
       getActions: (params) => {
         let actions = [
           <>
@@ -170,7 +170,7 @@ function ManagerUser() {
   const datatable = () => {
     if (Array.isArray(users) && users.length !== 0) {
       return (
-        <Box height="80vh" sx={{ zIndex: 1 }}>
+        <Box height="80vh">
           <DataGrid
             rowHeight={150}
             rows={users}
@@ -233,14 +233,13 @@ function ManagerUser() {
     <BoxHome color={"text.primary"}>
       <StackContent direction="row">
         {show && <LeftAdmin />}
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "100%", minWidth: "70%" }}>
           <Header show={show} setShow={setShow} />
           <Box
             bgcolor={"background.default"}
             sx={{
               paddingLeft: 2,
               paddingRight: 2,
-              transition: "all 0.5 ease",
             }}
           >
             <Box sx={{ padding: "5px 5px 5px" }}>

@@ -1,6 +1,6 @@
 import Header from "../../Component/Header/Header";
 import LeftSide from "../../Component/LeftSide/LeftSide";
-import { BoxContent, DateV, StackContent } from "./Style";
+import { BoxContent, BoxUserPost, DateV, StackContent } from "./Style";
 import { BoxHome, BoxTag } from "../../Assert/Style";
 import {
   Avatar,
@@ -210,15 +210,33 @@ function Post() {
             <Stack
               direction={{ xs: "column", md: "row" }}
               spacing={{ xs: 1, md: 4 }}
-              sx={{ textAlign: { xs: "center", md: "" }, marginTop: 2 }}
+              sx={{
+                textAlign: { xs: "center", md: "" },
+                marginTop: 2,
+                display: "flex",
+                alignItems: "center",
+              }}
             >
               {DateV(title.date)}
               <Typography variant="subtitle1">
                 Trạng thái: {title.status}
               </Typography>
-              <Typography variant="subtitle1">
-                Người đăng: {user.name}
-              </Typography>
+              <BoxUserPost direction="row" gap={1}>
+                <Typography variant="subtitle1">Người đăng:</Typography>
+                <BoxUserPost
+                  direction="row"
+                  gap={1}
+                  sx={{ cursor: "pointer" }}
+                  onClick={() => navigate(`/profile/${user.uid}`)}
+                >
+                  <Avatar
+                    alt="Avatar"
+                    src={user.avatar || user.name}
+                    sx={{ width: 40, height: 40 }}
+                  />
+                  <Typography variant="subtitle1">{user.name}</Typography>
+                </BoxUserPost>
+              </BoxUserPost>
             </Stack>
           </BoxContent>
 
@@ -289,11 +307,15 @@ function Post() {
                   </IconButton>
                 </Tooltip>
 
-                <Tooltip title="Báo cáo" placement="left">
-                  <IconButton onClick={handleReport}>
-                    <ReportIcon />
-                  </IconButton>
-                </Tooltip>
+                {currentUser !== user.uid ? (
+                  <Tooltip title="Báo cáo" placement="left">
+                    <IconButton onClick={handleReport}>
+                      <ReportIcon />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  <></>
+                )}
               </Box>
               <Box sx={{ marginLeft: 3 }}>
                 {Array.from(details).map((detail, i) => {
@@ -380,7 +402,11 @@ function Post() {
             </Box>
           </BoxContent>
 
-          <AnswerDetails answer={answer} />
+          <AnswerDetails
+            answer={answer}
+            uid={user.uid}
+            currentUser={currentUser}
+          />
 
           {Cookies.get("sessionCookie") !== undefined ? (
             <AnswerAction qid={qid} setAnswer={setAnswer} />

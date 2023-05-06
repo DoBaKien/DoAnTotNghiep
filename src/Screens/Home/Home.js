@@ -28,7 +28,7 @@ import {
 } from "./Style";
 import { BoxHome, BoxTag } from "../../Assert/Style";
 import { useNavigate } from "react-router-dom";
-import "./Home.css";
+import "../../Assert/index.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 function Home() {
@@ -112,9 +112,11 @@ function Home() {
                       marginBottom: { xs: 1, lg: 0 },
                     }}
                   >
-                    <Avatar sx={{ width: 35, height: 35 }}>
-                      {q.user.name}
-                    </Avatar>
+                    <Avatar
+                      alt="Avatar"
+                      src={q.user.avatar || q.user.name}
+                      sx={{ width: 35, height: 35 }}
+                    />
 
                     <Typography>{q.user.name}</Typography>
                   </StackName>

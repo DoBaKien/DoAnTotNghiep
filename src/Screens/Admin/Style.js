@@ -26,8 +26,8 @@ export const ExpandableCell = ({ value }) => {
   };
   return (
     <Box>
-      {expanded ? value : value.slice(0, 100)}&nbsp;
-      {value.length > 100 && (
+      {expanded ? value : value.slice(0, 150)}&nbsp;
+      {value.length > 150 && (
         <LinkView onClick={() => setExpanded(!expanded)}>
           {expanded ? "view less" : "view more"}
         </LinkView>

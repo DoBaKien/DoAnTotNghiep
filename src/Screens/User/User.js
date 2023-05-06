@@ -16,7 +16,7 @@ import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../Home/Home.css";
+import "../../Assert/index.css";
 function User() {
   const navigation = useNavigate();
   const [users, setUsers] = useState("");

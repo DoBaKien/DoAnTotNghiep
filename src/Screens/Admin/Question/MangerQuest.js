@@ -19,6 +19,7 @@ function ManagerQuest() {
       .get("/question/getAllQuestionDTO")
       .then(function (response) {
         setQuestions(response.data);
+        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -32,29 +33,34 @@ function ManagerQuest() {
     {
       field: "id",
       headerName: "ID",
-      width: 80,
+      flex: 0.4,
     },
     {
       field: "title",
       headerName: "Tiêu đề",
-      width: 280,
+      flex: 2,
       editable: true,
       renderCell: (params) => <ExpandableCell {...params} />,
     },
     {
       field: "name",
       headerName: "Người đăng",
-      width: 300,
+      flex: 1,
     },
     {
       field: "status",
       headerName: "Trạng thái",
-      width: 150,
+      flex: 0.6,
+    },
+    {
+      field: "vote",
+      headerName: "Số vote",
+      flex: 0.5,
     },
     {
       field: "date",
       headerName: "Ngày đăng",
-      width: 180,
+      flex: 1,
       renderCell: (params) => <ValueDate {...params} />,
     },
   ];
@@ -71,6 +77,7 @@ function ManagerQuest() {
               name: item.user.name,
               status: item.question.status,
               date: item.question.date,
+              vote: item.questionVote,
             }))}
             columns={columns}
             pageSizeOptions={[10, 50, 100]}
@@ -87,7 +94,7 @@ function ManagerQuest() {
                 showQuickFilter: true,
                 quickFilterProps: { debounceMs: 500 },
                 csvOptions: {
-                  fields: ["qid", "title", "name", "status", "date"],
+                  fields: ["qid", "title", "name", "status", "vote", "date"],
                 },
               },
             }}
@@ -128,7 +135,7 @@ function ManagerQuest() {
     <BoxHome color={"text.primary"}>
       <StackContent direction="row">
         {show && <LeftAdmin />}
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "100%", minWidth: "70%" }}>
           <Header show={show} setShow={setShow} />
           <Box
             bgcolor={"background.default"}

@@ -44,23 +44,23 @@ function ManagerTag() {
   };
 
   const columns = [
-    { field: "tid", headerName: "ID", width: 100 },
+    { field: "tid", headerName: "ID", flex: 0.5 },
     {
       field: "name",
       headerName: "Tên",
-      width: 300,
+      flex: 1,
     },
     {
       field: "description",
       headerName: "Mô tả",
-      width: 500,
+      flex: 2,
       renderCell: (params) => <ExpandableCell {...params} />,
     },
     {
       field: "actions",
       headerName: "Action",
       type: "actions",
-      width: 100,
+      flex: 0.5,
       getActions: (params) => {
         let actions = [
           <>
@@ -146,14 +146,13 @@ function ManagerTag() {
     <BoxHome color={"text.primary"}>
       <StackContent direction="row">
         {show && <LeftAdmin />}
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "100%", minWidth: "70%" }}>
           <Header show={show} setShow={setShow} />
           <Box
             bgcolor={"background.default"}
             sx={{
               paddingLeft: 2,
               paddingRight: 2,
-              transition: "all 0.5 ease",
             }}
           >
             <Box sx={{ padding: "5px 5px 5px" }}>

@@ -48,6 +48,7 @@ function Login() {
         .then((userCredential) => {
           const user = userCredential.user;
           localStorage.setItem("id", user.uid);
+
           return user.getIdToken();
         })
         .then((token) => {
@@ -55,9 +56,10 @@ function Login() {
             .post("/account/createSessionCookie", token)
             .then(function (response) {
               Cookies.set("sessionCookie", response.data, { expires: 365 });
+
               if (role === "Admin") {
                 navigate("/admin");
-              } else {
+              } else if (role === "User") {
                 navigate(-1);
               }
             });

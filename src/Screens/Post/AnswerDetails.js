@@ -17,7 +17,7 @@ import SouthIcon from "@mui/icons-material/South";
 import HistoryIcon from "@mui/icons-material/History";
 import ReportIcon from "@mui/icons-material/Report";
 import { memo, useState } from "react";
-import "../Home/Home.css";
+import "../../Assert/index.css";
 import ModalReport from "../../Assert/ModalReport";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
@@ -79,11 +79,15 @@ function AnswerDetails(props) {
                       <HistoryIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Báo cáo" placement="left">
-                    <IconButton onClick={() => handleReport(item.answer.aid)}>
-                      <ReportIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
+                  {props.currentUser !== props.uid ? (
+                    <Tooltip title="Báo cáo" placement="left">
+                      <IconButton onClick={() => handleReport(item.answer.aid)}>
+                        <ReportIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  ) : (
+                    <></>
+                  )}
                 </Box>
                 <Box sx={{ marginTop: 0.5 }}>
                   <BoxUser
