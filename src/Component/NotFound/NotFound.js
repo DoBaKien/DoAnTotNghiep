@@ -1,4 +1,4 @@
-import { Box, CardMedia, Stack, styled, Typography } from "@mui/material";
+import { Box, Stack, styled, Typography } from "@mui/material";
 
 function NotFound() {
   const BoxItem = styled(Stack)(({ theme }) => ({

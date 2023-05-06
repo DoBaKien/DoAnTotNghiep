@@ -54,7 +54,7 @@ function Router() {
         <Route path="/follow" element={<Follow />} />
         <Route path="/post/:qid" element={<Post />} />
         <Route path="/editpf/:id" element={<EditPf />} />
-        <Route path="/tagdetail" element={<TagDetails />} />
+        <Route path="/tagdetail/:tid" element={<TagDetails />} />
         <Route path="/history/:type/:id" element={<History />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/editpost/:qid" element={<EditPost />} />

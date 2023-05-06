@@ -16,6 +16,7 @@ import NorthIcon from "@mui/icons-material/North";
 import SouthIcon from "@mui/icons-material/South";
 import HistoryIcon from "@mui/icons-material/History";
 import ReportIcon from "@mui/icons-material/Report";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { memo, useState } from "react";
 import "../../Assert/index.css";
 import ModalReport from "../../Assert/ModalReport";
@@ -26,6 +27,9 @@ function AnswerDetails(props) {
   const [modal, setModal] = useState(false);
   const [aid, setAid] = useState("");
   const navigate = useNavigate();
+
+  const handleEdit = (id) => {};
+
   const handleReport = (id) => {
     if (Cookies.get("sessionCookie") !== undefined) {
       setModal(!modal);
@@ -79,10 +83,19 @@ function AnswerDetails(props) {
                       <HistoryIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
-                  {props.currentUser !== props.uid ? (
+                  {props.currentUser !== item.answer.uid ? (
                     <Tooltip title="Báo cáo" placement="left">
                       <IconButton onClick={() => handleReport(item.answer.aid)}>
                         <ReportIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  ) : (
+                    <></>
+                  )}
+                  {props.currentUser === item.answer.uid ? (
+                    <Tooltip title="Chỉnh sửa" placement="left">
+                      <IconButton onClick={() => handleEdit(item.answer.aid)}>
+                        <ModeEditIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
                   ) : (

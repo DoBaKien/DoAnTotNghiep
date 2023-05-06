@@ -45,6 +45,8 @@ function Post() {
   const { currentUser } = useContext(AuthContext);
   const [answer, setAnswer] = useState("");
   const [modal, setModal] = useState(false);
+  const [checkUser, setCheckUser] = useState("");
+
   useEffect(() => {
     const getQuestionDetailByQid = async () => {
       try {
@@ -57,6 +59,16 @@ function Post() {
       }
     };
     getQuestionDetailByQid();
+
+    const checkUserAnswer = async () => {
+      try {
+        const response = await axios.get(`question/checkUserAnswer/${qid}`);
+        setCheckUser(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    checkUserAnswer();
 
     axios
       .get(`question/getQuestionById/${qid}`)
@@ -198,6 +210,49 @@ function Post() {
       });
     }
   };
+
+  const handleHistory = () => {
+    navigate(`/history/question/${qid}`);
+  };
+
+  const checkAnswer = () => {
+    if (Cookies.get("sessionCookie") === undefined) {
+      return (
+        <BoxContent
+          sx={{
+            marginTop: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: 100,
+          }}
+        >
+          <Button variant="contained" color="error">
+            Đăng nhập để bình luận
+          </Button>
+        </BoxContent>
+      );
+    } else if (checkUser !== "None") {
+      return (
+        <BoxContent
+          sx={{
+            marginTop: 2,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: 100,
+          }}
+        >
+          <Button variant="contained" color="success" sx={{ color: "white" }}>
+            Đã trả lời
+          </Button>
+        </BoxContent>
+      );
+    } else {
+      return <AnswerAction qid={qid} setAnswer={setAnswer} />;
+    }
+  };
+
   return (
     <BoxHome color={"text.primary"}>
       <Header />
@@ -302,7 +357,7 @@ function Post() {
                 </IconButton>
 
                 <Tooltip title="Lịch sử chỉnh sửa" placement="left">
-                  <IconButton>
+                  <IconButton onClick={handleHistory}>
                     <HistoryIcon />
                   </IconButton>
                 </Tooltip>
@@ -407,24 +462,7 @@ function Post() {
             uid={user.uid}
             currentUser={currentUser}
           />
-
-          {Cookies.get("sessionCookie") !== undefined ? (
-            <AnswerAction qid={qid} setAnswer={setAnswer} />
-          ) : (
-            <BoxContent
-              sx={{
-                marginTop: 2,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: 100,
-              }}
-            >
-              <Button variant="contained" color="error">
-                Đăng nhập để bình luận
-              </Button>
-            </BoxContent>
-          )}
+          {checkAnswer()}
         </Box>
       </StackContent>
     </BoxHome>

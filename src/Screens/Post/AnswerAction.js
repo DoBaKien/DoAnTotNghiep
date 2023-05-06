@@ -133,7 +133,6 @@ function AnswerAction(props) {
     await uploadImage(file, index, key);
   };
   const handleAnswer = () => {
-    console.log(post);
     axios
       .post(`/answer/create/${props.qid}`, {})
       .then(function (response) {

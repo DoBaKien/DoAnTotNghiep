@@ -34,15 +34,17 @@ function EditPost() {
   const { currentUser } = useContext(AuthContext);
   const { qid } = useParams();
   const [tags, setTags] = useState("");
+  const [title, setTitle] = useState("");
+  const [personName, setPersonName] = useState([]);
+  const [tt, setTT] = useState("");
+
+  const [fileImage, setFileImage] = useState("");
 
   const [user, setUser] = useState("");
   const [post, setPost] = useState([
     { qdid: 1, type: "text", content: "", qid: qid },
   ]);
   const editor = useRef(null);
-  const [title, setTitle] = useState("");
-
-  const [fileImage, setFileImage] = useState("");
 
   useEffect(() => {
     axios
@@ -53,7 +55,15 @@ function EditPost() {
       .catch(function (error) {
         console.log(error);
       });
-
+    axios
+      .get(`/question/getQuestionTagByQid/${qid}`)
+      .then(function (response) {
+        setPersonName(response.data);
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     axios
       .get(`question/getQuestionById/${qid}`)
       .then(function (response) {
@@ -79,9 +89,58 @@ function EditPost() {
   const handlePost = () => {
     console.log(personName);
     console.log(post);
+    if (post === [] || personName === "" || tt === "") {
+    } else {
+      axios
+        .put(`/question/edit/${qid}`, {
+          title: title,
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      axios
+        .put(`/question/edit/${qid}`, {
+          title: title,
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      axios
+        .post(`/question/modifyTagPost/${qid}`, personName)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      axios
+        .post(`/question/editDetail/${qid}`, post)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      axios
+        .post(`/question/createActivityHistory/${qid}`, {
+          action: "Sửa câu hỏi",
+          description: "Khởi tạo câu hỏi",
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   };
 
-  const [personName, setPersonName] = useState([]);
   const handleChange = (event) => {
     const {
       target: { value },
@@ -101,16 +160,6 @@ function EditPost() {
     setPost(newPost);
   }
 
-  function CaseDel(id) {
-    if (id !== 1) {
-      return (
-        <IconButton color="error" onClick={() => deleteUser(id)}>
-          <CloseIcon />
-        </IconButton>
-      );
-    }
-  }
-
   const metadata = {
     contentType: "image/jpeg",
   };
@@ -118,7 +167,15 @@ function EditPost() {
   function deleteImage(id, language) {
     const newPost = post.filter((user) => user.qdid !== id);
     setPost(newPost);
-    console.log(language);
+    axios
+      .post(`/question/editDetail/${qid}`, post)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
     if (language === "") {
       const desertRef = ref(storage, "images/" + fileImage);
       deleteObject(desertRef)
@@ -217,7 +274,9 @@ function EditPost() {
       return (
         <Box>
           <Stack direction="row" sx={{ alignItems: "center" }}>
-            {CaseDel(id)}
+            <IconButton color="error" onClick={() => deleteImage(id, language)}>
+              <CloseIcon />
+            </IconButton>
             <Typography variant="h6">Text</Typography>
           </Stack>
           <Box sx={{ color: "black" }}>
@@ -247,7 +306,7 @@ function EditPost() {
             startIcon={<PhotoCamera />}
             sx={{ marginLeft: 5 }}
           >
-            Upload
+            Thêm ảnh
             <input
               hidden
               accept="image/*"
@@ -290,14 +349,14 @@ function EditPost() {
         <BoxHome color={"text.primary"}>
           <Header />
           <BoxNav>
-            <Typography variant="h3">ASK A QUESTION</Typography>
+            <Typography variant="h3">Sửa câu hỏi</Typography>
           </BoxNav>
           <BoxContent
             sx={{
               margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
             }}
           >
-            <Typography variant="h6">Title</Typography>
+            <Typography variant="h6">Tiêu đề</Typography>
             <TextField
               id="outlined-basic"
               variant="outlined"
@@ -361,8 +420,23 @@ function EditPost() {
               margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
             }}
           >
-            <Typography variant="h6">Tags</Typography>
+            <Typography variant="h6">Thẻ</Typography>
             <FormControl fullWidth>{TagBox()}</FormControl>
+          </BoxContent>
+          <BoxContent
+            sx={{
+              margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
+            }}
+          >
+            <Typography variant="h6">Tóm tắt chỉnh sửa</Typography>
+            <TextField
+              multiline
+              rows={2}
+              variant="outlined"
+              fullWidth
+              placeholder="Tóm tắt"
+              onChange={(e) => setTT(e.target.value)}
+            />
           </BoxContent>
           <BoxContent
             sx={{
@@ -372,7 +446,7 @@ function EditPost() {
             }}
           >
             <Button variant="contained" onClick={handlePost}>
-              Create Post
+              Sửa
             </Button>
           </BoxContent>
           <Box sx={{ height: 30, width: "100%" }}></Box>

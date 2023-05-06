@@ -48,6 +48,9 @@ function Home() {
   const handleCreate = () => {
     navigate("/create");
   };
+  const handleTag = (id) => {
+    navigate(`/tagdetail/${id}`);
+  };
   const handlePost = (id) => {
     navigate(`/post/${id}`);
   };
@@ -99,7 +102,7 @@ function Home() {
                     sx={{ width: "100%", alignItems: "center" }}
                   >
                     {q.tags.map((t, i) => (
-                      <BoxTag key={i}>
+                      <BoxTag key={i} onClick={() => handleTag(t.tid)}>
                         <Typography variant="body2">{t.name}</Typography>
                       </BoxTag>
                     ))}

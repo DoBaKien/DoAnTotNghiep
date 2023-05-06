@@ -11,8 +11,7 @@ import {
 } from "@mui/material";
 import { memo } from "react";
 
-function ModalReport({ setModal, modal, qid, type, aid }) {
-  console.log(qid);
+function ModalReport({ setModal, modal, qid, type }) {
   const style = {
     position: "absolute",
     top: "50%",

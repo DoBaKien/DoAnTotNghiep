@@ -5,14 +5,14 @@ import { BoxHome } from "../../Assert/Style";
 import { Box, InputAdornment, InputBase, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
-import "./Tags.css";
+import "../../Assert/index.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 function Tags() {
   const navigate = useNavigate();
-  const handle = () => {
-    navigate("/tagdetail");
+  const handle = (tid) => {
+    navigate(`/tagdetail/${tid}`);
   };
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState("");
@@ -50,17 +50,11 @@ function Tags() {
               .map((tag, index) => (
                 <Grid2 xs={3} sm={7} md={4} key={index}>
                   <BoxTags>
-                    <BoxTag onClick={handle}>
+                    <BoxTag onClick={() => handle(tag.tid)}>
                       <Typography variant="body1">{tag.name}</Typography>
                     </BoxTag>
                     <Typography sx={{ marginTop: 2 }} className="tag">
-                      For questions about programming in ECMAScript
-                      (JavaScript/JS) and its different dialects/implementations
-                      (except for ActionScript). Keep in mind that JavaScript is
-                      NOT the same as Java! Include all labels that are relevant
-                      to your question; e.g., [node.js], [jQuery], [JSON],
-                      [ReactJS], [angular], [ember.js], [vue.js], [typescript],
-                      [svelte], etc.
+                      {tag.description}
                     </Typography>
                   </BoxTags>
                 </Grid2>
