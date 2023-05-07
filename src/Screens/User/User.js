@@ -15,10 +15,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+
 import "../../Assert/index.css";
+import { Link } from "react-router-dom";
 function User() {
-  const navigation = useNavigate();
   const [users, setUsers] = useState("");
   const [search, setSearch] = useState("");
   useEffect(() => {
@@ -32,9 +32,6 @@ function User() {
       });
   }, []);
 
-  const handlePf = (id) => {
-    navigation(`/profile/${id}`);
-  };
   const ser = (val) => {
     if (search === "") {
       return val;
@@ -74,41 +71,46 @@ function User() {
                 .filter(ser)
                 .map((user, index) => (
                   <Grid2 xs={3} sm={7} md={4} key={index}>
-                    <PaperUser onClick={() => handlePf(user.uid)}>
-                      <Stack direction="row" spacing={2}>
-                        <Box
-                          sx={{
-                            width: 50,
-                            height: 60,
-                            alignItems: "center",
-                            justifyContent: "center",
-                            display: "flex",
-                          }}
-                        >
-                          <Avatar
-                            alt="Avatar"
-                            src={user.avatar || user.name}
-                            sx={{ width: 50, height: 50 }}
-                          />
-                        </Box>
-                        <Box
-                          sx={{
-                            height: 60,
-                          }}
-                        >
-                          <Typography
-                            variant="body1"
-                            sx={{ marginBottom: 0.5 }}
-                            className="title"
+                    <Link
+                      to={`/profile/${user.uid}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <PaperUser>
+                        <Stack direction="row" spacing={2}>
+                          <Box
+                            sx={{
+                              width: 50,
+                              height: 60,
+                              alignItems: "center",
+                              justifyContent: "center",
+                              display: "flex",
+                            }}
                           >
-                            {user.name}
-                          </Typography>
-                          <Typography variant="caption">
-                            {user.location || "Không có"}
-                          </Typography>
-                        </Box>
-                      </Stack>
-                    </PaperUser>
+                            <Avatar
+                              alt="Avatar"
+                              src={user.avatar || user.name}
+                              sx={{ width: 50, height: 50 }}
+                            />
+                          </Box>
+                          <Box
+                            sx={{
+                              height: 60,
+                            }}
+                          >
+                            <Typography
+                              variant="body1"
+                              sx={{ marginBottom: 0.5 }}
+                              className="title"
+                            >
+                              {user.name}
+                            </Typography>
+                            <Typography variant="caption">
+                              {user.location || "Không có"}
+                            </Typography>
+                          </Box>
+                        </Stack>
+                      </PaperUser>
+                    </Link>
                   </Grid2>
                 ))}
             </Grid2>

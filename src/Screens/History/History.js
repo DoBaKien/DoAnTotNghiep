@@ -1,18 +1,18 @@
 import Header from "../../Component/Header/Header";
 import LeftSide from "../../Component/LeftSide/LeftSide";
 import { BoxContent, StackContent } from "./Style";
-import { BoxHome } from "../../Assert/Style";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { BoxHome, ValueDate } from "../../Assert/Style";
+import { Avatar, Box, CircularProgress, Typography } from "@mui/material";
 
 import { useParams } from "react-router-dom";
 import { memo, useEffect, useState } from "react";
 import axios from "axios";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { ExpandableCell } from "../Admin/Style";
+import { DataGrid } from "@mui/x-data-grid";
 
 function History() {
-  const { type, id } = useParams();
+  const { id } = useParams();
   const [details, setDetails] = useState("");
+  const [title, setTitle] = useState("");
   useEffect(() => {
     const getQuestionDetailByQid = async () => {
       try {
@@ -20,46 +20,75 @@ function History() {
           `question/getQuestionActivityHistory/${id}`
         );
         setDetails(response.data);
-        console.log(response.data);
       } catch (error) {
         console.log(error);
       }
     };
     getQuestionDetailByQid();
+    axios
+      .get(`question/getQuestionById/${id}`)
+      .then(function (response) {
+        setTitle(response.data.title);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }, [id]);
-  console.log(type, id);
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
     {
       field: "name",
-      headerName: "Tên",
+      headerName: "Hành động",
       flex: 1,
     },
     {
       field: "description",
       headerName: "Mô tả",
       flex: 2,
-      // renderCell: (params) => <ExpandableCell {...params} />,
+    },
+    {
+      field: "username",
+      headerName: "Người chỉnh sửa",
+      flex: 2,
+      renderCell: (params) => {
+        const parts = params.value.split("///");
+
+        return (
+          <>
+            <Avatar
+              alt="Avatar"
+              src={parts[1]}
+              sx={{ width: 32, height: 32, marginRight: 1 }}
+            />
+            <>{parts[0]}</>
+          </>
+        );
+      },
+    },
+    {
+      field: "date",
+      headerName: "Ngày sửa",
+      flex: 1.2,
+      renderCell: (params) => <ValueDate {...params} />,
     },
   ];
   const datatable = () => {
     if (Array.isArray(details) && details.length !== 0) {
       return (
-        <Box height="80vh">
+        <Box height="70vh">
           <DataGrid
             rowHeight={50}
-            // rows={details}
-            rows={details.map((item, index) => ({
+            rows={details.map((item) => ({
               id: item.questionActivityHistory.qahid,
               name: item.questionActivityHistory.action,
+              description: item.questionActivityHistory.description,
+              username: item.user.name + "///" + item.user.avatar,
+              date: item.questionActivityHistory.date,
             }))}
             columns={columns}
             pageSizeOptions={[10, 50, 100]}
             checkboxSelection
-            components={{
-              Toolbar: GridToolbar,
-            }}
             initialState={{
               ...details.initialState,
               pagination: { paginationModel: { pageSize: 10 } },
@@ -107,8 +136,9 @@ function History() {
       <Header />
       <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
-        <BoxContent sx={{ width: { xs: "100vw", lg: "60vw" } }}>
-          <Typography variant="h4">Thẻ</Typography>
+        <BoxContent sx={{ width: "60vw" }}>
+          <Typography variant="h4">Lịch sử chỉnh sửa</Typography>
+          <Typography sx={{ marginTop: 1 }}>Tiêu để: {title}</Typography>
           <Box sx={{ width: "100%", marginTop: 2 }}>{datatable()}</Box>
         </BoxContent>
       </StackContent>

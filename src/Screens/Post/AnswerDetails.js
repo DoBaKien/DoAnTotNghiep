@@ -22,11 +22,10 @@ import "../../Assert/index.css";
 import ModalReport from "../../Assert/ModalReport";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 function AnswerDetails(props) {
   const [modal, setModal] = useState(false);
   const [aid, setAid] = useState("");
-  const navigate = useNavigate();
 
   const handleEdit = (id) => {};
 
@@ -103,18 +102,24 @@ function AnswerDetails(props) {
                   )}
                 </Box>
                 <Box sx={{ marginTop: 0.5 }}>
-                  <BoxUser
-                    direction="row"
-                    spacing={2}
-                    onClick={() => navigate(`/profile/${item.user.uid}`)}
-                    sx={{ marginBottom: 1, width: { xs: 150, md: 300 } }}
+                  <Link
+                    to={`/profile/${item.user.uid}`}
+                    style={{ textDecoration: "none" }}
                   >
-                    <Avatar
-                      alt="Avatar"
-                      src={item.user.avatar || item.user.name}
-                    />
-                    <Typography className="title">{item.user.name}</Typography>
-                  </BoxUser>
+                    <BoxUser
+                      direction="row"
+                      spacing={2}
+                      sx={{ marginBottom: 1, width: { xs: 150, md: 300 } }}
+                    >
+                      <Avatar
+                        alt="Avatar"
+                        src={item.user.avatar || item.user.name}
+                      />
+                      <Typography className="title" color={"text.primary"}>
+                        {item.user.name}
+                      </Typography>
+                    </BoxUser>
+                  </Link>
                   <Box>
                     {item.answerDetails.map((subItem, i) => {
                       if (subItem.type === "text") {

@@ -27,12 +27,12 @@ import {
   TypographyTitle,
 } from "./Style";
 import { BoxHome, BoxTag } from "../../Assert/Style";
-import { useNavigate } from "react-router-dom";
+
 import "../../Assert/index.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 function Home() {
-  const navigate = useNavigate();
   const [questions, setQuestions] = useState("");
   useEffect(() => {
     axios
@@ -45,15 +45,6 @@ function Home() {
       });
   }, []);
 
-  const handleCreate = () => {
-    navigate("/create");
-  };
-  const handleTag = (id) => {
-    navigate(`/tagdetail/${id}`);
-  };
-  const handlePost = (id) => {
-    navigate(`/post/${id}`);
-  };
   const post = () => {
     if (questions && questions.length > 0) {
       return (
@@ -84,14 +75,19 @@ function Home() {
               </BoxDetails>
 
               <BoxTitle>
-                <TypographyTitle
-                  component="div"
-                  className="title"
-                  onClick={() => handlePost(q.question.qid)}
-                  variant="h5"
+                <Link
+                  to={`/post/${q.question.qid}`}
+                  style={{ textDecoration: "none" }}
                 >
-                  {q.question.title}
-                </TypographyTitle>
+                  <TypographyTitle
+                    component="div"
+                    className="title"
+                    variant="h5"
+                    color={"text.primary"}
+                  >
+                    {q.question.title}
+                  </TypographyTitle>
+                </Link>
                 <Stack
                   direction={{ xs: "column", lg: "row" }}
                   sx={{ marginTop: 1 }}
@@ -102,9 +98,11 @@ function Home() {
                     sx={{ width: "100%", alignItems: "center" }}
                   >
                     {q.tags.map((t, i) => (
-                      <BoxTag key={i} onClick={() => handleTag(t.tid)}>
-                        <Typography variant="body2">{t.name}</Typography>
-                      </BoxTag>
+                      <Link to={`/tagdetail/${t.tid}`} key={i}>
+                        <BoxTag>
+                          <Typography variant="body2">{t.name}</Typography>
+                        </BoxTag>
+                      </Link>
                     ))}
                   </Stack>
                   <StackName
@@ -150,40 +148,39 @@ function Home() {
       <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
         <Box>
-          <StackCreate direction="row" spacing={{ xs: 1, lg: 2 }}>
-            <Box>
-              <IconButton>
-                <StyledBadge
-                  overlap="circular"
-                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                  variant="dot"
-                >
-                  <Avatar sx={{ width: 40, height: 40 }}>M</Avatar>
-                </StyledBadge>
-              </IconButton>
-            </Box>
+          <Link to="/create">
+            <StackCreate direction="row" spacing={{ xs: 1, lg: 2 }}>
+              <Box>
+                <IconButton>
+                  <StyledBadge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    variant="dot"
+                  >
+                    <Avatar sx={{ width: 40, height: 40 }}>M</Avatar>
+                  </StyledBadge>
+                </IconButton>
+              </Box>
 
-            <CrePost sx={{ display: { xs: "none", lg: "block" } }}>
-              <InputBase
-                sx={{ ml: 2, flex: 1, fontSize: 22 }}
-                fullWidth
-                placeholder="Đặt câu hỏi"
-                onClick={handleCreate}
-              />
-            </CrePost>
-            <IconButton
-              onClick={handleCreate}
-              sx={{ display: { xs: "block", lg: "none" } }}
-            >
-              <PostAddIcon fontSize="large" />
-            </IconButton>
-            <IconButton onClick={handleCreate}>
-              <InsertPhotoIcon fontSize="large" />
-            </IconButton>
-            <IconButton onClick={handleCreate}>
-              <AddLinkIcon fontSize="large" />
-            </IconButton>
-          </StackCreate>
+              <CrePost sx={{ display: { xs: "none", lg: "block" } }}>
+                <InputBase
+                  sx={{ ml: 2, flex: 1, fontSize: 22 }}
+                  fullWidth
+                  placeholder="Đặt câu hỏi"
+                />
+              </CrePost>
+
+              <IconButton sx={{ display: { xs: "block", lg: "none" } }}>
+                <PostAddIcon fontSize="large" />
+              </IconButton>
+              <IconButton>
+                <InsertPhotoIcon fontSize="large" />
+              </IconButton>
+              <IconButton>
+                <AddLinkIcon fontSize="large" />
+              </IconButton>
+            </StackCreate>
+          </Link>
           {post()}
         </Box>
       </StackContent>

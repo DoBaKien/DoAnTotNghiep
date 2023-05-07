@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import BlockIcon from "@mui/icons-material/Block";
-import "../Tags/Tags.css";
+import "../../Assert/index.css";
 import {
   BoxDetails,
   BoxText,

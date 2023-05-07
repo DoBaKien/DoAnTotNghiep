@@ -18,7 +18,7 @@ import SouthIcon from "@mui/icons-material/South";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useContext } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -34,7 +34,6 @@ import Cookies from "js-cookie";
 import ModalReport from "../../Assert/ModalReport";
 
 function Post() {
-  const navigate = useNavigate();
   const { qid } = useParams();
   const [details, setDetails] = useState("");
   const [title, setTitle] = useState("");
@@ -142,7 +141,7 @@ function Post() {
 
       GetAnswer();
     }
-  }, [qid, currentUser, navigate]);
+  }, [qid, currentUser]);
 
   const VoteAction = (value) => {
     if (Cookies.get("sessionCookie") !== undefined) {
@@ -211,10 +210,6 @@ function Post() {
     }
   };
 
-  const handleHistory = () => {
-    navigate(`/history/question/${qid}`);
-  };
-
   const checkAnswer = () => {
     if (Cookies.get("sessionCookie") === undefined) {
       return (
@@ -278,19 +273,25 @@ function Post() {
               </Typography>
               <BoxUserPost direction="row" gap={1}>
                 <Typography variant="subtitle1">Người đăng:</Typography>
-                <BoxUserPost
-                  direction="row"
-                  gap={1}
-                  sx={{ cursor: "pointer" }}
-                  onClick={() => navigate(`/profile/${user.uid}`)}
+                <Link
+                  to={`/profile/${user.uid}`}
+                  style={{ textDecoration: "none" }}
                 >
-                  <Avatar
-                    alt="Avatar"
-                    src={user.avatar || user.name}
-                    sx={{ width: 40, height: 40 }}
-                  />
-                  <Typography variant="subtitle1">{user.name}</Typography>
-                </BoxUserPost>
+                  <BoxUserPost
+                    direction="row"
+                    gap={1}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <Avatar
+                      alt="Avatar"
+                      src={user.avatar || user.name}
+                      sx={{ width: 40, height: 40 }}
+                    />
+                    <Typography variant="subtitle1" color={"text.primary"}>
+                      {user.name}
+                    </Typography>
+                  </BoxUserPost>
+                </Link>
               </BoxUserPost>
             </Stack>
           </BoxContent>
@@ -306,13 +307,14 @@ function Post() {
                 }}
                 direction={{ xs: "column", md: "row" }}
               >
-                <Button
-                  variant="contained"
-                  sx={{ marginRight: 1, width: 200 }}
-                  onClick={() => navigate(`/editpost/${qid}`)}
-                >
-                  Sửa bài viết
-                </Button>
+                <Link to={`/editpost/${qid}`}>
+                  <Button
+                    variant="contained"
+                    sx={{ marginRight: 1, width: 200 }}
+                  >
+                    Sửa bài viết
+                  </Button>
+                </Link>
                 <Button variant="contained" sx={{ marginRight: 1, width: 200 }}>
                   Chấp nhận
                 </Button>
@@ -357,9 +359,11 @@ function Post() {
                 </IconButton>
 
                 <Tooltip title="Lịch sử chỉnh sửa" placement="left">
-                  <IconButton onClick={handleHistory}>
-                    <HistoryIcon />
-                  </IconButton>
+                  <Link to={`/history/question/${qid}`}>
+                    <IconButton>
+                      <HistoryIcon />
+                    </IconButton>
+                  </Link>
                 </Tooltip>
 
                 {currentUser !== user.uid ? (

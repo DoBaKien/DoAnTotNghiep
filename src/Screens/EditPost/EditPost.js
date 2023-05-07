@@ -87,8 +87,6 @@ function EditPost() {
   }, [qid]);
 
   const handlePost = () => {
-    console.log(personName);
-    console.log(post);
     if (post === [] || personName === "" || tt === "") {
     } else {
       axios
@@ -130,7 +128,7 @@ function EditPost() {
       axios
         .post(`/question/createActivityHistory/${qid}`, {
           action: "Sửa câu hỏi",
-          description: "Khởi tạo câu hỏi",
+          description: tt,
         })
         .then(function (response) {
           console.log(response);

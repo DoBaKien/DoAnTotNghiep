@@ -7,13 +7,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
 import "../../Assert/index.css";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
+import { Link } from "react-router-dom";
 function Tags() {
-  const navigate = useNavigate();
-  const handle = (tid) => {
-    navigate(`/tagdetail/${tid}`);
-  };
   const [search, setSearch] = useState("");
   const [tags, setTags] = useState("");
 
@@ -50,10 +47,15 @@ function Tags() {
               .map((tag, index) => (
                 <Grid2 xs={3} sm={7} md={4} key={index}>
                   <BoxTags>
-                    <BoxTag onClick={() => handle(tag.tid)}>
-                      <Typography variant="body1">{tag.name}</Typography>
-                    </BoxTag>
-                    <Typography sx={{ marginTop: 2 }} className="tag">
+                    <Link
+                      to={`/tagdetail/${tag.tid}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <BoxTag>
+                        <Typography variant="body1">{tag.name}</Typography>
+                      </BoxTag>
+                    </Link>
+                    <Typography sx={{ marginTop: 2 }} className="title">
                       {tag.description}
                     </Typography>
                   </BoxTags>
@@ -74,9 +76,9 @@ function Tags() {
           <Typography variant="h4">Thẻ</Typography>
           <Box sx={{ width: "40vw", marginTop: 2 }}>
             <Typography>
-              A tag is a keyword or label that categorizes your question with
-              other, similar questions. Using the right tags makes it easier for
-              others to find and answer your question.
+              Thẻ là từ khóa hoặc nhãn phân loại câu hỏi của bạn với các câu hỏi
+              tương tự khác. Sử dụng đúng thẻ giúp người khác tìm và trả lời câu
+              hỏi của bạn dễ dàng hơn.
             </Typography>
           </Box>
           <InputFind>

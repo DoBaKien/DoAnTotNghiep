@@ -3,12 +3,13 @@ import Header from "../../../Component/Admin/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useContext } from "react";
 import { AuthContext } from "../../../Component/Auth/AuthContext";
-import { BoxHome, ExpandableCell, StackContent, ValueDate } from "../Style";
+import { BoxHome, ExpandableCell, StackContent } from "../Style";
 import LeftAdmin from "../../../Component/Admin/Left";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ValueDate } from "../../../Assert/Style";
 
 function ManagerQuest() {
   const { show, setShow } = useContext(AuthContext);
@@ -19,7 +20,6 @@ function ManagerQuest() {
       .get("/question/getAllQuestionDTO")
       .then(function (response) {
         setQuestions(response.data);
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -71,8 +71,8 @@ function ManagerQuest() {
         <Box height="80vh">
           <DataGrid
             rowHeight={50}
-            rows={questions.map((item, index) => ({
-              id: index,
+            rows={questions.map((item) => ({
+              id: item.question.qid,
               title: item.question.title,
               name: item.user.name,
               status: item.question.status,
