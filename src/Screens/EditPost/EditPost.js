@@ -26,11 +26,13 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AuthContext } from "../../Component/Auth/AuthContext";
 import NotFound from "../../Component/NotFound/NotFound";
+import Swal from "sweetalert2";
 
 function EditPost() {
+  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const { qid } = useParams();
   const [tags, setTags] = useState("");
@@ -55,15 +57,7 @@ function EditPost() {
       .catch(function (error) {
         console.log(error);
       });
-    axios
-      .get(`/question/getQuestionTagByQid/${qid}`)
-      .then(function (response) {
-        setPersonName(response.data);
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+
     axios
       .get(`question/getQuestionById/${qid}`)
       .then(function (response) {
@@ -85,10 +79,20 @@ function EditPost() {
     };
     getQuestionDetailByQid();
   }, [qid]);
-
-  const handlePost = () => {
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  const handlePost = async () => {
     if (post === [] || personName === "" || tt === "") {
+      Swal.fire("Thiếu thông tin", "Vui lòng điền đầy đủ thông tin", "error");
     } else {
+      Swal.fire({
+        icon: "success",
+        title: "Thành công",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+
       axios
         .put(`/question/edit/${qid}`, {
           title: title,
@@ -136,6 +140,8 @@ function EditPost() {
         .catch(function (error) {
           console.log(error);
         });
+      await sleep(2000);
+      navigate(`/post/${qid}`);
     }
   };
 
@@ -162,11 +168,29 @@ function EditPost() {
     contentType: "image/jpeg",
   };
 
+  const notiDel = (id, language) => {
+    Swal.fire({
+      title: "Bạn có chắc chắn muốn xóa ?",
+      text: "Khi bạn xóa hình thì bạn phải đăng lại hình mới",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire("Saved!", "", "success");
+
+        deleteImage(id, language);
+      }
+    });
+  };
+
   function deleteImage(id, language) {
     const newPost = post.filter((user) => user.qdid !== id);
     setPost(newPost);
     axios
-      .post(`/question/editDetail/${qid}`, post)
+      .post(`/question/editDetail/${qid}`, newPost)
       .then(function (response) {
         console.log(response);
       })
@@ -272,7 +296,7 @@ function EditPost() {
       return (
         <Box>
           <Stack direction="row" sx={{ alignItems: "center" }}>
-            <IconButton color="error" onClick={() => deleteImage(id, language)}>
+            <IconButton color="error" onClick={() => notiDel(id, language)}>
               <CloseIcon />
             </IconButton>
             <Typography variant="h6">Text</Typography>
@@ -295,7 +319,7 @@ function EditPost() {
     } else if (e === "image") {
       return (
         <Box>
-          <IconButton color="error" onClick={() => deleteImage(id, language)}>
+          <IconButton color="error" onClick={() => notiDel(id, language)}>
             <CloseIcon />
           </IconButton>
           <Button

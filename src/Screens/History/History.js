@@ -4,15 +4,18 @@ import { BoxContent, StackContent } from "./Style";
 import { BoxHome, ValueDate } from "../../Assert/Style";
 import { Avatar, Box, CircularProgress, Typography } from "@mui/material";
 
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { memo, useEffect, useState } from "react";
 import axios from "axios";
 import { DataGrid } from "@mui/x-data-grid";
+import { BoxUserPost } from "../Post/Style";
 
 function History() {
-  const { id } = useParams();
+  const { type, id } = useParams();
+  console.log(type);
   const [details, setDetails] = useState("");
   const [title, setTitle] = useState("");
+  const [user, setUser] = useState("");
   useEffect(() => {
     const getQuestionDetailByQid = async () => {
       try {
@@ -24,16 +27,41 @@ function History() {
         console.log(error);
       }
     };
-    getQuestionDetailByQid();
-    axios
-      .get(`question/getQuestionById/${id}`)
-      .then(function (response) {
-        setTitle(response.data.title);
-      })
-      .catch(function (error) {
+    const getAnswerActivityHistory = async () => {
+      try {
+        const response = await axios.get(
+          `answer/getAnswerActivityHistory/${id}`
+        );
+        setDetails(response.data);
+        console.log(response.data);
+      } catch (error) {
         console.log(error);
-      });
-  }, [id]);
+      }
+    };
+    const findByUid = async (uid) => {
+      try {
+        const response = await axios.get(`user/findByUid/${uid}`);
+        setUser(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    const getQuestionById = async () => {
+      try {
+        const response = await axios.get(`question/getQuestionById/${id}`);
+        setTitle(response.data.title);
+        findByUid(response.data.uid);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (type === "question") {
+      getQuestionDetailByQid();
+      getQuestionById();
+    } else if (type === "answer") {
+      getAnswerActivityHistory();
+    }
+  }, [id, type]);
 
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
@@ -73,22 +101,21 @@ function History() {
       renderCell: (params) => <ValueDate {...params} />,
     },
   ];
-  const datatable = () => {
+  const datatableQuestion = () => {
     if (Array.isArray(details) && details.length !== 0) {
       return (
         <Box height="70vh">
           <DataGrid
             rowHeight={50}
-            rows={details.map((item) => ({
-              id: item.questionActivityHistory.qahid,
+            rows={details.map((item, index) => ({
+              id: index,
               name: item.questionActivityHistory.action,
               description: item.questionActivityHistory.description,
               username: item.user.name + "///" + item.user.avatar,
               date: item.questionActivityHistory.date,
             }))}
             columns={columns}
-            pageSizeOptions={[10, 50, 100]}
-            checkboxSelection
+            pageSizeOptions={[5, 10, 20]}
             initialState={{
               ...details.initialState,
               pagination: { paginationModel: { pageSize: 10 } },
@@ -130,17 +157,107 @@ function History() {
       );
     }
   };
+  const datatableAnswer = () => {
+    if (Array.isArray(details) && details.length !== 0) {
+      return (
+        <Box height="70vh">
+          <DataGrid
+            rowHeight={50}
+            rows={details.map((item, index) => ({
+              id: index,
+              name: item.answerActivityHistory.action,
+              description: item.answerActivityHistory.description,
+              username: item.user.name + "///" + item.user.avatar,
+              date: item.answerActivityHistory.date,
+            }))}
+            columns={columns}
+            pageSizeOptions={[5, 10, 20]}
+            initialState={{
+              ...details.initialState,
+              pagination: { paginationModel: { pageSize: 10 } },
+            }}
+            componentsProps={{
+              toolbar: {
+                showQuickFilter: true,
+                quickFilterProps: { debounceMs: 500 },
+                csvOptions: { fields: ["tid", "name", "description"] },
+              },
+            }}
+            getRowHeight={() => "auto"}
+            sx={{
+              "&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell": {
+                py: 1,
+              },
+              "&.MuiDataGrid-root--densityStandard .MuiDataGrid-cell": {
+                py: "8px",
+              },
+              "&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell": {
+                py: "10px",
+              },
+            }}
+          />
+        </Box>
+      );
+    } else {
+      return (
+        <Box
+          sx={{
+            height: "90vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
+  };
+
+  const checkType = () => {
+    if (type === "question") {
+      return (
+        <BoxContent sx={{ width: "60vw" }}>
+          <Typography variant="h4">Lịch sử chỉnh sửa</Typography>
+          <Typography sx={{ marginTop: 1 }}>Tiêu để: {title}</Typography>
+          <BoxUserPost direction="row" gap={1} sx={{ marginTop: 1 }}>
+            <Typography variant="subtitle1">Người đăng:</Typography>
+            <Link
+              to={`/profile/${user.uid}`}
+              style={{ textDecoration: "none" }}
+            >
+              <BoxUserPost direction="row" gap={1} sx={{ cursor: "pointer" }}>
+                <Avatar
+                  alt="Avatar"
+                  src={user.avatar || user.name}
+                  sx={{ width: 40, height: 40 }}
+                />
+                <Typography variant="subtitle1" color={"text.primary"}>
+                  {user.name}
+                </Typography>
+              </BoxUserPost>
+            </Link>
+          </BoxUserPost>
+          <Box sx={{ width: "100%", marginTop: 2 }}>{datatableQuestion()}</Box>
+        </BoxContent>
+      );
+    } else if (type === "answer") {
+      return (
+        <BoxContent sx={{ width: "60vw" }}>
+          <Typography variant="h4">Lịch sử chỉnh sửa câu trả lời</Typography>
+
+          <Box sx={{ width: "100%", marginTop: 2 }}>{datatableAnswer()}</Box>
+        </BoxContent>
+      );
+    }
+  };
 
   return (
     <BoxHome color={"text.primary"}>
       <Header />
       <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
-        <BoxContent sx={{ width: "60vw" }}>
-          <Typography variant="h4">Lịch sử chỉnh sửa</Typography>
-          <Typography sx={{ marginTop: 1 }}>Tiêu để: {title}</Typography>
-          <Box sx={{ width: "100%", marginTop: 2 }}>{datatable()}</Box>
-        </BoxContent>
+        {checkType()}
       </StackContent>
     </BoxHome>
   );

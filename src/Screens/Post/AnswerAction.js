@@ -137,21 +137,33 @@ function AnswerAction(props) {
       .post(`/answer/create/${props.qid}`, {})
       .then(function (response) {
         axios
+          .post(`/answer/createActivityHistory/${response.data}`, {
+            action: "Trả lời",
+            description: "Khởi tạo câu trả lời",
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        axios
+          .post(`/question/createActivityHistory/${props.qid}`, {
+            action: "Trả lời",
+            description: "Trả lời",
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        axios
           .post(`/answer/createDetail/${response.data}`, post)
           .then(function (response) {
             Swal.fire("Thành công", "Bạn trả lời thành công", "success");
             setPost([{ id: 1, type: "text", content: "" }]);
-            axios
-              .post(`/answer/createActivityHistory/${response.data}`, {
-                action: "Trả lời",
-                description: "Khởi tạo câu trả lời",
-              })
-              .then(function (response) {
-                console.log(response);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
+
             if (currentUser === "") {
               axios
                 .get(`answer/getAnswerDTOByQid/${props.qid}`)

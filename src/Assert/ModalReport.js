@@ -1,17 +1,17 @@
 import {
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
   Modal,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import { memo } from "react";
-
+import axios from "axios";
+import { memo, useState } from "react";
+import Swal from "sweetalert2";
 function ModalReport({ setModal, modal, qid, type }) {
+  const [reason, setReason] = useState("");
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -24,11 +24,36 @@ function ModalReport({ setModal, modal, qid, type }) {
     color: "text.primary",
     p: 4,
   };
+  const handleReasonChange = (e) => {
+    setReason(e.target.value);
+  };
 
   const toggleModal = () => {
     setModal(false);
   };
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    if (type === "câu trả lời" && reason !== "") {
+      axios
+        .post(`/answer/report/${qid}`, reason)
+        .then(function (response) {
+          console.log(response);
+          Swal.fire("Thành công", "Tố cáo thành công", "success");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else if (type === "câu hỏi" && reason !== "") {
+      axios
+        .post(`/question/report/${qid}`, reason)
+        .then(function (response) {
+          console.log(response);
+          Swal.fire("Thành công", "Tố cáo thành công", "success");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  };
 
   return (
     <Box>
@@ -42,41 +67,37 @@ function ModalReport({ setModal, modal, qid, type }) {
             </Typography>
           </Box>
           <Box>
-            <form noValidate onSubmit={handleSubmit}>
-              <TextField
-                label="Mã người dùng"
-                variant="outlined"
-                fullWidth
-                disabled
-                defaultValue={qid}
-                style={{ marginTop: 20, marginBottom: 20 }}
-              />
-              <FormGroup>
-                <FormControlLabel
-                  control={<Checkbox defaultChecked />}
-                  label="Label"
-                />
-                <FormControlLabel control={<Checkbox />} label="Required" />
-                <FormControlLabel control={<Checkbox />} label="Disabled" />
-              </FormGroup>
-              <Stack
-                direction="row"
-                spacing={10}
-                style={{ justifyContent: "center", textAlign: "center" }}
+            <Typography>Vui lòng nhập lý do tố cáo {type}</Typography>
+            <TextField
+              placeholder="Nhập lý do của bạn"
+              variant="outlined"
+              fullWidth
+              multiline
+              onChange={handleReasonChange}
+              rows={4}
+              style={{ marginTop: 20, marginBottom: 20 }}
+            />
+            <Stack
+              direction="row"
+              spacing={10}
+              style={{ justifyContent: "center", textAlign: "center" }}
+            >
+              <Button
+                variant="contained"
+                onClick={() => setModal(!modal)}
+                sx={{ width: 150 }}
               >
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={() => setModal(!modal)}
-                  sx={{ width: 150 }}
-                >
-                  Hủy
-                </Button>
-                <Button type="submit" variant="contained" sx={{ width: 150 }}>
-                  đăng nhập
-                </Button>
-              </Stack>
-            </form>
+                Hủy
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                sx={{ width: 150 }}
+                onClick={handleSubmit}
+              >
+                Tố cáo
+              </Button>
+            </Stack>
           </Box>
         </Box>
       </Modal>

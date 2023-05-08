@@ -98,7 +98,11 @@ function Home() {
                     sx={{ width: "100%", alignItems: "center" }}
                   >
                     {q.tags.map((t, i) => (
-                      <Link to={`/tagdetail/${t.tid}`} key={i}>
+                      <Link
+                        to={`/tagdetail/${t.tid}`}
+                        key={i}
+                        style={{ textDecoration: "none" }}
+                      >
                         <BoxTag>
                           <Typography variant="body2">{t.name}</Typography>
                         </BoxTag>

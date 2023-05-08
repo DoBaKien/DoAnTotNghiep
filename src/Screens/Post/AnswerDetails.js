@@ -77,11 +77,13 @@ function AnswerDetails(props) {
                   >
                     <SouthIcon fontSize="small" />
                   </IconButton>
-                  <Tooltip title="Lịch sử chỉnh sửa" placement="left">
-                    <IconButton>
-                      <HistoryIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
+                  <Link to={`/history/answer/${item.answer.aid}`}>
+                    <Tooltip title="Lịch sử chỉnh sửa" placement="left">
+                      <IconButton>
+                        <HistoryIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Link>
                   {props.currentUser !== item.answer.uid ? (
                     <Tooltip title="Báo cáo" placement="left">
                       <IconButton onClick={() => handleReport(item.answer.aid)}>
