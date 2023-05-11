@@ -34,7 +34,7 @@ import Swal from "sweetalert2";
 function EditPost() {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
-  const { qid } = useParams();
+  const { type, qid } = useParams();
   const [tags, setTags] = useState("");
   const [title, setTitle] = useState("");
   const [personName, setPersonName] = useState([]);
@@ -49,24 +49,25 @@ function EditPost() {
   const editor = useRef(null);
 
   useEffect(() => {
-    axios
-      .get("/tag/getAllTag")
-      .then(function (response) {
+    const getAllTag = async () => {
+      try {
+        const response = await axios.get("/tag/getAllTag");
         setTags(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-    axios
-      .get(`question/getQuestionById/${qid}`)
-      .then(function (response) {
+    const getQuestionById = async () => {
+      try {
+        const response = await axios.get(`question/getQuestionById/${qid}`);
         setTitle(response.data.title);
         setUser(response.data.uid);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     const getQuestionDetailByQid = async () => {
       try {
         const response = await axios.get(
@@ -77,6 +78,9 @@ function EditPost() {
         console.error(error);
       }
     };
+
+    getAllTag();
+    getQuestionById();
     getQuestionDetailByQid();
   }, [qid]);
   function sleep(ms) {

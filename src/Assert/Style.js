@@ -30,7 +30,7 @@ export const BoxAbout = styled(Box)(({ theme }) => ({
 export const BoxList = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
   width: "20vw",
-  height: 300,
+  height: "-moz-fit-content",
 }));
 export const PaperUser = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",

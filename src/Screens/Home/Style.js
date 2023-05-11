@@ -1,4 +1,11 @@
-import { Badge, Box, Stack, Typography, styled } from "@mui/material";
+import {
+  Badge,
+  Box,
+  IconButton,
+  Stack,
+  Typography,
+  styled,
+} from "@mui/material";
 
 export const StackContent = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
@@ -75,5 +82,15 @@ export const StackName = styled(Stack)(() => ({
 export const TypographyTitle = styled(Typography)(({ theme }) => ({
   "&:hover": {
     color: theme.palette.mode === "light" ? "#00A2E8" : "#C3C3C3",
+  },
+}));
+export const BtnToTop = styled(IconButton)(({ theme }) => ({
+  position: "fixed",
+  bottom: "50px",
+  right: "70px",
+  color: theme.palette.mode === "light" ? "white" : "black",
+  backgroundColor: theme.palette.mode === "light" ? "#00A2E8" : "#E54B4B",
+  "&:hover": {
+    backgroundColor: theme.palette.mode === "light" ? "lightblue" : "#C3C3C3",
   },
 }));

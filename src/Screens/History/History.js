@@ -62,7 +62,7 @@ function History() {
       getAnswerActivityHistory();
     }
   }, [id, type]);
-
+  console.log(details);
   const columns = [
     { field: "id", headerName: "ID", flex: 0.5 },
     {
@@ -213,7 +213,7 @@ function History() {
       );
     }
   };
-
+  console.log(details);
   const checkType = () => {
     if (type === "question") {
       return (

@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, styled } from "@mui/material";
+import { Box, Stack, styled } from "@mui/material";
 
 export const StackContent = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
@@ -27,7 +27,7 @@ export const DateV = (value) => {
   const minutes = dateObject.getMinutes(); // Lấy phút
   const date = `${hours}:${minutes} - ${day}/${month}/${year}`;
 
-  return <Typography variant="subtitle1">Ngày đăng: {date}</Typography>;
+  return date;
 };
 
 export const BoxUserPost = styled(Stack)(() => ({

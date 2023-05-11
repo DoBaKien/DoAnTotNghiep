@@ -9,8 +9,16 @@ import {
 import axios from "axios";
 import { memo, useState } from "react";
 import Swal from "sweetalert2";
-function ModalReport({ setModal, modal, qid, type }) {
+function ModalReport({ setModal, modal, qid, type, setCheckRp }) {
   const [reason, setReason] = useState("");
+  const getUserReportValue = async () => {
+    try {
+      const response = await axios.get(`question/getUserReportValue/${qid}`);
+      setCheckRp(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const style = {
     position: "absolute",
@@ -34,9 +42,11 @@ function ModalReport({ setModal, modal, qid, type }) {
   const handleSubmit = () => {
     if (type === "câu trả lời" && reason !== "") {
       axios
-        .post(`/answer/report/${qid}`, reason)
+        .post(`/answer/report/${qid}`, { detail: reason })
         .then(function (response) {
           console.log(response);
+          setModal(false);
+
           Swal.fire("Thành công", "Tố cáo thành công", "success");
         })
         .catch(function (error) {
@@ -44,9 +54,11 @@ function ModalReport({ setModal, modal, qid, type }) {
         });
     } else if (type === "câu hỏi" && reason !== "") {
       axios
-        .post(`/question/report/${qid}`, reason)
+        .post(`/question/report/${qid}`, { detail: reason })
         .then(function (response) {
           console.log(response);
+          setModal(false);
+          getUserReportValue();
           Swal.fire("Thành công", "Tố cáo thành công", "success");
         })
         .catch(function (error) {

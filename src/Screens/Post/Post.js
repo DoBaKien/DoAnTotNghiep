@@ -32,7 +32,7 @@ import parse from "html-react-parser";
 import AnswerAction from "./AnswerAction";
 import Cookies from "js-cookie";
 import ModalReport from "../../Assert/ModalReport";
-
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 function Post() {
   const { qid } = useParams();
   const [details, setDetails] = useState("");
@@ -45,8 +45,17 @@ function Post() {
   const [answer, setAnswer] = useState("");
   const [modal, setModal] = useState(false);
   const [checkUser, setCheckUser] = useState("");
-
+  const [checkRp, setCheckRp] = useState("");
   useEffect(() => {
+    const getUserReportValue = async () => {
+      try {
+        const response = await axios.get(`question/getUserReportValue/${qid}`);
+        setCheckRp(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserReportValue();
     const getQuestionDetailByQid = async () => {
       try {
         const response = await axios.get(
@@ -118,6 +127,7 @@ function Post() {
       }
     };
     GetTotalVoteValue();
+
     if (currentUser === "") {
       const GetAnswer = async () => {
         try {
@@ -190,8 +200,12 @@ function Post() {
 
   const handleReport = () => {
     if (Cookies.get("sessionCookie") !== undefined) {
-      setModal(!modal);
-    } else {
+      if (checkRp !== "None") {
+        setModal(!modal);
+      } else {
+        Swal.fire("Bạn đã tố cáo rồi");
+      }
+    } else if (Cookies.get("sessionCookie") === undefined) {
       Swal.fire({
         title: "Lỗi",
         text: "Bạn phải đăng nhập trước",
@@ -248,10 +262,27 @@ function Post() {
     }
   };
 
+  const saveQuestion = () => {
+    axios
+      .post(`/user/saveQuestion/${qid}`)
+      .then(function (response) {
+        Swal.fire("", "Lưu câu hỏi thành công", "success");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   return (
     <BoxHome color={"text.primary"}>
       <Header />
-      <ModalReport setModal={setModal} modal={modal} qid={qid} type="câu hỏi" />
+      <ModalReport
+        setModal={setModal}
+        modal={modal}
+        qid={qid}
+        type="câu hỏi"
+        setCheckRp={setCheckRp}
+      />
       <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
         <Box>
@@ -267,7 +298,10 @@ function Post() {
                 alignItems: "center",
               }}
             >
-              {DateV(title.date)}
+              <Typography variant="subtitle1">
+                Ngày đăng: {DateV(title.date)}
+              </Typography>
+
               <Typography variant="subtitle1">
                 Trạng thái: {title.status}
               </Typography>
@@ -307,7 +341,7 @@ function Post() {
                 }}
                 direction={{ xs: "column", md: "row" }}
               >
-                <Link to={`/editpost/${qid}`}>
+                <Link to={`/edit/post/${qid}`}>
                   <Button
                     variant="contained"
                     sx={{ marginRight: 1, width: 200 }}
@@ -316,7 +350,7 @@ function Post() {
                   </Button>
                 </Link>
                 <Button variant="contained" sx={{ marginRight: 1, width: 200 }}>
-                  Chấp nhận
+                  Đóng
                 </Button>
                 <Button
                   variant="contained"
@@ -368,8 +402,20 @@ function Post() {
 
                 {currentUser !== user.uid ? (
                   <Tooltip title="Báo cáo" placement="left">
-                    <IconButton onClick={handleReport}>
+                    <IconButton
+                      onClick={handleReport}
+                      color={checkRp !== "None" ? "primary" : ""}
+                    >
                       <ReportIcon />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  <></>
+                )}
+                {currentUser !== user.uid ? (
+                  <Tooltip title="Lưu câu hỏi" placement="left">
+                    <IconButton onClick={saveQuestion}>
+                      <BookmarkBorderIcon />
                     </IconButton>
                   </Tooltip>
                 ) : (
@@ -429,7 +475,7 @@ function Post() {
           <Typography sx={{ marginTop: 1 }} variant="h5">
             Bình luận
           </Typography>
-          <BoxContent sx={{ marginTop: 1 }}>
+          {/* <BoxContent sx={{ marginTop: 1 }}>
             <Stack direction="row" gap={2} sx={{ padding: 1 }}>
               <Box>
                 <Avatar alt="Avatar">V</Avatar>
@@ -449,7 +495,7 @@ function Post() {
                 </Typography>
               </Box>
             </Stack>
-          </BoxContent>
+          </BoxContent> */}
 
           <BoxContent>
             <Box sx={{ marginLeft: 8 }}>

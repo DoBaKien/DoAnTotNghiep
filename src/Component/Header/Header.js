@@ -73,7 +73,10 @@ function Header() {
     navigate("/login");
     setTest(!test);
   };
-
+  const handleSetting = () => {
+    navigate("/setting");
+    setAnchorEl(null);
+  };
   const CheckAuth = () => {
     if (cookie === undefined) {
       return (
@@ -228,7 +231,7 @@ function Header() {
           />
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleSetting}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>

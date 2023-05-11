@@ -6,6 +6,16 @@ import { BoxHome, StackContent, Item } from "../Style";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useContext } from "react";
 import { AuthContext } from "../../../Component/Auth/AuthContext";
+// import {
+//   Bar,
+//   BarChart,
+//   CartesianGrid,
+//   Legend,
+//   Tooltip,
+//   XAxis,
+//   YAxis,
+// } from "recharts";
+
 function DashBoard() {
   const { show, setShow } = useContext(AuthContext);
 
@@ -38,6 +48,31 @@ function DashBoard() {
                 ))}
               </Grid>
             </Box>
+          </Box>
+          <Box
+            sx={{
+              width: 100,
+              height: 100,
+
+              marginTop: 2,
+            }}
+          >
+            {/* <BarChart
+              width={1200}
+              height={300}
+              data={monthlyTotal.map((value, index) => ({
+                name: `Tháng ${index + 1}`,
+                value,
+              }))}
+              style={{ background: "#FFFFFF", width: "100%", height: "100%" }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="value" fill="#8884d8" />
+            </BarChart> */}
           </Box>
         </Box>
       </StackContent>

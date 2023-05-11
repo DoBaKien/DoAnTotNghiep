@@ -1,52 +1,28 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Divider,
-  Stack,
-  Typography,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from "@mui/material";
+import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import {
   BoxAbout,
   BoxHome,
-  BoxList,
   BoxName,
   StackContent,
   BoxContent,
-  BoxTag,
 } from "../../Assert/Style";
 import Header from "../../Component/Header/Header";
-import {
-  BoxDetails,
-  BoxText,
-  BoxTitle,
-  StackPost,
-  TypographyTitle,
-} from "../Home/Style";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { BoxPost } from "./Style";
+
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useContext, useState } from "react";
 import { AuthContext } from "../../Component/Auth/AuthContext";
 import axios from "axios";
+import LeftSide from "./LeftSide";
+
+import My from "./My";
 
 function Profile() {
   const { currentUser } = useContext(AuthContext);
   const id = useParams();
-
+  const [page, setPage] = useState(<My id={id.id} />);
   const [data, setData] = useState("");
   const navigation = useNavigate();
-  const handleFollow = () => {
-    navigation("/follow");
-  };
+
   const handleEditPage = () => {
     navigation(`/editpf/${id.id}`);
   };
@@ -123,12 +99,7 @@ function Profile() {
       <BoxContent sx={{ marginTop: 3 }}>
         <BoxAbout>
           <Typography variant="h5">Về bản thân</Typography>
-          <Typography>
-            Karakai Jouzu no Takagi-san dựa trên tác phẩm cùng tên, nói về
-            Takagi và con gái cô ấy, Chi. mang đến có các bạn những câu chuyện
-            thường ngày châm chọc hài hước, liều rằng người bố có xuất hiện hay
-            không.....?
-          </Typography>
+          <Typography>{data.about}</Typography>
         </BoxAbout>
       </BoxContent>
       <Stack
@@ -138,157 +109,8 @@ function Profile() {
           marginTop: 4,
         }}
       >
-        <BoxList>
-          <Box sx={{ flex: { xl: 1, md: 2, sm: 2, xs: 1 } }}>
-            <Box p={2} sx={{ display: { xs: "none", md: "block" } }}>
-              <Box
-                sx={{
-                  border: "1px solid gray",
-                  padding: 1,
-                  borderRadius: 10,
-                }}
-              >
-                <List>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <QuestionAnswerIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Câu hỏi" />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={handleFollow}>
-                      <ListItemIcon>
-                        <FavoriteIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Theo dõi" />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <LocalOfferIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Thẻ" />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <LogoutIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Đăng xuất" />
-                    </ListItemButton>
-                  </ListItem>
-                </List>
-              </Box>
-            </Box>
-            <Box
-              flex={0.1}
-              sx={{
-                display: { md: "none", xs: "block" },
-              }}
-            >
-              <Box
-                sx={{
-                  justifyContent: "center",
-                  display: "flex",
-                }}
-              >
-                <List style={{ width: "50px" }}>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <FavoriteIcon />
-                      </ListItemIcon>
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <QuestionAnswerIcon />
-                      </ListItemIcon>
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <LocalOfferIcon />
-                      </ListItemIcon>
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <LogoutIcon />
-                      </ListItemIcon>
-                    </ListItemButton>
-                  </ListItem>
-                </List>
-              </Box>
-            </Box>
-          </Box>
-        </BoxList>
-        <BoxPost>
-          {Array.from(Array(6)).map((_, i) => (
-            <StackPost
-              key={i}
-              direction="row"
-              spacing={2}
-              divider={
-                <Divider
-                  orientation="vertical"
-                  flexItem
-                  sx={{ display: { xs: "none", lg: "block" } }}
-                />
-              }
-            >
-              <BoxDetails sx={{ display: { xs: "none", lg: "block" } }}>
-                <BoxText>
-                  <Typography>1 phiếu</Typography>
-                </BoxText>
-                <BoxText>
-                  <Typography>1 trả lời</Typography>
-                </BoxText>
-                <BoxText>
-                  <Typography>1 xem</Typography>
-                </BoxText>
-              </BoxDetails>
-
-              <BoxTitle>
-                <TypographyTitle component="div" className="title">
-                  SQL Error mismatched input 'sql_query' expecting when using
-                  Create Table in Pyspark SQL Error mismatched input 'sql_query'
-                  expecting when using Create Table in Pyspark SQL Error
-                  mismatched input 'sql_query' expecting when using Create Table
-                  in Pyspark
-                </TypographyTitle>
-                <Stack
-                  direction={{ xs: "column", lg: "row" }}
-                  sx={{ marginTop: 1 }}
-                >
-                  <Stack
-                    direction="row"
-                    spacing={2}
-                    sx={{
-                      width: "100%",
-                      alignItems: "center",
-                      marginBottom: 2,
-                      marginTop: 1,
-                    }}
-                  >
-                    {Array.from(Array(3)).map((_, i) => (
-                      <BoxTag key={i}>
-                        <Typography variant="body2">asd {i}</Typography>
-                      </BoxTag>
-                    ))}
-                  </Stack>
-                </Stack>
-              </BoxTitle>
-            </StackPost>
-          ))}
-        </BoxPost>
+        <LeftSide page={page} setPage={setPage} id={id.id} />
+        {page}
       </Stack>
     </BoxHome>
   );

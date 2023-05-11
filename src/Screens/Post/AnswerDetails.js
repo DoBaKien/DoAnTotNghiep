@@ -1,4 +1,4 @@
-import { BoxContent, BoxUser } from "./Style";
+import { BoxContent, BoxUser, DateV } from "./Style";
 import {
   Avatar,
   Box,
@@ -22,7 +22,11 @@ import "../../Assert/index.css";
 import ModalReport from "../../Assert/ModalReport";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
+import CheckIcon from "@mui/icons-material/Check";
+
 import { Link, Navigate } from "react-router-dom";
+import axios from "axios";
+
 function AnswerDetails(props) {
   const [modal, setModal] = useState(false);
   const [aid, setAid] = useState("");
@@ -52,6 +56,35 @@ function AnswerDetails(props) {
     }
   };
 
+  const handleApt = (id) => {
+    axios
+      .put(`/answer/acceptAnswer/${id}`)
+      .then(function (response) {
+        Swal.fire("", "Bạn đã chấp nhận câu trả lời này", "success");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const checkAcpt = (aid, stt) => {
+    if (stt === "Accepted") {
+      return (
+        <Tooltip title="Chấp nhận câu trả lởi" placement="left">
+          <CheckIcon color="success" fontSize="large" />
+        </Tooltip>
+      );
+    } else if (props.uid === props.currentUser) {
+      return (
+        <Tooltip title="Chấp nhận câu trả lởi" placement="left">
+          <IconButton onClick={() => handleApt(aid)}>
+            <CheckIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      );
+    }
+  };
+
   const ad = () => {
     if (props.answer && props.answer.length > 0) {
       return (
@@ -70,7 +103,6 @@ function AnswerDetails(props) {
                   <IconButton color={item.voteValue === "Up" ? "primary" : ""}>
                     <NorthIcon fontSize="small" />
                   </IconButton>
-
                   <Typography variant="subtitle1">{item.answerVote}</Typography>
                   <IconButton
                     color={item.voteValue === "Down" ? "primary" : ""}
@@ -91,17 +123,15 @@ function AnswerDetails(props) {
                       </IconButton>
                     </Tooltip>
                   ) : (
-                    <></>
-                  )}
-                  {props.currentUser === item.answer.uid ? (
                     <Tooltip title="Chỉnh sửa" placement="left">
-                      <IconButton onClick={() => handleEdit(item.answer.aid)}>
-                        <ModeEditIcon fontSize="small" />
-                      </IconButton>
+                      <Link to={`/edit/answer/${item.answer.aid}`}>
+                        <IconButton onClick={() => handleEdit()}>
+                          <ModeEditIcon fontSize="small" />
+                        </IconButton>
+                      </Link>
                     </Tooltip>
-                  ) : (
-                    <></>
                   )}
+                  {checkAcpt(item.answer.aid, item.answer.status)}
                 </Box>
                 <Box sx={{ marginTop: 0.5 }}>
                   <Link
@@ -119,6 +149,9 @@ function AnswerDetails(props) {
                       />
                       <Typography className="title" color={"text.primary"}>
                         {item.user.name}
+                      </Typography>
+                      <Typography variant="caption" color={"text.primary"}>
+                        {DateV(item.answer.date)}
                       </Typography>
                     </BoxUser>
                   </Link>
