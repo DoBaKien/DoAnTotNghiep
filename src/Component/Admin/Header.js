@@ -27,11 +27,29 @@ import { ThemeUseContext } from "../Darkmode/ThemeUseContext";
 import { MaterialUISwitch } from "../Header/Style";
 import { auth } from "../../Assert/Config";
 import Cookies from "js-cookie";
+import { useEffect } from "react";
+import { AuthContext } from "../Auth/AuthContext";
+import axios from "axios";
 function Header({ show, setShow }) {
   const navigate = useNavigate();
   const context = useContext(ThemeUseContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const { currentUser } = useContext(AuthContext);
+  const [data, setData] = useState("");
+  useEffect(() => {
+    const findByUid = async () => {
+      try {
+        const response = await axios.get(`/user/findByUid/${currentUser}`);
+        setData(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    if (currentUser !== "") {
+      findByUid();
+    }
+  }, [currentUser]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,7 +65,10 @@ function Header({ show, setShow }) {
     navigate("/login");
   };
   const handlePf = () => {};
-
+  const handleSetting = () => {
+    navigate("/setting");
+    setAnchorEl(null);
+  };
   return (
     <StackHeader direction="row" color={"text.primary"} spacing={2}>
       <IconButton onClick={() => setShow(!show)}>
@@ -81,7 +102,15 @@ function Header({ show, setShow }) {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
-              <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+              {data.avatar !== null ? (
+                <Avatar
+                  alt="Avatar"
+                  src={data.avatar}
+                  sx={{ width: 32, height: 32 }}
+                />
+              ) : (
+                <Avatar>V</Avatar>
+              )}
             </IconButton>
           </Tooltip>
         </Box>
@@ -120,7 +149,12 @@ function Header({ show, setShow }) {
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
           <MenuItem onClick={handlePf}>
-            <Avatar /> Trang cá nhân
+            {data.avatar !== null ? (
+              <Avatar alt="Avatar" src={data.avatar} />
+            ) : (
+              <Avatar>V</Avatar>
+            )}
+            Trang cá nhân
           </MenuItem>
           <MenuItem sx={{ justifyContent: "center" }}>
             Chế độ tối
@@ -131,7 +165,7 @@ function Header({ show, setShow }) {
             />
           </MenuItem>
           <Divider />
-          <MenuItem onClick={handleClose}>
+          <MenuItem onClick={handleSetting}>
             <ListItemIcon>
               <Settings fontSize="small" />
             </ListItemIcon>

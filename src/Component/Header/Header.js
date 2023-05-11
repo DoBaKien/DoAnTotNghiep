@@ -26,6 +26,7 @@ import Cookies from "js-cookie";
 import { AuthContext } from "../Auth/AuthContext";
 import { auth } from "../../Assert/Config";
 import axios from "axios";
+import { signOut } from "firebase/auth";
 
 function Header() {
   const { currentUser, test, setTest } = useContext(AuthContext);
@@ -59,11 +60,16 @@ function Header() {
   };
 
   const handlelogout = () => {
-    setTest(!test);
-    auth.signOut();
-    Cookies.remove("sessionCookie");
-    localStorage.removeItem("id");
-    setAnchorEl(null);
+    signOut(auth)
+      .then(() => {
+        setTest(!test);
+        Cookies.remove("sessionCookie");
+        localStorage.removeItem("id");
+        setAnchorEl(null);
+      })
+      .catch((error) => {
+        console.log("dx lỗi");
+      });
   };
   const handlePf = () => {
     navigate(`/profile/${currentUser}`);

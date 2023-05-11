@@ -20,6 +20,7 @@ import { useState } from "react";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import CommentIcon from "@mui/icons-material/Comment";
 import AnnouncementIcon from "@mui/icons-material/Announcement";
+import SwitchAccountIcon from "@mui/icons-material/SwitchAccount";
 function LeftAdmin() {
   const BoxSide = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
@@ -36,6 +37,7 @@ function LeftAdmin() {
     setOpen(!open);
   };
   const handleHome = () => {
+    // window.open("/tags", "_blank");
     navigate("/");
   };
   const handleDB = () => {
@@ -84,7 +86,7 @@ function LeftAdmin() {
                 <ListItemIcon>
                   <PeopleIcon />
                 </ListItemIcon>
-                <ListItemText primary="Quản Lý Người Dùng" />
+                <ListItemText primary="Quản lý người dùng" />
               </ListItemButton>
             </ListItem>
             <Divider />
@@ -93,7 +95,7 @@ function LeftAdmin() {
                 <ListItemIcon>
                   <QuestionAnswerIcon />
                 </ListItemIcon>
-                <ListItemText primary="Quản Lý Câu hỏi" />
+                <ListItemText primary="Quản lý câu hỏi" />
               </ListItemButton>
             </ListItem>
             <Divider />
@@ -102,7 +104,7 @@ function LeftAdmin() {
                 <ListItemIcon>
                   <LocalOfferIcon />
                 </ListItemIcon>
-                <ListItemText primary="Quản Lý Thẻ" />
+                <ListItemText primary="Quản lý thẻ" />
               </ListItemButton>
             </ListItem>
             <Divider />
@@ -110,7 +112,7 @@ function LeftAdmin() {
               <ListItemIcon>
                 <ReportIcon />
               </ListItemIcon>
-              <ListItemText primary="Quản Lý Báo cáo" />
+              <ListItemText primary="Quản lý báo cáo" />
               {open ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
             <Collapse in={open} timeout="auto" unmountOnExit>
@@ -119,23 +121,31 @@ function LeftAdmin() {
                   <ListItemIcon>
                     <QuestionAnswerIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Báo Cáo Câu Hỏi" />
+                  <ListItemText primary="Báo cáo câu hỏi" />
                 </ListItemButton>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <AnnouncementIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Báo Cáo Trả Lời" />
+                  <ListItemText primary="Báo cáo trả lời" />
                 </ListItemButton>
                 <ListItemButton sx={{ pl: 4 }}>
                   <ListItemIcon>
                     <CommentIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Báo Cáo Bình Luận" />
+                  <ListItemText primary="Báo cáo bình luận" />
                 </ListItemButton>
               </List>
             </Collapse>
             <Divider />
+            <ListItem disablePadding>
+              <ListItemButton onClick={handleHome}>
+                <ListItemIcon>
+                  <SwitchAccountIcon />
+                </ListItemIcon>
+                <ListItemText primary="Giao diện người dùng" />
+              </ListItemButton>
+            </ListItem>
           </List>
         </Box>
       </Box>

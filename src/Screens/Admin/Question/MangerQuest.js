@@ -68,7 +68,7 @@ function ManagerQuest() {
   const datatable = () => {
     if (Array.isArray(questions) && questions.length !== 0) {
       return (
-        <Box height="80vh">
+        <Box height="80vh" width="99%">
           <DataGrid
             rowHeight={50}
             rows={questions.map((item) => ({
@@ -81,7 +81,6 @@ function ManagerQuest() {
             }))}
             columns={columns}
             pageSizeOptions={[10, 50, 100]}
-            checkboxSelection
             components={{
               Toolbar: GridToolbar,
             }}
@@ -100,7 +99,6 @@ function ManagerQuest() {
             }}
             getRowHeight={() => "auto"}
             sx={{
-              width: "98%",
               "&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell": {
                 py: 1,
               },

@@ -60,7 +60,7 @@ function ManagerTag() {
       field: "actions",
       headerName: "Action",
       type: "actions",
-      flex: 0.5,
+      flex: 0.6,
       getActions: (params) => {
         let actions = [
           <>
@@ -89,14 +89,13 @@ function ManagerTag() {
   const datatable = () => {
     if (Array.isArray(tags) && tags.length !== 0) {
       return (
-        <Box height="80vh">
+        <Box height="80vh" width="99%">
           <DataGrid
             rowHeight={50}
             getRowId={getRowId}
             rows={tags}
             columns={columns}
             pageSizeOptions={[10, 50, 100]}
-            checkboxSelection
             components={{
               Toolbar: GridToolbar,
             }}

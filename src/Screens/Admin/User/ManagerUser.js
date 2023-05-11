@@ -170,7 +170,7 @@ function ManagerUser() {
   const datatable = () => {
     if (Array.isArray(users) && users.length !== 0) {
       return (
-        <Box height="80vh">
+        <Box height="80vh" width="99%">
           <DataGrid
             rowHeight={150}
             rows={users}
@@ -179,7 +179,6 @@ function ManagerUser() {
             onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
             rowsPerPageOptions={[5, 10, 20]}
             pageSize={pageSize}
-            checkboxSelection
             components={{
               Toolbar: GridToolbar,
             }}

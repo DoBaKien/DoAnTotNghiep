@@ -17,13 +17,17 @@ import { useContext, useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  FacebookAuthProvider,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Header from "../../Component/Header/Header";
 import { auth } from "../../Assert/Config";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../Component/Auth/AuthContext";
+import ModalForgot from "./ModalForgot";
 
 var regEmail = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z]{2,4})+$/;
 var regpass = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
@@ -35,7 +39,7 @@ function Login() {
   const [userNameError, setUserNameError] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
-
+  const [modal, setModal] = useState(false);
   const handleSubmit = (e) => {
     e.preventDefault();
     if (userName === "" || password === "") {
@@ -80,7 +84,10 @@ function Login() {
       setUserName("");
       setUserNameError(true);
     }
-    setUserName(e);
+  };
+
+  const handleForget = () => {
+    setModal(!modal);
   };
 
   const handleChanglePassword = (e) => {
@@ -94,6 +101,12 @@ function Login() {
     setPassword(e);
   };
 
+  const provider = new FacebookAuthProvider();
+  provider.setCustomParameters({
+    display: "popup",
+  });
+  const handleFb = () => {};
+
   return (
     <Box
       bgcolor={"background.default"}
@@ -102,6 +115,7 @@ function Login() {
         height: "100vh",
       }}
     >
+      <ModalForgot setModal={setModal} modal={modal} />
       <Header />
       <Box
         sx={{
@@ -117,7 +131,7 @@ function Login() {
           </Box>
           <BoxGG variant="outlined">
             <CardActionArea>
-              <CardContent sx={{ alignItems: "center" }}>
+              <CardContent sx={{ alignItems: "center" }} onClick={handleFb}>
                 <Stack
                   direction="row"
                   sx={{
@@ -182,7 +196,7 @@ function Login() {
               marginTop: 20,
             }}
           >
-            <Link component="button" variant="body2">
+            <Link component="button" variant="body2" onClick={handleForget}>
               Quên mật khẩu?
             </Link>
           </Box>

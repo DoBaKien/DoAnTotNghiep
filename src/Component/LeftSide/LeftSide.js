@@ -20,6 +20,8 @@ import { ThemeUseContext } from "../Darkmode/ThemeUseContext.js";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useNavigate } from "react-router-dom";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import { AuthContext } from "../Auth/AuthContext.js";
 function LeftSide() {
   const BoxSide = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
@@ -31,6 +33,7 @@ function LeftSide() {
     minHeight: "90vh",
   }));
 
+  const { role } = useContext(AuthContext);
   const context = useContext(ThemeUseContext);
   const navigate = useNavigate();
   const handleHome = () => {
@@ -68,7 +71,7 @@ function LeftSide() {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton onClick={handleAdmin}>
+                <ListItemButton>
                   <ListItemIcon>
                     <QuestionAnswerIcon />
                   </ListItemIcon>
@@ -91,6 +94,20 @@ function LeftSide() {
                   <ListItemText primary="Người dùng" />
                 </ListItemButton>
               </ListItem>
+
+              {role === "Admin" ? (
+                <ListItem disablePadding>
+                  <ListItemButton onClick={handleAdmin}>
+                    <ListItemIcon>
+                      <AdminPanelSettingsIcon />
+                    </ListItemIcon>
+                    <ListItemText primary=" Admin" />
+                  </ListItemButton>
+                </ListItem>
+              ) : (
+                <></>
+              )}
+
               <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
@@ -139,7 +156,17 @@ function LeftSide() {
                   </ListItemIcon>
                 </ListItemButton>
               </ListItem>
-
+              {role === "Admin" ? (
+                <ListItem disablePadding>
+                  <ListItemButton onClick={handleAdmin}>
+                    <ListItemIcon>
+                      <AdminPanelSettingsIcon />
+                    </ListItemIcon>
+                  </ListItemButton>
+                </ListItem>
+              ) : (
+                <></>
+              )}
               <ListItem disablePadding>
                 <IconButton
                   sx={{ ml: 1 }}
