@@ -9,7 +9,6 @@ import {
   CardMedia,
   IconButton,
   Stack,
-  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -33,6 +32,7 @@ import AnswerAction from "./AnswerAction";
 import Cookies from "js-cookie";
 import ModalReport from "../../Assert/ModalReport";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import Comment from "./Comment";
 function Post() {
   const { qid } = useParams();
   const [details, setDetails] = useState("");
@@ -45,7 +45,8 @@ function Post() {
   const [answer, setAnswer] = useState("");
   const [modal, setModal] = useState(false);
   const [checkUser, setCheckUser] = useState("");
-  const [checkRp, setCheckRp] = useState("");
+  const [checkRp, setCheckRp] = useState("None");
+
   useEffect(() => {
     const getUserReportValue = async () => {
       try {
@@ -55,7 +56,7 @@ function Post() {
         console.log(error);
       }
     };
-    getUserReportValue();
+
     const getQuestionDetailByQid = async () => {
       try {
         const response = await axios.get(
@@ -76,7 +77,6 @@ function Post() {
         console.log(error);
       }
     };
-    checkUserAnswer();
 
     axios
       .get(`question/getQuestionById/${qid}`)
@@ -127,29 +127,29 @@ function Post() {
       }
     };
     GetTotalVoteValue();
+    const GetAnswerCK = async () => {
+      try {
+        const response = await axios.get(`answer/getAnswerDTOByQidCk/${qid}`);
+        setAnswer(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    const GetAnswer = async () => {
+      try {
+        const response = await axios.get(`answer/getAnswerDTOByQid/${qid}`);
+        setAnswer(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
     if (currentUser === "") {
-      const GetAnswer = async () => {
-        try {
-          const response = await axios.get(`answer/getAnswerDTOByQid/${qid}`);
-          setAnswer(response.data);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-
       GetAnswer();
     } else {
-      const GetAnswer = async () => {
-        try {
-          const response = await axios.get(`answer/getAnswerDTOByQidCk/${qid}`);
-          setAnswer(response.data);
-        } catch (error) {
-          console.error(error);
-        }
-      };
-
-      GetAnswer();
+      GetAnswerCK();
+      getUserReportValue();
+      checkUserAnswer();
     }
   }, [qid, currentUser]);
 
@@ -475,37 +475,8 @@ function Post() {
           <Typography sx={{ marginTop: 1 }} variant="h5">
             Bình luận
           </Typography>
-          {/* <BoxContent sx={{ marginTop: 1 }}>
-            <Stack direction="row" gap={2} sx={{ padding: 1 }}>
-              <Box>
-                <Avatar alt="Avatar">V</Avatar>
-              </Box>
-              <Box>
-                <Typography variant="body1">Đỗ Bá Kiên</Typography>
-                <Typography variant="body2">
-                  I am the Flutter maintainer who fixed both of the issues that
-                  are being confused in these SO answers, both caused by changes
-                  of behavior in Xcode 14.3. The originally reported missing
-                  libarclite_iphoneos was fixed in Flutter 3.7.11
-                  github.com/flutter/flutter/issues/124340. The other unrelated
-                  issue is the failure to archive, which was tracked in
-                  github.com/flutter/flutter/issues/123890 and fixed in Flutter
-                  3.7.10. In either case, remove any changes you've made to your
-                  Podfile and run flutter upgrade
-                </Typography>
-              </Box>
-            </Stack>
-          </BoxContent> */}
 
-          <BoxContent>
-            <Box sx={{ marginLeft: 8 }}>
-              <TextField
-                id="standard-basic"
-                variant="standard"
-                placeholder="Viết bình luận"
-              />
-            </Box>
-          </BoxContent>
+          <Comment qid={qid} currentUser={currentUser} />
 
           <AnswerDetails
             answer={answer}

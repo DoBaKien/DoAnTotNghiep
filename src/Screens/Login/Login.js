@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import {
   FacebookAuthProvider,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -33,6 +34,7 @@ var regEmail = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z]{2,4})+$/;
 var regpass = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 function Login() {
   const { role } = useContext(AuthContext);
+
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
   const [userName, setUserName] = useState("");

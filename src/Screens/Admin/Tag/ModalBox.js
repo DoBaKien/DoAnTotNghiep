@@ -28,7 +28,8 @@ function ModalBox({ setModal, modal }) {
   const toggleModal = () => {
     setModal(false);
   };
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     console.log(name, description);
   };
 

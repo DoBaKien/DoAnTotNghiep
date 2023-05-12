@@ -44,7 +44,6 @@ function ModalReport({ setModal, modal, qid, type, setCheckRp }) {
       axios
         .post(`/answer/report/${qid}`, { detail: reason })
         .then(function (response) {
-          console.log(response);
           setModal(false);
 
           Swal.fire("Thành công", "Tố cáo thành công", "success");
@@ -56,9 +55,19 @@ function ModalReport({ setModal, modal, qid, type, setCheckRp }) {
       axios
         .post(`/question/report/${qid}`, { detail: reason })
         .then(function (response) {
-          console.log(response);
           setModal(false);
           getUserReportValue();
+          Swal.fire("Thành công", "Tố cáo thành công", "success");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else if (type === "bình luận" && reason !== "") {
+      axios
+        .post(`/comment/report/${qid}`, { detail: reason })
+        .then(function (response) {
+          setModal(false);
+
           Swal.fire("Thành công", "Tố cáo thành công", "success");
         })
         .catch(function (error) {

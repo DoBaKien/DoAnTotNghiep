@@ -31,8 +31,6 @@ function AnswerDetails(props) {
   const [modal, setModal] = useState(false);
   const [aid, setAid] = useState("");
 
-  const handleEdit = (id) => {};
-
   const handleReport = (id) => {
     if (Cookies.get("sessionCookie") !== undefined) {
       setModal(!modal);
@@ -125,7 +123,7 @@ function AnswerDetails(props) {
                   ) : (
                     <Tooltip title="Chỉnh sửa" placement="left">
                       <Link to={`/edit/answer/${item.answer.aid}`}>
-                        <IconButton onClick={() => handleEdit()}>
+                        <IconButton>
                           <ModeEditIcon fontSize="small" />
                         </IconButton>
                       </Link>
@@ -141,7 +139,10 @@ function AnswerDetails(props) {
                     <BoxUser
                       direction="row"
                       spacing={2}
-                      sx={{ marginBottom: 1, width: { xs: 150, md: 300 } }}
+                      sx={{
+                        marginBottom: 1,
+                        width: { xs: 150, md: 300 },
+                      }}
                     >
                       <Avatar
                         alt="Avatar"
@@ -150,7 +151,12 @@ function AnswerDetails(props) {
                       <Typography className="title" color={"text.primary"}>
                         {item.user.name}
                       </Typography>
-                      <Typography variant="caption" color={"text.primary"}>
+
+                      <Typography
+                        variant="caption"
+                        color={"text.primary"}
+                        sx={{ display: { xs: "none", md: "block" } }}
+                      >
                         {DateV(item.answer.date)}
                       </Typography>
                     </BoxUser>

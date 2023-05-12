@@ -6,11 +6,19 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import axios from "axios";
 
-function ModalEdit({ setModalE, modalE, id }) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+import Swal from "sweetalert2";
+
+function ModalComment({
+  setOpen,
+  open,
+  id,
+  qid,
+  content,
+  setContent,
+  setData,
+}) {
   const style = {
     position: "absolute",
     top: "50%",
@@ -23,21 +31,37 @@ function ModalEdit({ setModalE, modalE, id }) {
     color: "text.primary",
     p: 4,
   };
-  const maxLength = 500;
-  const count = description.length;
 
   const toggleModal = () => {
-    setModalE(false);
+    setOpen(false);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(name, description);
+    axios
+      .put(`/comment/edit/${id}`, {
+        detail: content,
+      })
+      .then(function (response) {
+        axios
+          .get(`comment/getCommentDTOByQid/${qid}`)
+          .then(function (response) {
+            setData(response.data);
+            setOpen(!open);
+            Swal.fire("Thành công", "Chỉnh sửa thành công", "success");
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   return (
     <Box>
       <Modal
-        open={modalE}
+        open={open}
         onClose={toggleModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -47,36 +71,18 @@ function ModalEdit({ setModalE, modalE, id }) {
             sx={{ display: "flex", justifyContent: "center", marginBottom: 2 }}
           >
             <Typography id="modal-modal-title" variant="h4">
-              Chỉnh sửa thẻ
+              Chỉnh sửa bình luận
             </Typography>
           </Box>
           <Box>
             <form noValidate onSubmit={handleSubmit}>
               <TextField
-                label="Mã thẻ"
+                label="Bình luận mới"
                 variant="outlined"
                 fullWidth
-                disabled
-                defaultValue={id}
-                style={{ marginTop: 20, marginBottom: 20 }}
-              />
-              <TextField
-                label="Tên thẻ"
-                variant="outlined"
-                fullWidth
-                onChange={(e) => setName(e.target.value)}
-              />
-
-              <TextField
-                label="Mô tả"
-                rows={3}
-                multiline
-                style={{ marginTop: 20, marginBottom: 20 }}
-                fullWidth
-                variant="outlined"
-                onChange={(e) => setDescription(e.target.value)}
-                inputProps={{ maxLength: maxLength }}
-                helperText={`Còn lại ${maxLength - count}/${maxLength} ký tự`}
+                sx={{ marginBottom: 2 }}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
               />
 
               <Stack
@@ -87,13 +93,13 @@ function ModalEdit({ setModalE, modalE, id }) {
                 <Button
                   variant="contained"
                   color="error"
-                  onClick={() => setModalE(!modalE)}
+                  onClick={() => setOpen(!open)}
                   sx={{ width: 150 }}
                 >
                   Hủy
                 </Button>
                 <Button type="submit" variant="contained" sx={{ width: 150 }}>
-                  đăng nhập
+                  Sửa
                 </Button>
               </Stack>
             </form>
@@ -104,4 +110,4 @@ function ModalEdit({ setModalE, modalE, id }) {
   );
 }
 
-export default ModalEdit;
+export default ModalComment;
