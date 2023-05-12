@@ -17,7 +17,7 @@ import SouthIcon from "@mui/icons-material/South";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useContext } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -41,12 +41,12 @@ function Post() {
   const [user, setUser] = useState("");
   const [vote, setVote] = useState(0);
   const [check, setCheck] = useState("");
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, role } = useContext(AuthContext);
   const [answer, setAnswer] = useState("");
   const [modal, setModal] = useState(false);
   const [checkUser, setCheckUser] = useState("");
   const [checkRp, setCheckRp] = useState("None");
-
+  const navigation = useNavigate();
   useEffect(() => {
     const getUserReportValue = async () => {
       try {
@@ -64,7 +64,7 @@ function Post() {
         );
         setDetails(response.data);
       } catch (error) {
-        console.log(error);
+        navigation("/");
       }
     };
     getQuestionDetailByQid();
@@ -93,7 +93,7 @@ function Post() {
           });
       })
       .catch(function (error) {
-        console.log(error);
+        navigation("/");
       });
 
     const getQuestionTagByQid = async () => {
@@ -151,7 +151,7 @@ function Post() {
       getUserReportValue();
       checkUserAnswer();
     }
-  }, [qid, currentUser]);
+  }, [qid, currentUser, navigation]);
 
   const VoteAction = (value) => {
     if (Cookies.get("sessionCookie") !== undefined) {
@@ -225,23 +225,43 @@ function Post() {
   };
 
   const checkAnswer = () => {
-    if (Cookies.get("sessionCookie") === undefined) {
-      return (
-        <BoxContent
-          sx={{
-            marginTop: 2,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: 100,
-          }}
-        >
-          <Button variant="contained" color="error">
-            Đăng nhập để bình luận
-          </Button>
-        </BoxContent>
-      );
-    } else if (checkUser !== "None") {
+    if (title.status === "Open") {
+      if (Cookies.get("sessionCookie") === undefined) {
+        return (
+          <BoxContent
+            sx={{
+              marginTop: 2,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: 100,
+            }}
+          >
+            <Button variant="contained" color="error">
+              Đăng nhập để bình luận
+            </Button>
+          </BoxContent>
+        );
+      } else if (checkUser !== "None") {
+        return (
+          <BoxContent
+            sx={{
+              marginTop: 2,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: 100,
+            }}
+          >
+            <Button variant="contained" color="success" sx={{ color: "white" }}>
+              Đã trả lời
+            </Button>
+          </BoxContent>
+        );
+      } else {
+        return <AnswerAction qid={qid} setAnswer={setAnswer} />;
+      }
+    } else if (title.status === "Closed") {
       return (
         <BoxContent
           sx={{
@@ -253,12 +273,10 @@ function Post() {
           }}
         >
           <Button variant="contained" color="success" sx={{ color: "white" }}>
-            Đã trả lời
+            Câu hỏi đã đóng
           </Button>
         </BoxContent>
       );
-    } else {
-      return <AnswerAction qid={qid} setAnswer={setAnswer} />;
     }
   };
 
@@ -271,6 +289,100 @@ function Post() {
       .catch(function (error) {
         console.log(error);
       });
+  };
+
+  const handleClose = () => {
+    if (title.status === "Open") {
+      Swal.fire({
+        title: "Bạn có chắc chắn muốn đóng",
+        showCancelButton: false,
+        showDenyButton: true,
+        confirmButtonText: "Hủy",
+        denyButtonText: `Đóng`,
+      }).then((result) => {
+        if (result.isDenied) {
+          axios
+            .put(`/question/closeQuestion/${qid}`)
+            .then(function (response) {
+              axios
+                .get(`question/getQuestionById/${qid}`)
+                .then(function (response) {
+                  setTitle(response.data);
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+              Swal.fire("Thành công", "Đóng câu hỏi thành công", "success");
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        }
+      });
+    } else if (title.status === "Closed") {
+      Swal.fire({
+        title: "Bạn có chắc chắn muốn mở câu hỏi",
+        showCancelButton: true,
+        cancelButtonText: "Hủy",
+        confirmButtonText: "Mở",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .put(`/question/closeQuestion/${qid}`)
+            .then(function (response) {
+              axios
+                .get(`question/getQuestionById/${qid}`)
+                .then(function (response) {
+                  setTitle(response.data);
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+              Swal.fire("Thành công", "Mở câu hỏi thành công", "success");
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        }
+      });
+    }
+  };
+
+  const handleCheckRole = () => {
+    if (user.uid === currentUser || role === "Admin") {
+      return (
+        <Stack
+          gap={1}
+          sx={{
+            justifyContent: "center",
+            display: "flex",
+            alignItems: "center",
+          }}
+          direction={{ xs: "column", md: "row" }}
+        >
+          <Link to={`/edit/post/${qid}`}>
+            <Button variant="contained" sx={{ marginRight: 1, width: 200 }}>
+              Sửa bài viết
+            </Button>
+          </Link>
+          <Button
+            variant="contained"
+            sx={{ marginRight: 1, width: 200 }}
+            onClick={handleClose}
+          >
+            {title.status === "Open" ? "Đóng" : "Mở"}
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ marginRight: 1, width: 200 }}
+          >
+            Xóa bài viết
+          </Button>
+        </Stack>
+      );
+    }
   };
 
   return (
@@ -330,40 +442,7 @@ function Post() {
             </Stack>
           </BoxContent>
 
-          <BoxContent sx={{ marginTop: 2 }}>
-            {user.uid === currentUser ? (
-              <Stack
-                gap={1}
-                sx={{
-                  justifyContent: "center",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-                direction={{ xs: "column", md: "row" }}
-              >
-                <Link to={`/edit/post/${qid}`}>
-                  <Button
-                    variant="contained"
-                    sx={{ marginRight: 1, width: 200 }}
-                  >
-                    Sửa bài viết
-                  </Button>
-                </Link>
-                <Button variant="contained" sx={{ marginRight: 1, width: 200 }}>
-                  Đóng
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  sx={{ marginRight: 1, width: 200 }}
-                >
-                  Xóa bài viết
-                </Button>
-              </Stack>
-            ) : (
-              <></>
-            )}
-          </BoxContent>
+          <BoxContent sx={{ marginTop: 2 }}>{handleCheckRole()}</BoxContent>
 
           <BoxContent sx={{ marginTop: 2 }}>
             <Stack direction="row">
@@ -476,7 +555,7 @@ function Post() {
             Bình luận
           </Typography>
 
-          <Comment qid={qid} currentUser={currentUser} />
+          <Comment qid={qid} currentUser={currentUser} status={title.status} />
 
           <AnswerDetails
             answer={answer}

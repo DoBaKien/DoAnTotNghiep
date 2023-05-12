@@ -36,7 +36,6 @@ function Comment(props) {
         `comment/getCommentDTOByQid/${props.qid}`
       );
       setData(response.data);
-      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -156,23 +155,27 @@ function Comment(props) {
           setContent={setContent}
           setData={setData}
         />
-        <Stack direction="row" sx={{ paddingLeft: 10 }}>
-          <TextField
-            id="standard-basic"
-            variant="standard"
-            placeholder="Viết bình luận"
-            value={comment}
-            sx={{ width: "30vw" }}
-            onChange={(e) => setComment(e.target.value)}
-          />
-          <Button
-            variant="outlined"
-            onClick={handleSend}
-            sx={{ marginLeft: 8 }}
-          >
-            Gửi
-          </Button>
-        </Stack>
+        {props.status === "Open" ? (
+          <Stack direction="row" sx={{ paddingLeft: 10 }}>
+            <TextField
+              id="standard-basic"
+              variant="standard"
+              placeholder="Viết bình luận"
+              value={comment}
+              sx={{ width: "30vw" }}
+              onChange={(e) => setComment(e.target.value)}
+            />
+            <Button
+              variant="outlined"
+              onClick={handleSend}
+              sx={{ marginLeft: 8 }}
+            >
+              Gửi
+            </Button>
+          </Stack>
+        ) : (
+          <></>
+        )}
       </BoxContent>
     </>
   );

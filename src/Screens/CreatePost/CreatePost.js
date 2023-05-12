@@ -28,7 +28,7 @@ import {
 } from "firebase/storage";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Component/Auth/AuthContext";
 
 function CreatePost() {
@@ -38,7 +38,7 @@ function CreatePost() {
   const editor = useRef(null);
   const [title, setTitle] = useState("");
   const [fileImage, setFileImage] = useState("");
-
+  const navigation = useNavigate();
   useEffect(() => {
     axios
       .get("/tag/getAllTag")
@@ -83,7 +83,6 @@ function CreatePost() {
             .post(`/question/createDetail/${response.data}`, post)
             .then(function (response) {
               console.log(response);
-              Swal.fire("Thành công", `Bạn đăng bài thành công`, "success");
             })
             .catch(function (error) {
               console.log(error);
@@ -94,7 +93,19 @@ function CreatePost() {
               description: "Khởi tạo câu hỏi",
             })
             .then(function (response) {
-              console.log(response);
+              Swal.fire({
+                title: "Đăng bài thành công",
+                icon: "success",
+                showCancelButton: true,
+                reverseButtons: true,
+                cancelButtonText: "Tiếp tục",
+                confirmButtonText: "Trang chủ",
+              }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                  navigation("/");
+                }
+              });
             })
             .catch(function (error) {
               console.log(error);
