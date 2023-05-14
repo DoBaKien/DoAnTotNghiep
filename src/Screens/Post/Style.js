@@ -17,6 +17,11 @@ export const BoxUser = styled(Stack)(({ theme }) => ({
   alignItems: "center",
   borderRadius: 10,
   padding: 5,
+  "&:hover": {
+    border:
+      theme.palette.mode === "light" ? "2px solid black" : "2px solid gray",
+    opacity: 0.5,
+  },
 }));
 export const DateV = (value) => {
   const dateObject = new Date(value);

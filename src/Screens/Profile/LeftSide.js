@@ -14,7 +14,10 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 import My from "./My";
 import Save from "./Save";
+import { useContext } from "react";
+import { AuthContext } from "../../Component/Auth/AuthContext";
 function LeftSide(props) {
+  const { currentUser } = useContext(AuthContext);
   const handleFollow = () => {
     props.setPage(<My id={props.id} />);
   };
@@ -56,14 +59,18 @@ function LeftSide(props) {
                   <ListItemText primary="Thẻ" />
                 </ListItemButton>
               </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <LogoutIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Đăng xuất" />
-                </ListItemButton>
-              </ListItem>
+              {currentUser === props.id ? (
+                <ListItem disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <LogoutIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Đăng xuất" />
+                  </ListItemButton>
+                </ListItem>
+              ) : (
+                <></>
+              )}
             </List>
           </Box>
         </Box>

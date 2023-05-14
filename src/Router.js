@@ -61,6 +61,7 @@ function Router() {
         <Route path="*" element={<NotFound />} />
         <Route path="/edit/:type/:qid" element={<EditPost />} />
 
+        <Route path="/post/:qid/admin/:id" element={<Post />} />
         <Route path="/admin" element={<AdminCheck role={role} />} />
         <Route path="/manageruser" element={<UserPageCheck role={role} />} />
         <Route path="/managertag" element={<TagPageCheck role={role} />} />

@@ -17,20 +17,25 @@ import SouthIcon from "@mui/icons-material/South";
 import HistoryIcon from "@mui/icons-material/History";
 import ReportIcon from "@mui/icons-material/Report";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { memo, useState } from "react";
+import { memo, useContext, useState } from "react";
 import "../../Assert/index.css";
 import ModalReport from "../../Assert/ModalReport";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import CheckIcon from "@mui/icons-material/Check";
-
-import { Link, Navigate } from "react-router-dom";
+import ClearIcon from "@mui/icons-material/Clear";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import { AuthContext } from "../../Component/Auth/AuthContext";
+
 function AnswerDetails(props) {
+  console.log(props.answer);
   const [modal, setModal] = useState(false);
   const [aid, setAid] = useState("");
+  const { role } = useContext(AuthContext);
 
+  const navigation = useNavigate();
   const handleReport = (id) => {
     if (Cookies.get("sessionCookie") !== undefined) {
       setModal(!modal);
@@ -48,21 +53,82 @@ function AnswerDetails(props) {
         reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          return <Navigate to="/" />;
+          navigation("/login");
         }
       });
     }
   };
 
-  const handleApt = (id) => {
-    axios
-      .put(`/answer/acceptAnswer/${id}`)
-      .then(function (response) {
-        Swal.fire("", "Bạn đã chấp nhận câu trả lời này", "success");
-      })
-      .catch(function (error) {
-        console.log(error);
+  const VoteAction = (id, value) => {
+    console.log(id, value);
+    if (Cookies.get("sessionCookie") !== undefined) {
+      axios
+        .post(`answer/castAnswerVoteUD/${id}`, { value })
+        .then(function (response) {
+          Swal.fire("Thành công", `Bạn vote thành công`, "success");
+          GetAnswerCK();
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      Swal.fire({
+        title: "Lỗi",
+        text: "Bạn phải đăng nhập trước",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "Đăng nhập",
+        cancelButtonText: "Hủy",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigation("/login");
+        }
       });
+    }
+  };
+
+  const GetAnswerCK = async () => {
+    try {
+      const response = await axios.get(
+        `answer/getAnswerDTOByQidCk/${props.qid}`
+      );
+      props.setAnswer(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleApt = (id) => {
+    if (Cookies.get("sessionCookie") !== undefined) {
+      axios
+        .put(`/answer/acceptAnswer/${id}`)
+        .then(function (response) {
+          GetAnswerCK();
+          Swal.fire("", "Bạn đã chấp nhận câu trả lời này", "success");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      Swal.fire({
+        title: "Lỗi",
+        text: "Bạn phải đăng nhập trước",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "Đăng nhập",
+        cancelButtonText: "Hủy",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigation("/login");
+        }
+      });
+    }
   };
 
   const checkAcpt = (aid, stt) => {
@@ -83,12 +149,75 @@ function AnswerDetails(props) {
     }
   };
 
+  const checkRole = (uid, aid) => {
+    if (role === "Admin") {
+      return (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Tooltip title="Báo cáo" placement="left">
+            <IconButton onClick={() => handleReport(aid)}>
+              <ReportIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Chỉnh sửa" placement="left">
+            <Link to={`/edit/answer/${aid}`}>
+              <IconButton>
+                <ModeEditIcon fontSize="small" />
+              </IconButton>
+            </Link>
+          </Tooltip>
+          <Tooltip title="Xóa" placement="left">
+            <IconButton>
+              <ClearIcon fontSize="small" color="error" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      );
+    } else if (
+      props.currentUser !== uid &&
+      Cookies.get("sessionCookie") === undefined
+    ) {
+      return (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Tooltip title="Báo cáo" placement="left">
+            <IconButton onClick={() => handleReport(aid)}>
+              <ReportIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      );
+    } else if (props.currentUser === uid && role === "Admin") {
+      return (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Tooltip title="Chỉnh sửa" placement="left">
+            <Link to={`/edit/answer/${aid}`}>
+              <IconButton>
+                <ModeEditIcon fontSize="small" />
+              </IconButton>
+            </Link>
+          </Tooltip>
+          <Tooltip title="Xóa" placement="left">
+            <IconButton>
+              <ClearIcon fontSize="small" color="error" />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      );
+    }
+  };
+
   const ad = () => {
     if (props.answer && props.answer.length > 0) {
       return (
         <Box>
           {props.answer.map((item, i) => (
-            <BoxContent sx={{ marginTop: 2 }} key={i}>
+            <BoxContent
+              sx={{
+                marginTop: 2,
+
+                border: item.answer.aid === props.id ? "3px solid red" : "",
+              }}
+              key={i}
+            >
               <Stack direction="row">
                 <Box
                   sx={{
@@ -98,11 +227,15 @@ function AnswerDetails(props) {
                     justifyContent: "center",
                   }}
                 >
-                  <IconButton color={item.voteValue === "Up" ? "primary" : ""}>
+                  <IconButton
+                    color={item.voteValue === "Up" ? "primary" : ""}
+                    onClick={() => VoteAction(item.answer.aid, "Up")}
+                  >
                     <NorthIcon fontSize="small" />
                   </IconButton>
                   <Typography variant="subtitle1">{item.answerVote}</Typography>
                   <IconButton
+                    onClick={() => VoteAction(item.answer.aid, "Down")}
                     color={item.voteValue === "Down" ? "primary" : ""}
                   >
                     <SouthIcon fontSize="small" />
@@ -114,53 +247,44 @@ function AnswerDetails(props) {
                       </IconButton>
                     </Tooltip>
                   </Link>
-                  {props.currentUser !== item.answer.uid ? (
-                    <Tooltip title="Báo cáo" placement="left">
-                      <IconButton onClick={() => handleReport(item.answer.aid)}>
-                        <ReportIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  ) : (
-                    <Tooltip title="Chỉnh sửa" placement="left">
-                      <Link to={`/edit/answer/${item.answer.aid}`}>
-                        <IconButton>
-                          <ModeEditIcon fontSize="small" />
-                        </IconButton>
-                      </Link>
-                    </Tooltip>
-                  )}
                   {checkAcpt(item.answer.aid, item.answer.status)}
                 </Box>
-                <Box sx={{ marginTop: 0.5 }}>
-                  <Link
-                    to={`/profile/${item.user.uid}`}
-                    style={{ textDecoration: "none" }}
+                <Box sx={{ marginTop: 0.5, width: "100%" }}>
+                  <Stack
+                    direction={{ md: "row" }}
+                    sx={{ justifyContent: "space-between" }}
                   >
-                    <BoxUser
-                      direction="row"
-                      spacing={2}
-                      sx={{
-                        marginBottom: 1,
-                        width: { xs: 150, md: 300 },
-                      }}
+                    <Link
+                      to={`/profile/${item.user.uid}`}
+                      style={{ textDecoration: "none" }}
                     >
-                      <Avatar
-                        alt="Avatar"
-                        src={item.user.avatar || item.user.name}
-                      />
-                      <Typography className="title" color={"text.primary"}>
-                        {item.user.name}
-                      </Typography>
-
-                      <Typography
-                        variant="caption"
-                        color={"text.primary"}
-                        sx={{ display: { xs: "none", md: "block" } }}
+                      <BoxUser
+                        direction="row"
+                        spacing={2}
+                        sx={{
+                          marginBottom: 1,
+                          width: { xs: 150, md: 300 },
+                        }}
                       >
-                        {DateV(item.answer.date)}
-                      </Typography>
-                    </BoxUser>
-                  </Link>
+                        <Avatar
+                          alt="Avatar"
+                          src={item.user.avatar || item.user.name}
+                        />
+                        <Typography className="title" color={"text.primary"}>
+                          {item.user.name}
+                        </Typography>
+
+                        <Typography
+                          variant="caption"
+                          color={"text.primary"}
+                          sx={{ display: { xs: "none", md: "block" } }}
+                        >
+                          {DateV(item.answer.date)}
+                        </Typography>
+                      </BoxUser>
+                    </Link>
+                    {checkRole(item.answer.uid, item.answer.aid)}
+                  </Stack>
                   <Box>
                     {item.answerDetails.map((subItem, i) => {
                       if (subItem.type === "text") {

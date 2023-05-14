@@ -17,7 +17,7 @@ import SouthIcon from "@mui/icons-material/South";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { useContext } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -25,7 +25,6 @@ import Swal from "sweetalert2";
 import { AuthContext } from "../../Component/Auth/AuthContext";
 import HistoryIcon from "@mui/icons-material/History";
 import ReportIcon from "@mui/icons-material/Report";
-
 import AnswerDetails from "./AnswerDetails";
 import parse from "html-react-parser";
 import AnswerAction from "./AnswerAction";
@@ -34,7 +33,7 @@ import ModalReport from "../../Assert/ModalReport";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import Comment from "./Comment";
 function Post() {
-  const { qid } = useParams();
+  const { qid, id } = useParams();
   const [details, setDetails] = useState("");
   const [title, setTitle] = useState("");
   const [tags, setTags] = useState("");
@@ -192,7 +191,7 @@ function Post() {
         reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          return <Navigate to="/" />;
+          navigation("/login");
         }
       });
     }
@@ -218,7 +217,7 @@ function Post() {
         reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          return <Navigate to="/" />;
+          navigation("/login");
         }
       });
     }
@@ -281,14 +280,32 @@ function Post() {
   };
 
   const saveQuestion = () => {
-    axios
-      .post(`/user/saveQuestion/${qid}`)
-      .then(function (response) {
-        Swal.fire("", "Lưu câu hỏi thành công", "success");
-      })
-      .catch(function (error) {
-        console.log(error);
+    if (currentUser === undefined) {
+      axios
+        .post(`/user/saveQuestion/${qid}`)
+        .then(function (response) {
+          Swal.fire("", "Lưu câu hỏi thành công", "success");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      Swal.fire({
+        title: "Lỗi",
+        text: "Bạn phải đăng nhập trước",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "Đăng nhập",
+        cancelButtonText: "Hủy",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigation("/login");
+        }
       });
+    }
   };
 
   const handleClose = () => {
@@ -426,7 +443,12 @@ function Post() {
                   <BoxUserPost
                     direction="row"
                     gap={1}
-                    sx={{ cursor: "pointer" }}
+                    sx={{
+                      cursor: "pointer",
+                      "&:hover": {
+                        opacity: 0.6,
+                      },
+                    }}
                   >
                     <Avatar
                       alt="Avatar"
@@ -558,9 +580,12 @@ function Post() {
           <Comment qid={qid} currentUser={currentUser} status={title.status} />
 
           <AnswerDetails
+            setAnswer={setAnswer}
             answer={answer}
             uid={user.uid}
             currentUser={currentUser}
+            qid={qid}
+            id={id}
           />
           {checkAnswer()}
         </Box>

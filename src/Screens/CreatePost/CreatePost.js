@@ -4,8 +4,6 @@ import {
   Button,
   FormControl,
   IconButton,
-  MenuItem,
-  Select,
   Stack,
   TextField,
   Typography,
@@ -51,12 +49,6 @@ function CreatePost() {
   }, []);
 
   const [personName, setPersonName] = useState([]);
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(typeof value === "string" ? value.split(",") : value);
-  };
 
   function handleInputChange(event, index, key) {
     const updatedUsers = [...post];
@@ -65,6 +57,8 @@ function CreatePost() {
   }
 
   const handleP = () => {
+    const SelectTag = personName.map((item) => item.tid);
+    console.log(SelectTag);
     if (Cookies.get("sessionCookie") !== undefined) {
       axios
         .post("/question/create", {
@@ -72,9 +66,10 @@ function CreatePost() {
         })
         .then(function (response) {
           axios
-            .post(`/question/modifyTagPost/${response.data}`, personName)
+            .post(`/question/modifyTagPost/${response.data}`, SelectTag)
             .then(function (response) {
               console.log(response);
+              setPersonName([]);
             })
             .catch(function (error) {
               console.log(error);
@@ -218,7 +213,7 @@ function CreatePost() {
                 handleInputChange(newValue, i, "programLanguage");
               }}
               renderInput={(params) => (
-                <TextField {...params} label="Language" />
+                <TextField {...params} label="Ngôn ngữ" />
               )}
             />
           </Stack>
@@ -291,13 +286,19 @@ function CreatePost() {
   const TagBox = () => {
     if (tags && tags.length > 0) {
       return (
-        <Select multiple value={personName} onChange={handleChange}>
-          {tags.map((tag) => (
-            <MenuItem key={tag.tid} value={tag.tid}>
-              {tag.name}
-            </MenuItem>
-          ))}
-        </Select>
+        <Autocomplete
+          multiple
+          id="fixed-tags-demo"
+          value={personName}
+          onChange={(event, newValue) => {
+            setPersonName(newValue);
+          }}
+          options={tags}
+          getOptionLabel={(option) => option.name}
+          renderInput={(params) => (
+            <TextField {...params} placeholder="Chọn thẻ" />
+          )}
+        />
       );
     }
   };
@@ -306,19 +307,19 @@ function CreatePost() {
     <BoxHome color={"text.primary"}>
       <Header />
       <BoxNav>
-        <Typography variant="h3">ASK A QUESTION</Typography>
+        <Typography variant="h3">Đặt câu hỏi</Typography>
       </BoxNav>
       <BoxContent
         sx={{
           margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
         }}
       >
-        <Typography variant="h6">Title</Typography>
+        <Typography variant="h6">Tiêu đề</Typography>
         <TextField
           id="outlined-basic"
           variant="outlined"
           fullWidth
-          placeholder="Title"
+          placeholder="Tiêu đề"
           onChange={(e) => setTitle(e.target.value)}
         />
       </BoxContent>
@@ -370,7 +371,7 @@ function CreatePost() {
           margin: { lg: "10px 200px 0px 200px", xs: "10px 10px 0px 10px" },
         }}
       >
-        <Typography variant="h6">Tags</Typography>
+        <Typography variant="h6">Thẻ</Typography>
         <FormControl fullWidth>{TagBox()}</FormControl>
       </BoxContent>
       <BoxContent
@@ -381,7 +382,7 @@ function CreatePost() {
         }}
       >
         <Button variant="contained" onClick={handleP}>
-          Create Post
+          Tạo bài viết
         </Button>
       </BoxContent>
       <Box sx={{ height: 30, width: "100%" }}></Box>

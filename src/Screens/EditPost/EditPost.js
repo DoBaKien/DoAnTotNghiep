@@ -4,8 +4,6 @@ import {
   Button,
   FormControl,
   IconButton,
-  MenuItem,
-  Select,
   Stack,
   TextField,
   Typography,
@@ -33,13 +31,13 @@ import Swal from "sweetalert2";
 
 function EditPost() {
   const navigate = useNavigate();
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, role } = useContext(AuthContext);
   const { type, qid } = useParams();
   const [tags, setTags] = useState("");
   const [title, setTitle] = useState("");
   const [personName, setPersonName] = useState([]);
   const [tt, setTT] = useState("");
-
+  console.log(qid);
   const [fileImage, setFileImage] = useState("");
 
   const [user, setUser] = useState("");
@@ -81,44 +79,40 @@ function EditPost() {
 
     getAllTag();
     getQuestionById();
+
     getQuestionDetailByQid();
   }, [qid]);
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+
   const handlePost = async () => {
+    const SelectTag = personName.map((item) => item.tid);
+    console.log(SelectTag);
     if (post === [] || personName === "" || tt === "") {
       Swal.fire("Thiếu thông tin", "Vui lòng điền đầy đủ thông tin", "error");
     } else {
-      Swal.fire({
-        icon: "success",
-        title: "Thành công",
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      axios
+        .put(`/question/edit/${qid}`, {
+          title: title,
+        })
+        .then(function (response) {
+          Swal.fire({
+            title: "Chỉnh sửa bài thành công",
+            icon: "success",
+            showCancelButton: false,
+
+            confirmButtonText: "Quay lại",
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+              navigate(-1);
+            }
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
 
       axios
-        .put(`/question/edit/${qid}`, {
-          title: title,
-        })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-      axios
-        .put(`/question/edit/${qid}`, {
-          title: title,
-        })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-      axios
-        .post(`/question/modifyTagPost/${qid}`, personName)
+        .post(`/question/modifyTagPost/${qid}`, SelectTag)
         .then(function (response) {
           console.log(response);
         })
@@ -144,16 +138,7 @@ function EditPost() {
         .catch(function (error) {
           console.log(error);
         });
-      await sleep(2000);
-      navigate(`/post/${qid}`);
     }
-  };
-
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(typeof value === "string" ? value.split(",") : value);
   };
 
   function handleInputChange(event, index, key) {
@@ -273,10 +258,9 @@ function EditPost() {
             </IconButton>
             <Typography variant="h6">Code</Typography>
             <Autocomplete
-              disablePortal
               options={ProLanguage}
               sx={{ width: 200, marginLeft: 5, marginBottom: 1 }}
-              value={language}
+              value={language || ""}
               onInputChange={(event, newValue) => {
                 handleInputChange(newValue, i, "programLanguage");
               }}
@@ -358,20 +342,26 @@ function EditPost() {
   const TagBox = () => {
     if (tags && tags.length > 0) {
       return (
-        <Select multiple value={personName} onChange={handleChange}>
-          {tags.map((tag) => (
-            <MenuItem key={tag.tid} value={tag.tid}>
-              {tag.name}
-            </MenuItem>
-          ))}
-        </Select>
+        <Autocomplete
+          multiple
+          id="fixed-tags-demo"
+          value={personName}
+          onChange={(event, newValue) => {
+            setPersonName(newValue);
+          }}
+          options={tags}
+          getOptionLabel={(option) => option.name}
+          renderInput={(params) => (
+            <TextField {...params} placeholder="Chọn thẻ" />
+          )}
+        />
       );
     }
   };
 
   return (
     <>
-      {user === currentUser ? (
+      {user === currentUser || role === "Admin" ? (
         <BoxHome color={"text.primary"}>
           <Header />
           <BoxNav>

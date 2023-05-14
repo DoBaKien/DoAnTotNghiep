@@ -10,17 +10,19 @@ import {
 } from "@mui/material";
 import { BoxContent, DateV } from "./Style";
 import axios from "axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
 import { useCallback } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReportIcon from "@mui/icons-material/Report";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { memo } from "react";
 import Cookies from "js-cookie";
 import ModalReport from "../../Assert/ModalReport";
 import ModalComment from "./ModalComment";
+import ClearIcon from "@mui/icons-material/Clear";
+import { AuthContext } from "../../Component/Auth/AuthContext";
 
 function Comment(props) {
   const [comment, setComment] = useState("");
@@ -29,7 +31,8 @@ function Comment(props) {
   const [cid, setCid] = useState("");
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState("");
-
+  const { role } = useContext(AuthContext);
+  const navigation = useNavigate("");
   const getCommentDTOByQid = useCallback(async () => {
     try {
       const response = await axios.get(
@@ -70,7 +73,7 @@ function Comment(props) {
     return (
       <Link
         to={`/profile/${id}`}
-        style={{ textDecoration: "none", color: "lightblue" }}
+        style={{ textDecoration: "none", color: "#A9A9A9" }}
       >
         {name}
       </Link>
@@ -92,6 +95,22 @@ function Comment(props) {
         .catch(function (error) {
           console.log(error);
         });
+    } else {
+      Swal.fire({
+        title: "Lỗi",
+        text: "Bạn phải đăng nhập trước",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "Đăng nhập",
+        cancelButtonText: "Hủy",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigation("/login");
+        }
+      });
     }
   };
 
@@ -101,34 +120,80 @@ function Comment(props) {
     setOpen(!open);
   };
 
+  const checkRole = (cid, detail, uid) => {
+    if (role === "Admin") {
+      return (
+        <>
+          <Tooltip title="Báo cáo" placement="left">
+            <IconButton onClick={() => handleReport(cid)}>
+              <ReportIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Chỉnh sửa" placement="top">
+            <IconButton onClick={() => handleEdit(cid, detail)}>
+              <ModeEditIcon sx={{ fontSize: 15 }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Xóa" placement="right">
+            <IconButton>
+              <ClearIcon sx={{ fontSize: 18 }} color="error" />
+            </IconButton>
+          </Tooltip>
+        </>
+      );
+    } else if (
+      props.currentUser !== uid &&
+      Cookies.get("sessionCookie") === undefined
+    ) {
+      return (
+        <>
+          <Tooltip title="Báo cáo" placement="left">
+            <IconButton onClick={() => handleReport(cid)}>
+              <ReportIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+          </Tooltip>
+        </>
+      );
+    } else if (props.currentUser === uid && role === "Admin") {
+      return (
+        <>
+          <Tooltip title="Chỉnh sửa" placement="top">
+            <IconButton onClick={() => handleEdit(cid, detail)}>
+              <ModeEditIcon sx={{ fontSize: 15 }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Xóa" placement="right">
+            <IconButton>
+              <ClearIcon sx={{ fontSize: 18 }} color="error" />
+            </IconButton>
+          </Tooltip>
+        </>
+      );
+    }
+  };
+
   const commentDetail = () => {
     if (data && data.length > 0) {
       return (
         <Box>
           {data.map((item, i) => (
-            <Box key={i} sx={{ marginBottom: 1 }}>
-              <Typography variant="body2">
+            <Box
+              key={i}
+              sx={{ marginBottom: 1, alignItems: "center", display: "flex" }}
+            >
+              <Typography
+                variant="body2"
+                sx={{ float: "left", lineHeight: 1.5 }}
+              >
                 {item.comment.detail} —{" "}
                 {TextUser(item.user.name, item.user.uid)}{" "}
                 {DateV(item.comment.date)}
+                {checkRole(
+                  item.comment.cid,
+                  item.comment.detail,
+                  item.comment.uid
+                )}
               </Typography>
-              {props.currentUser !== item.comment.uid ? (
-                <Tooltip title="Báo cáo" placement="left">
-                  <IconButton onClick={() => handleReport(item.comment.cid)}>
-                    <ReportIcon sx={{ fontSize: 18 }} />
-                  </IconButton>
-                </Tooltip>
-              ) : (
-                <Tooltip title="Chỉnh sửa" placement="left">
-                  <IconButton
-                    onClick={() =>
-                      handleEdit(item.comment.cid, item.comment.detail)
-                    }
-                  >
-                    <ModeEditIcon sx={{ fontSize: 15 }} />
-                  </IconButton>
-                </Tooltip>
-              )}
               <Divider sx={{ marginTop: 1 }} />
             </Box>
           ))}

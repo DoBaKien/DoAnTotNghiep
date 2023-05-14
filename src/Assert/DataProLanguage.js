@@ -13,4 +13,5 @@ export const ProLanguage = [
   "swift",
   "typescript",
   "jsx",
+  "",
 ];

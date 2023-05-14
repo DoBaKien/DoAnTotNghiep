@@ -96,6 +96,10 @@ function ManagerTag() {
             rows={tags}
             columns={columns}
             pageSizeOptions={[10, 50, 100]}
+            checkboxSelection
+            onRowSelectionModelChange={(id) => {
+              console.log(id);
+            }}
             components={{
               Toolbar: GridToolbar,
             }}
