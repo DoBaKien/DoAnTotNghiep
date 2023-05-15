@@ -24,6 +24,7 @@ function EditPf() {
   const [about, setAbout] = useState("");
   const [location, setLocation] = useState(dataLocation[0]);
   const [pre, setPre] = useState(null);
+  const [oldAva, setOldAva] = useState("");
   const navigate = useNavigate();
   const maxLength = 200;
   let count = 0;
@@ -40,6 +41,7 @@ function EditPf() {
         setAbout(response.data.about);
         setLocation(response.data.location);
         setPre(response.data.avatar);
+        setOldAva(response.data.avatar);
       })
       .catch(function (error) {
         console.log(error);
@@ -59,7 +61,7 @@ function EditPf() {
         name: name,
         about: about,
         location: location,
-        avatar: pre,
+        avatar: pre || oldAva,
       })
       .then((res) => {
         Swal.fire("Thành công", "Bạn cập nhật thông tin thành công", "success");

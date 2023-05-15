@@ -36,6 +36,7 @@ function CreatePost() {
   const editor = useRef(null);
   const [title, setTitle] = useState("");
   const [fileImage, setFileImage] = useState("");
+
   const navigation = useNavigate();
   useEffect(() => {
     axios
@@ -58,13 +59,14 @@ function CreatePost() {
 
   const handleP = () => {
     const SelectTag = personName.map((item) => item.tid);
-    console.log(SelectTag);
+
     if (Cookies.get("sessionCookie") !== undefined) {
       axios
         .post("/question/create", {
           title: title,
         })
         .then(function (response) {
+          const a = response.data;
           axios
             .post(`/question/modifyTagPost/${response.data}`, SelectTag)
             .then(function (response) {
@@ -99,6 +101,8 @@ function CreatePost() {
                 /* Read more about isConfirmed, isDenied below */
                 if (result.isConfirmed) {
                   navigation("/");
+                } else {
+                  navigation(`/post/${a}`);
                 }
               });
             })

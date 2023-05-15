@@ -18,7 +18,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 import {
-  FacebookAuthProvider,
+  GoogleAuthProvider,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
@@ -42,6 +42,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [modal, setModal] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (userName === "" || password === "") {
@@ -62,7 +63,6 @@ function Login() {
             .post("/account/createSessionCookie", token)
             .then(function (response) {
               Cookies.set("sessionCookie", response.data, { expires: 365 });
-
               if (role === "Admin") {
                 navigate("/admin");
               } else if (role === "User") {
@@ -103,11 +103,35 @@ function Login() {
     setPassword(e);
   };
 
-  const provider = new FacebookAuthProvider();
-  provider.setCustomParameters({
-    display: "popup",
-  });
-  const handleFb = () => {};
+  const provider = new GoogleAuthProvider();
+  const handleFb = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+
+        axios
+          .post("/account/dangky", {
+            uid: user.uid,
+            name: user.displayName,
+            email: user.email,
+            avatar: user.photoURL,
+          })
+          .then(function (response) {});
+        axios
+          .post("/account/createSessionCookie", user.accessToken)
+          .then(function (response) {
+            Cookies.set("sessionCookie", response.data, { expires: 365 });
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+        console.log(credential);
+      });
+  };
 
   return (
     <Box

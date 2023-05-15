@@ -30,7 +30,6 @@ import axios from "axios";
 import { AuthContext } from "../../Component/Auth/AuthContext";
 
 function AnswerDetails(props) {
-  console.log(props.answer);
   const [modal, setModal] = useState(false);
   const [aid, setAid] = useState("");
   const { role } = useContext(AuthContext);
@@ -173,7 +172,7 @@ function AnswerDetails(props) {
         </Box>
       );
     } else if (
-      props.currentUser !== uid &&
+      props.currentUser !== uid ||
       Cookies.get("sessionCookie") === undefined
     ) {
       return (
@@ -185,7 +184,7 @@ function AnswerDetails(props) {
           </Tooltip>
         </Box>
       );
-    } else if (props.currentUser === uid && role === "Admin") {
+    } else if (props.currentUser === uid) {
       return (
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Tooltip title="Chỉnh sửa" placement="left">

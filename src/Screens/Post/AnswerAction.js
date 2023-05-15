@@ -55,7 +55,12 @@ function AnswerAction(props) {
         }
       });
     } else {
-      handleAnswer();
+      console.log(post);
+      if (post[0].content !== "<p><br></p>" && post[0].content !== "") {
+        handleAnswer();
+      } else {
+        Swal.fire("Lỗi", "Bạn chưa nhập câu trả lời", "error");
+      }
     }
   };
   const handleAdd = (e) => {
@@ -71,15 +76,7 @@ function AnswerAction(props) {
     const newPost = post.filter((user) => user.id !== id);
     setPost(newPost);
   }
-  function CaseDel(id) {
-    if (id !== 1) {
-      return (
-        <IconButton color="error" onClick={() => deleteUser(id)}>
-          <CloseIcon />
-        </IconButton>
-      );
-    }
-  }
+
   function deleteImage(id) {
     const newPost = post.filter((user) => user.id !== id);
     setPost(newPost);
@@ -239,7 +236,9 @@ function AnswerAction(props) {
       return (
         <Box>
           <Stack direction="row" sx={{ alignItems: "center" }}>
-            {CaseDel(id)}
+            <IconButton color="error" onClick={() => deleteUser(id)}>
+              <CloseIcon />
+            </IconButton>
             <Typography variant="h6">Text</Typography>
           </Stack>
           <Box sx={{ color: "black" }}>

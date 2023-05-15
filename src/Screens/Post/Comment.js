@@ -142,7 +142,7 @@ function Comment(props) {
         </>
       );
     } else if (
-      props.currentUser !== uid &&
+      props.currentUser !== uid ||
       Cookies.get("sessionCookie") === undefined
     ) {
       return (

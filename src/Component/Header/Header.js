@@ -37,7 +37,7 @@ function Header() {
   const open = Boolean(anchorEl);
   const cookie = Cookies.get("sessionCookie");
   const [data, setData] = useState("");
-
+  // console.log(currentUser);
   useEffect(() => {
     const findByUid = async () => {
       try {
