@@ -53,6 +53,16 @@ function LeftAdmin() {
   const handleTag = () => {
     navigate("/managerTag");
   };
+  const handleReportA = () => {
+    navigate("/managerreportanswer");
+  };
+  const handleReportQ = () => {
+    navigate("/managerreportquestion");
+  };
+  const handleReportC = () => {
+    navigate("/managerreportcomment");
+  };
+
 
   return (
     <BoxSide>
@@ -117,19 +127,19 @@ function LeftAdmin() {
             </ListItemButton>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <List component="div" disablePadding>
-                <ListItemButton sx={{ pl: 4 }}>
+                <ListItemButton sx={{ pl: 4 }} onClick={handleReportQ}>
                   <ListItemIcon>
                     <QuestionAnswerIcon />
                   </ListItemIcon>
                   <ListItemText primary="Báo cáo câu hỏi" />
                 </ListItemButton>
-                <ListItemButton sx={{ pl: 4 }}>
+                <ListItemButton sx={{ pl: 4 }} onClick={handleReportA}>
                   <ListItemIcon>
                     <AnnouncementIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Báo cáo trả lời" />
+                  <ListItemText primary="Báo cáo câu trả lời" />
                 </ListItemButton>
-                <ListItemButton sx={{ pl: 4 }}>
+                <ListItemButton sx={{ pl: 4 }} onClick={handleReportC}>
                   <ListItemIcon>
                     <CommentIcon />
                   </ListItemIcon>

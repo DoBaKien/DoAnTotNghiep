@@ -21,6 +21,9 @@ import { AuthContext } from "./Component/Auth/AuthContext";
 import {
   AdminCheck,
   QuestionPageCheck,
+  ReportAPageCheck,
+  ReportCPageCheck,
+  ReportQPageCheck,
   TagPageCheck,
   UserPageCheck,
 } from "./Assert/AdminCheck";
@@ -65,6 +68,18 @@ function Router() {
         <Route path="/admin" element={<AdminCheck role={role} />} />
         <Route path="/manageruser" element={<UserPageCheck role={role} />} />
         <Route path="/managertag" element={<TagPageCheck role={role} />} />
+        <Route
+          path="/managerreportanswer"
+          element={<ReportAPageCheck role={role} />}
+        />
+        <Route
+          path="/managerreportquestion"
+          element={<ReportQPageCheck role={role} />}
+        />
+        <Route
+          path="/managerreportcomment"
+          element={<ReportCPageCheck role={role} />}
+        />
         <Route
           path="/managerquestion"
           element={<QuestionPageCheck role={role} />}

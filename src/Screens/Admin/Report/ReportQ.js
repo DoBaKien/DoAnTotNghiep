@@ -1,14 +1,6 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  IconButton,
-  Tooltip,
-  Typography,
-} from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import Header from "../../../Component/Admin/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import AddIcon from "@mui/icons-material/Add";
 import { useContext } from "react";
 import { AuthContext } from "../../../Component/Auth/AuthContext";
 import { BoxHome, ExpandableCell, StackContent } from "../Style";
@@ -16,98 +8,114 @@ import LeftAdmin from "../../../Component/Admin/Left";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
-import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ModalBox from "./ModalBox";
-import ModalEdit from "./ModalEdit";
-
-function ManagerTag() {
+import { ValueDate } from "../../../Assert/Style";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Swal from "sweetalert2";
+function ReportQ() {
   const { show, setShow } = useContext(AuthContext);
-  const [tags, setTags] = useState("");
-  const [modal, setModal] = useState(false);
-  const [modalE, setModalE] = useState(false);
-  const [id, setId] = useState("");
+  const [data, setData] = useState([]);
+  const [select, setSelect] = useState([]);
   useEffect(() => {
     axios
-      .get("/tag/getAllTag")
+      .get("/question/getQuestionReport")
       .then(function (response) {
-        setTags(response.data);
+        setData(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
   }, []);
+  const handleOnCellClick = (params) => {
+    console.log(params);
+  };
 
-  const handleEdit = (value) => {
-    setId(value);
-    setModalE(!modalE);
+  const handleDone = () => {
+    if (select === []) {
+      axios
+        .put("/answer/editReport", select)
+        .then(function (response) {
+          axios
+            .get("/answer/getAnswerReport")
+            .then(function (response) {
+              Swal.fire("Thành công", "Chuyển thành công", "question");
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      Swal.fire("", "Vui lòng chọn bài tố cáo", "question");
+    }
   };
 
   const columns = [
-    { field: "tid", headerName: "ID", flex: 0.5 },
+    {
+      field: "id",
+      headerName: "ID",
+      flex: 0.4,
+    },
+    {
+      field: "detail",
+      headerName: "Nội dung",
+      flex: 0.6,
+      renderCell: (params) => <ExpandableCell {...params} />,
+    },
+
+    {
+      field: "status",
+      headerName: "Trạng thái",
+      flex: 0.6,
+    },
     {
       field: "name",
-      headerName: "Tên",
+      headerName: "Người tố cáo",
       flex: 1,
     },
     {
-      field: "description",
-      headerName: "Mô tả",
-      flex: 2,
-      renderCell: (params) => <ExpandableCell {...params} />,
-    },
-    {
-      field: "actions",
-      headerName: "Action",
-      type: "actions",
-      flex: 0.6,
-      getActions: (params) => {
-        let actions = [
-          <>
-            <Tooltip title="Xóa thẻ" placement="left">
-              <IconButton>
-                <DeleteIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Sửa thẻ" placement="right">
-              <IconButton onClick={() => handleEdit(params.id)}>
-                <DriveFileRenameOutlineIcon />
-              </IconButton>
-            </Tooltip>
-          </>,
-        ];
-
-        return actions;
-      },
+      field: "date",
+      headerName: "Ngày đăng",
+      flex: 1,
+      renderCell: (params) => <ValueDate {...params} />,
     },
   ];
 
-  function getRowId(row) {
-    return row.tid;
-  }
-
   const datatable = () => {
-    if (Array.isArray(tags) && tags.length !== 0) {
+    if (Array.isArray(data) && data.length !== 0) {
       return (
         <Box height="80vh" width="99%">
           <DataGrid
             rowHeight={50}
-            getRowId={getRowId}
-            rows={tags}
+            rows={data.map((item) => ({
+              id: item.questionReport.rqid,
+              detail: item.questionReport.detail,
+              name: item.user.name,
+              status: item.questionReport.status,
+              date: item.questionReport.date,
+              qid: item.questionReport.qid,
+            }))}
+            checkboxSelection
             columns={columns}
             pageSizeOptions={[10, 50, 100]}
             components={{
               Toolbar: GridToolbar,
             }}
             initialState={{
-              ...tags.initialState,
+              ...data.initialState,
               pagination: { paginationModel: { pageSize: 10 } },
+            }}
+            onRowSelectionModelChange={(id) => {
+              setSelect(id);
             }}
             componentsProps={{
               toolbar: {
                 showQuickFilter: true,
                 quickFilterProps: { debounceMs: 500 },
-                csvOptions: { fields: ["tid", "name", "description"] },
+                csvOptions: {
+                  fields: ["qid", "title", "name", "status", "vote", "date"],
+                },
               },
             }}
             getRowHeight={() => "auto"}
@@ -122,6 +130,7 @@ function ManagerTag() {
                 py: "10px",
               },
             }}
+            onCellDoubleClick={handleOnCellClick}
           />
         </Box>
       );
@@ -152,20 +161,19 @@ function ManagerTag() {
             sx={{
               paddingLeft: 2,
               paddingRight: 2,
+              transition: "all 0.5 ease",
             }}
           >
             <Box sx={{ padding: "5px 5px 5px" }}>
-              <Typography variant="h4">Quản lý thẻ</Typography>
+              <Typography variant="h4">Quản lý tố cáo câu hỏi</Typography>
             </Box>
             <Button
               size="small"
-              startIcon={<AddIcon />}
-              onClick={() => setModal(!modal)}
+              startIcon={<CheckCircleIcon />}
+              onClick={handleDone}
             >
-              Thêm thẻ
+              Chuyển trạng thái
             </Button>
-            <ModalBox setModal={setModal} modal={modal} />
-            <ModalEdit setModalE={setModalE} modalE={modalE} id={id} />
             {datatable()}
           </Box>
         </Box>
@@ -174,4 +182,4 @@ function ManagerTag() {
   );
 }
 
-export default ManagerTag;
+export default ReportQ;
