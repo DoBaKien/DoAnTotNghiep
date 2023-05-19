@@ -16,6 +16,7 @@ import My from "./My";
 import Save from "./Save";
 import { useContext } from "react";
 import { AuthContext } from "../../Component/Auth/AuthContext";
+import Tag from "./Tag";
 function LeftSide(props) {
   const { currentUser } = useContext(AuthContext);
   const handleFollow = () => {
@@ -52,7 +53,9 @@ function LeftSide(props) {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton
+                  onClick={() => props.setPage(<Tag id={props.id} />)}
+                >
                   <ListItemIcon>
                     <LocalOfferIcon />
                   </ListItemIcon>

@@ -9,7 +9,10 @@ export const BoxHome = styled(Box)(({ theme }) => ({
 }));
 export const BoxContent = styled(Box)(() => ({
   height: "-moz-fit-content",
-  margin: "20px 50px 20px 50px",
+  marginTop: 10,
+
+  justifyContent: "center",
+  display: "flex",
 }));
 export const StackContent = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
@@ -43,7 +46,6 @@ export const PaperUser = styled(Paper)(({ theme }) => ({
   },
 }));
 export const BoxTag = styled(Box)(() => ({
-  padding: "2px 10px 2px 10px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -57,6 +59,7 @@ export const BoxTag = styled(Box)(() => ({
     backgroundColor: "#D6E0E8",
   },
 }));
+
 export const ValueDate = ({ value }) => {
   const dateObject = new Date(value);
   const day = dateObject.getDate(); // Lấy ngày

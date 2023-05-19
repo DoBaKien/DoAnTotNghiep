@@ -64,15 +64,26 @@ export const BoxTitle = styled(Box)(() => ({
 export const BoxDetails = styled(Box)(() => ({
   height: 100,
   width: 100,
+  display: "flex",
+  justifyContent: "center",
+
+  marginLeft: 8,
+  alignItems: "center",
 }));
 export const BoxText = styled(Box)(() => ({
   width: "100%",
   height: 33,
-  textAlign: "end",
+
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
 }));
 export const StackPost = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
   marginBottom: 10,
+  display: "flex",
+  alignItems: "center",
+  height: "-moz-fit-content",
 }));
 
 export const StackName = styled(Stack)(() => ({

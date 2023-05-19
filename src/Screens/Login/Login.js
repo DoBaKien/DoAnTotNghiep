@@ -62,7 +62,7 @@ function Login() {
           axios
             .post("/account/createSessionCookie", token)
             .then(function (response) {
-              Cookies.set("sessionCookie", response.data, { expires: 365 });
+              Cookies.set("sessionCookie", response.data, { expires: 10 });
               if (role === "Admin") {
                 navigate("/admin");
               } else if (role === "User") {
@@ -120,7 +120,7 @@ function Login() {
         axios
           .post("/account/createSessionCookie", user.accessToken)
           .then(function (response) {
-            Cookies.set("sessionCookie", response.data, { expires: 365 });
+            Cookies.set("sessionCookie", response.data, { expires: 10 });
           })
           .catch(function (error) {
             console.log(error);

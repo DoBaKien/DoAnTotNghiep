@@ -7,6 +7,7 @@ import {
   Stack,
   Divider,
   CircularProgress,
+  Grid,
 } from "@mui/material";
 import NavigationIcon from "@mui/icons-material/Navigation";
 import Header from "../../Component/Header/Header";
@@ -29,11 +30,12 @@ import {
   TypographyTitle,
 } from "./Style";
 import { BoxHome, BoxTag } from "../../Assert/Style";
-
+import CheckIcon from "@mui/icons-material/Check";
 import "../../Assert/index.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+
 function Home() {
   const [questions, setQuestions] = useState("");
   const [backToTop, setBackToTop] = useState(false);
@@ -70,7 +72,7 @@ function Home() {
             <StackPost
               key={i}
               direction="row"
-              spacing={2}
+              spacing={1}
               divider={
                 <Divider
                   orientation="vertical"
@@ -83,9 +85,26 @@ function Home() {
                 <BoxText>
                   <Typography>{q.questionVote} phiếu</Typography>
                 </BoxText>
-                <BoxText>
+                <BoxText
+                  gap={1}
+                  bgcolor={q.acceptAnswerAvailable === true ? "#66FF66" : ""}
+                  color={
+                    q.acceptAnswerAvailable === true ? "black" : "text.primary"
+                  }
+                  sx={{
+                    border: q.acceptAnswerAvailable ? `2px solid gray` : "",
+                  }}
+                >
+                  {q.acceptAnswerAvailable ? (
+                    <>
+                      <CheckIcon />
+                    </>
+                  ) : (
+                    <></>
+                  )}
                   <Typography>{q.answerCount} trả lời</Typography>
                 </BoxText>
+
                 <BoxText>
                   <Typography>1 xem</Typography>
                 </BoxText>
@@ -107,25 +126,21 @@ function Home() {
                 </Link>
                 <Stack
                   direction={{ xs: "column", lg: "row" }}
-                  sx={{ marginTop: 1 }}
+                  sx={{ marginTop: 1, justifyContent: "space-between" }}
                 >
-                  <Stack
-                    direction="row"
-                    spacing={2}
-                    sx={{ width: "100%", alignItems: "center" }}
+                  <Grid
+                    container
+                    spacing={1}
+                    columns={{ xs: 4, sm: 8, md: 12 }}
                   >
-                    {q.tags.map((t, i) => (
-                      <Link
-                        to={`/tagdetail/${t.tid}`}
-                        key={i}
-                        style={{ textDecoration: "none" }}
-                      >
+                    {Array.from(q.tags).map((t, index) => (
+                      <Grid item xs={2} sm={2} md={2} key={index}>
                         <BoxTag>
                           <Typography variant="body2">{t.name}</Typography>
                         </BoxTag>
-                      </Link>
+                      </Grid>
                     ))}
-                  </Stack>
+                  </Grid>
                   <StackName
                     direction="row"
                     spacing={2}

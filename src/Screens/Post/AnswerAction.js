@@ -55,7 +55,6 @@ function AnswerAction(props) {
         }
       });
     } else {
-      console.log(post);
       if (post[0].content !== "<p><br></p>" && post[0].content !== "") {
         handleAnswer();
       } else {

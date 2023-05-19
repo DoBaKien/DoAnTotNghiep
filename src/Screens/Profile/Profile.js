@@ -52,10 +52,11 @@ function Profile() {
   return (
     <BoxHome color={"text.primary"}>
       <Header />
-      <BoxContent>
+      <BoxContent
+      >
         <StackContent
           direction={{ xs: "column", lg: "row" }}
-          sx={{ display: "flex", justifyContent: "space-between" }}
+          sx={{ display: "flex", justifyContent: "space-between",padding:1 }}
         >
           <Stack direction={{ xs: "column", lg: "row" }}>
             <Box

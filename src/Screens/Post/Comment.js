@@ -80,7 +80,6 @@ function Comment(props) {
     );
   };
   const handleReport = (id) => {
-    console.log(id);
     setCid(id);
     if (Cookies.get("sessionCookie") !== undefined) {
       axios

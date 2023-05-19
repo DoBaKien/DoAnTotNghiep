@@ -1,8 +1,8 @@
 import {
-  Avatar,
   Box,
   CircularProgress,
   Divider,
+  Grid,
   Stack,
   Typography,
 } from "@mui/material";
@@ -10,7 +10,6 @@ import {
   BoxDetails,
   BoxText,
   BoxTitle,
-  StackName,
   StackPost,
   TypographyTitle,
 } from "../Home/Style";
@@ -19,6 +18,7 @@ import { BoxTag } from "../../Assert/Style";
 import { memo, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import CheckIcon from "@mui/icons-material/Check";
 
 function My(props) {
   const [data, setData] = useState("");
@@ -54,7 +54,23 @@ function My(props) {
                 <BoxText>
                   <Typography>{q.questionVote} phiếu</Typography>
                 </BoxText>
-                <BoxText>
+                <BoxText
+                  gap={1}
+                  bgcolor={q.acceptAnswerAvailable === true ? "#66FF66" : ""}
+                  color={
+                    q.acceptAnswerAvailable === true ? "black" : "text.primary"
+                  }
+                  sx={{
+                    border: q.acceptAnswerAvailable ? `2px solid gray` : "",
+                  }}
+                >
+                  {q.acceptAnswerAvailable ? (
+                    <>
+                      <CheckIcon />
+                    </>
+                  ) : (
+                    <></>
+                  )}
                   <Typography>{q.answerCount} trả lời</Typography>
                 </BoxText>
                 <BoxText>
@@ -80,39 +96,19 @@ function My(props) {
                   direction={{ xs: "column", lg: "row" }}
                   sx={{ marginTop: 1 }}
                 >
-                  <Stack
-                    direction="row"
-                    spacing={2}
-                    sx={{ width: "100%", alignItems: "center" }}
+                  <Grid
+                    container
+                    spacing={1}
+                    columns={{ xs: 4, sm: 8, md: 12 }}
                   >
-                    {q.tags.map((t, i) => (
-                      <Link
-                        to={`/tagdetail/${t.tid}`}
-                        key={i}
-                        style={{ textDecoration: "none" }}
-                      >
+                    {Array.from(q.tags).map((t, index) => (
+                      <Grid item xs={2} sm={2} md={2} key={index}>
                         <BoxTag>
                           <Typography variant="body2">{t.name}</Typography>
                         </BoxTag>
-                      </Link>
+                      </Grid>
                     ))}
-                  </Stack>
-                  <StackName
-                    direction="row"
-                    spacing={2}
-                    sx={{
-                      marginTop: { xs: 1, lg: 0 },
-                      marginBottom: { xs: 1, lg: 0 },
-                    }}
-                  >
-                    <Avatar
-                      alt="Avatar"
-                      src={q.user.avatar || q.user.name}
-                      sx={{ width: 35, height: 35 }}
-                    />
-
-                    <Typography>{q.user.name}</Typography>
-                  </StackName>
+                  </Grid>
                 </Stack>
               </BoxTitle>
             </StackPost>

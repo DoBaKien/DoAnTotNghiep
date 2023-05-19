@@ -55,7 +55,7 @@ function Tags() {
                         <Typography variant="body1">{tag.name}</Typography>
                       </BoxTag>
                     </Link>
-                    <Typography sx={{ marginTop: 2 }} className="title">
+                    <Typography sx={{ marginTop: 2 }} className="tag">
                       {tag.description}
                     </Typography>
                   </BoxTags>

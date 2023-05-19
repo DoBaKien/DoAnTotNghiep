@@ -36,7 +36,7 @@ function Modal({ setModal, name, email, password }) {
             axios
               .post("/account/createSessionCookie", token)
               .then(function (response) {
-                Cookies.set("sessionCookie", response.data, { expires: 365 });
+                Cookies.set("sessionCookie", response.data, { expires: 10 });
                 navigate("/");
               })
               .catch(function (error) {

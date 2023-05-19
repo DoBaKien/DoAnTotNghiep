@@ -12,7 +12,6 @@ import { BoxUserPost } from "../Post/Style";
 
 function History() {
   const { type, id } = useParams();
-  console.log(type);
   const [details, setDetails] = useState("");
   const [title, setTitle] = useState("");
   const [user, setUser] = useState("");
@@ -33,7 +32,6 @@ function History() {
           `answer/getAnswerActivityHistory/${id}`
         );
         setDetails(response.data);
-        console.log(response.data);
       } catch (error) {
         console.log(error);
       }

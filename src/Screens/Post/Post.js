@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   CardMedia,
+  Grid,
   IconButton,
   Stack,
   Tooltip,
@@ -31,6 +32,7 @@ import AnswerAction from "./AnswerAction";
 import Cookies from "js-cookie";
 import ModalReport from "../../Assert/ModalReport";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import BookmarkIcon from "@mui/icons-material/Bookmark";
 import Comment from "./Comment";
 function Post() {
   const { qid, id } = useParams();
@@ -45,6 +47,7 @@ function Post() {
   const [modal, setModal] = useState(false);
   const [checkUser, setCheckUser] = useState("");
   const [checkRp, setCheckRp] = useState("None");
+  const [checkSave, setCheckSave] = useState("None");
   const navigation = useNavigate();
   useEffect(() => {
     const getUserReportValue = async () => {
@@ -61,6 +64,7 @@ function Post() {
         const response = await axios.get(
           `question/getQuestionDetailByQid/${qid}`
         );
+
         setDetails(response.data);
       } catch (error) {
         navigation("/");
@@ -104,6 +108,15 @@ function Post() {
       }
     };
     getQuestionTagByQid();
+    const checkSaveQuestion = async () => {
+      try {
+        const response = await axios.get(`user/checkSaveQuestion/${qid}`);
+        setCheckSave(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    checkSaveQuestion();
 
     if (currentUser !== "") {
       const getUserVoteValue = async () => {
@@ -279,12 +292,20 @@ function Post() {
     }
   };
 
-  const saveQuestion = () => {
-    if (currentUser === undefined) {
+  const saveQuestion = (type) => {
+    if (currentUser !== undefined) {
       axios
         .post(`/user/saveQuestion/${qid}`)
         .then(function (response) {
-          Swal.fire("", "Lưu câu hỏi thành công", "success");
+          axios
+            .get(`/user/checkSaveQuestion/${qid}`)
+            .then(function (response) {
+              setCheckSave(response.data);
+              Swal.fire("Thành công", `${type} thành công`, "success");
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
         })
         .catch(function (error) {
           console.log(error);
@@ -367,7 +388,7 @@ function Post() {
   };
 
   const handleCheckRole = () => {
-    if (user.uid === currentUser || role === "Admin") {
+    if (user.uid === currentUser) {
       return (
         <Stack
           gap={1}
@@ -399,6 +420,46 @@ function Post() {
           </Button>
         </Stack>
       );
+    } else if (role === "Admin") {
+      return (
+        <Box
+          sx={{
+            justifyContent: "center",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="error"
+            sx={{ marginRight: 1, width: 200 }}
+          >
+            Xóa bài viết
+          </Button>
+        </Box>
+      );
+    }
+  };
+
+  const handleCheckSave = () => {
+    if (currentUser !== user.uid) {
+      if (checkSave === "None" || checkSave === "") {
+        return (
+          <Tooltip title="Lưu câu hỏi" placement="left">
+            <IconButton onClick={() => saveQuestion("Lưu câu hỏi")}>
+              <BookmarkBorderIcon />
+            </IconButton>
+          </Tooltip>
+        );
+      } else {
+        return (
+          <Tooltip title="Bỏ lưu câu hỏi" placement="left">
+            <IconButton onClick={() => saveQuestion("Bỏ lưu câu hỏi")}>
+              <BookmarkIcon />
+            </IconButton>
+          </Tooltip>
+        );
+      }
     }
   };
 
@@ -513,15 +574,7 @@ function Post() {
                 ) : (
                   <></>
                 )}
-                {currentUser !== user.uid ? (
-                  <Tooltip title="Lưu câu hỏi" placement="left">
-                    <IconButton onClick={saveQuestion}>
-                      <BookmarkBorderIcon />
-                    </IconButton>
-                  </Tooltip>
-                ) : (
-                  <></>
-                )}
+                {handleCheckSave()}
               </Box>
               <Box sx={{ marginLeft: 3 }}>
                 {Array.from(details).map((detail, i) => {
@@ -560,18 +613,16 @@ function Post() {
             </Stack>
           </BoxContent>
 
-          <BoxContent sx={{ marginTop: 2 }}>
-            <Stack
-              direction="row"
-              spacing={2}
-              sx={{ width: "100%", alignItems: "center", padding: 2 }}
-            >
-              {Array.from(tags).map((tag, i) => (
-                <BoxTag key={i} sx={{ padding: "1 0.5" }}>
-                  <Typography variant="body2">{tag.name}</Typography>
-                </BoxTag>
+          <BoxContent sx={{ marginTop: 2, paddingTop: 2, paddingBottom: 2 }}>
+            <Grid container spacing={1} columns={{ xs: 4, sm: 8, md: 12 }}>
+              {Array.from(tags).map((t, index) => (
+                <Grid item xs={2} sm={2} md={2} key={index}>
+                  <BoxTag sx={{ paddingTop: 1, paddingBottom: 1 }}>
+                    <Typography variant="body2">{t.name}</Typography>
+                  </BoxTag>
+                </Grid>
               ))}
-            </Stack>
+            </Grid>
           </BoxContent>
           <Typography sx={{ marginTop: 1 }} variant="h5">
             Bình luận

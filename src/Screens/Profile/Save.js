@@ -1,4 +1,4 @@
-import { Divider, Stack, Typography } from "@mui/material";
+import { Divider, Grid, Stack, Typography } from "@mui/material";
 import {
   BoxDetails,
   BoxText,
@@ -10,6 +10,8 @@ import { BoxPost } from "./Style";
 import { BoxTag } from "../../Assert/Style";
 import { memo, useEffect, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import CheckIcon from "@mui/icons-material/Check";
 
 function Save() {
   const [data, setData] = useState("");
@@ -26,58 +28,81 @@ function Save() {
   }, []);
   return (
     <BoxPost>
-      {Array.from(data).map((item, i) => (
-        <StackPost
-          key={i}
-          direction="row"
-          spacing={2}
-          divider={
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{ display: { xs: "none", lg: "block" } }}
-            />
-          }
-        >
-          <BoxDetails sx={{ display: { xs: "none", lg: "block" } }}>
-            <BoxText>
-              <Typography>1 phiếu</Typography>
-            </BoxText>
-            <BoxText>
-              <Typography>1 trả lời</Typography>
-            </BoxText>
-            <BoxText>
-              <Typography>1 xem</Typography>
-            </BoxText>
-          </BoxDetails>
+      {Array.from(data).map((q, i) => (
+         <StackPost
+         key={i}
+         direction="row"
+         spacing={2}
+         divider={
+           <Divider
+             orientation="vertical"
+             flexItem
+             sx={{ display: { xs: "none", lg: "block" } }}
+           />
+         }
+       >
+         <BoxDetails sx={{ display: { xs: "none", lg: "block" } }}>
+           <BoxText>
+             <Typography>{q.questionVote} phiếu</Typography>
+           </BoxText>
+           <BoxText
+             gap={1}
+             bgcolor={q.acceptAnswerAvailable === true ? "#66FF66" : ""}
+             color={
+               q.acceptAnswerAvailable === true ? "black" : "text.primary"
+             }
+             sx={{
+               border: q.acceptAnswerAvailable ? `2px solid gray` : "",
+             }}
+           >
+             {q.acceptAnswerAvailable ? (
+               <>
+                 <CheckIcon />
+               </>
+             ) : (
+               <></>
+             )}
+             <Typography>{q.answerCount} trả lời</Typography>
+           </BoxText>
+           <BoxText>
+             <Typography>1 xem</Typography>
+           </BoxText>
+         </BoxDetails>
 
-          <BoxTitle>
-            <TypographyTitle component="div" className="title">
-              {item.title}
-            </TypographyTitle>
-            <Stack
-              direction={{ xs: "column", lg: "row" }}
-              sx={{ marginTop: 1 }}
-            >
-              <Stack
-                direction="row"
-                spacing={2}
-                sx={{
-                  width: "100%",
-                  alignItems: "center",
-                  marginBottom: 2,
-                  marginTop: 1,
-                }}
-              >
-                {Array.from(Array(3)).map((_, i) => (
-                  <BoxTag key={i}>
-                    <Typography variant="body2">asd {i}</Typography>
-                  </BoxTag>
-                ))}
-              </Stack>
-            </Stack>
-          </BoxTitle>
-        </StackPost>
+         <BoxTitle>
+           <Link
+             to={`/post/${q.question.qid}`}
+             style={{ textDecoration: "none" }}
+           >
+             <TypographyTitle
+               component="div"
+               className="title"
+               variant="h5"
+               color={"text.primary"}
+             >
+               {q.question.title}
+             </TypographyTitle>
+           </Link>
+           <Stack
+             direction={{ xs: "column", lg: "row" }}
+             sx={{ marginTop: 1 }}
+           >
+             <Grid
+               container
+               spacing={1}
+               columns={{ xs: 4, sm: 8, md: 12 }}
+             >
+               {Array.from(q.tags).map((t, index) => (
+                 <Grid item xs={2} sm={2} md={2} key={index}>
+                   <BoxTag>
+                     <Typography variant="body2">{t.name}</Typography>
+                   </BoxTag>
+                 </Grid>
+               ))}
+             </Grid>
+           </Stack>
+         </BoxTitle>
+       </StackPost>
       ))}
     </BoxPost>
   );
