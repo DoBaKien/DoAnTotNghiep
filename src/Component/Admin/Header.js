@@ -12,14 +12,11 @@ import {
   Stack,
   Tooltip,
 } from "@mui/material";
-
 import { StackHeader, Search } from "./Style";
-
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Logout, Settings } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-
 import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useContext } from "react";
@@ -36,7 +33,7 @@ function Header({ show, setShow }) {
   const context = useContext(ThemeUseContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const { currentUser, setTest, role,test } = useContext(AuthContext);
+  const { currentUser, setTest, test } = useContext(AuthContext);
   const [data, setData] = useState("");
   useEffect(() => {
     const findByUid = async () => {
@@ -65,9 +62,9 @@ function Header({ show, setShow }) {
         Cookies.remove("sessionCookie");
         localStorage.removeItem("id");
         setAnchorEl(null);
-        if (role === "Admin") {
-          window.location.reload();
-        }
+        navigate("/");
+
+        window.location.reload();
       })
       .catch((error) => {
         console.log("dx lỗi");

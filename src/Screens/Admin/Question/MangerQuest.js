@@ -8,7 +8,6 @@ import LeftAdmin from "../../../Component/Admin/Left";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
-
 import { ValueDate } from "../../../Assert/Style";
 
 function ManagerQuest() {

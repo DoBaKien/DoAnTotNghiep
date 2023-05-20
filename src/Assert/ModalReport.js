@@ -9,6 +9,7 @@ import {
 import axios from "axios";
 import { memo, useState } from "react";
 import Swal from "sweetalert2";
+
 function ModalReport({ setModal, modal, qid, type, setCheckRp }) {
   const [reason, setReason] = useState("");
   const getUserReportValue = async () => {

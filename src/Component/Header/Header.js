@@ -22,7 +22,6 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Logout, Settings } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-
 import { AuthContext } from "../Auth/AuthContext";
 import { auth } from "../../Assert/Config";
 import axios from "axios";

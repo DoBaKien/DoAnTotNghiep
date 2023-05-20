@@ -1,239 +1,234 @@
 import {
-  Avatar,
   Box,
-  Button,
-  Stack,
   Typography,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
+  Avatar,
+  IconButton,
+  InputBase,
+  Stack,
+  Divider,
+  CircularProgress,
+  Grid,
 } from "@mui/material";
-import {
-  BoxHome,
-  BoxAbout,
-  BoxContent,
-  BoxList,
-  BoxName,
-  StackContent,
-  PaperUser,
-} from "../../Assert/Style";
+import NavigationIcon from "@mui/icons-material/Navigation";
 import Header from "../../Component/Header/Header";
+import LeftSide from "../../Component/LeftSide/LeftSide";
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import AddLinkIcon from "@mui/icons-material/AddLink";
+import PostAddIcon from "@mui/icons-material/PostAdd";
+import {
+  BtnToTop,
+  BoxContent,
+  BoxDetails,
+  BoxText,
+  BoxTitle,
+  CrePost,
+  StackContent,
+  StackCreate,
+  StackName,
+  StackPost,
+  StyledBadge,
+  TypographyTitle,
+} from "../Home/Style";
+import { BoxHome, BoxTag } from "../../Assert/Style";
+import CheckIcon from "@mui/icons-material/Check";
+import "../../Assert/index.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { BoxPost } from "./Style";
-import { useNavigate } from "react-router-dom";
-import Grid2 from "@mui/material/Unstable_Grid2/Grid2";
+function Home() {
+  const [questions, setQuestions] = useState("");
+  const [backToTop, setBackToTop] = useState(false);
 
-function Follow() {
-  const navigation = useNavigate();
-  const handleQUestion = () => {
-    navigation("/profile");
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 100) {
+        setBackToTop(true);
+      } else {
+        setBackToTop(false);
+      }
+    });
+    axios
+      .get("/question/getQuestionDTOByUserTag")
+      .then(function (response) {
+        setQuestions(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
+  const scrollUp = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
-  const handleEdit = () => {
-    navigation("/editpf");
+
+  const post = () => {
+    if (questions && questions.length > 0) {
+      return (
+        <BoxContent>
+          {questions.map((q, i) => (
+            <StackPost
+              key={i}
+              direction="row"
+              spacing={1}
+              divider={
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{ display: { xs: "none", lg: "block" } }}
+                />
+              }
+            >
+              <BoxDetails sx={{ display: { xs: "none", lg: "block" } }}>
+                <BoxText>
+                  <Typography>{q.questionVote} phiếu</Typography>
+                </BoxText>
+                <BoxText
+                  gap={1}
+                  bgcolor={q.acceptAnswerAvailable === true ? "#66FF66" : ""}
+                  color={
+                    q.acceptAnswerAvailable === true ? "black" : "text.primary"
+                  }
+                  sx={{
+                    border: q.acceptAnswerAvailable ? `2px solid gray` : "",
+                  }}
+                >
+                  {q.acceptAnswerAvailable ? (
+                    <>
+                      <CheckIcon />
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                  <Typography>{q.answerCount} trả lời</Typography>
+                </BoxText>
+
+                <BoxText>
+                  <Typography>1 xem</Typography>
+                </BoxText>
+              </BoxDetails>
+
+              <BoxTitle>
+                <Link
+                  to={`/post/${q.question.qid}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <TypographyTitle
+                    component="div"
+                    className="title"
+                    variant="h5"
+                    color={"text.primary"}
+                  >
+                    {q.question.title}
+                  </TypographyTitle>
+                </Link>
+                <Stack
+                  direction={{ xs: "column", lg: "row" }}
+                  sx={{ marginTop: 1, justifyContent: "space-between" }}
+                >
+                  <Grid
+                    container
+                    spacing={1}
+                    columns={{ xs: 4, sm: 8, md: 12 }}
+                  >
+                    {Array.from(q.tags).map((t, index) => (
+                      <Grid item xs={2} sm={2} md={2} key={index}>
+                        <BoxTag>
+                          <Typography variant="body2">{t.name}</Typography>
+                        </BoxTag>
+                      </Grid>
+                    ))}
+                  </Grid>
+                  <StackName
+                    direction="row"
+                    spacing={2}
+                    sx={{
+                      marginTop: { xs: 1, lg: 0 },
+                      marginBottom: { xs: 1, lg: 0 },
+                    }}
+                  >
+                    <Avatar
+                      alt="Avatar"
+                      src={q.user.avatar || q.user.name}
+                      sx={{ width: 35, height: 35 }}
+                    />
+
+                    <Typography>{q.user.name}</Typography>
+                  </StackName>
+                </Stack>
+              </BoxTitle>
+            </StackPost>
+          ))}
+        </BoxContent>
+      );
+    } else {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            height: "81vh",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      );
+    }
   };
   return (
     <BoxHome color={"text.primary"}>
-      <Header />
-      <BoxContent>
-        <StackContent direction={{ xs: "column", lg: "row" }}>
-          <Box
-            sx={{
-              justifyContent: "center",
-              display: "flex",
-            }}
-          >
-            <Avatar sx={{ width: 100, height: 100 }}>A</Avatar>
-          </Box>
-          <BoxName>
-            <Typography
-              variant="h5"
-              sx={{
-                display: { lg: "none", xs: "block" },
-                textAlign: { lg: "start", xs: "center" },
-              }}
-            >
-              Nameasdasdsaddasasd
-            </Typography>
-            <Typography
-              variant="h3"
-              sx={{ display: { lg: "block", xs: "none" } }}
-            >
-              Nameasdasdsaddasasd
-            </Typography>
-            <Typography sx={{ textAlign: { lg: "start", xs: "center" } }}>
-              Location
-            </Typography>
-          </BoxName>
-          <Box
-            sx={{
-              width: "100%",
-              height: 40,
-              display: "flex",
-              justifyContent: { lg: "end", xs: "center" },
-            }}
-          >
-            <Button variant="outlined" onClick={handleEdit}>
-              Edit Profile
-            </Button>
-          </Box>
-        </StackContent>
-      </BoxContent>
+      {backToTop && (
+        <BtnToTop onClick={scrollUp}>
+          <NavigationIcon />
+        </BtnToTop>
+      )}
 
-      <BoxContent sx={{ marginTop: 3 }}>
-        <BoxAbout>
-          <Typography variant="h5">About me</Typography>
-          <Typography>
-            Karakai Jouzu no Takagi-san dựa trên tác phẩm cùng tên, nói về
-            Takagi và con gái cô ấy, Chi. mang đến có các bạn những câu chuyện
-            thường ngày châm chọc hài hước, liều rằng người bố có xuất hiện hay
-            không.....?
-          </Typography>
-        </BoxAbout>
-      </BoxContent>
-      <Stack
-        direction="row"
-        sx={{
-          justifyContent: "center",
-          marginTop: 4,
-        }}
-      >
-        <BoxList>
-          <Box sx={{ flex: { xl: 1, md: 2, sm: 2, xs: 1 } }}>
-            <Box p={2} sx={{ display: { xs: "none", md: "block" } }}>
-              <Box
-                sx={{
-                  border: "1px solid gray",
-                  padding: 1,
-                  borderRadius: 10,
-                }}
-              >
-                <List>
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={handleQUestion}>
-                      <ListItemIcon>
-                        <QuestionAnswerIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Question" />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <FavoriteIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Follow" />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <LocalOfferIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Tags" />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <LogoutIcon />
-                      </ListItemIcon>
-                      <ListItemText primary="Log out" />
-                    </ListItemButton>
-                  </ListItem>
-                </List>
+      <Header />
+      <StackContent direction="row" sx={{ marginTop: 2 }}>
+        <LeftSide></LeftSide>
+        <Box>
+          <Link to="/create">
+            <StackCreate direction="row" spacing={{ xs: 1, lg: 2 }}>
+              <Box>
+                <IconButton>
+                  <StyledBadge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    variant="dot"
+                  >
+                    <Avatar sx={{ width: 40, height: 40 }}>M</Avatar>
+                  </StyledBadge>
+                </IconButton>
               </Box>
-            </Box>
-            <Box
-              flex={0.1}
-              sx={{
-                display: { md: "none", xs: "block" },
-              }}
-            >
-              <Box
-                sx={{
-                  justifyContent: "center",
-                  display: "flex",
-                }}
-              >
-                <List style={{ width: "50px" }}>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <FavoriteIcon />
-                      </ListItemIcon>
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <QuestionAnswerIcon />
-                      </ListItemIcon>
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <LocalOfferIcon />
-                      </ListItemIcon>
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemIcon>
-                        <LogoutIcon />
-                      </ListItemIcon>
-                    </ListItemButton>
-                  </ListItem>
-                </List>
-              </Box>
-            </Box>
-          </Box>
-        </BoxList>
-        <BoxPost>
-          <Grid2
-            container
-            spacing={{ xs: 1, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-          >
-            {Array.from(Array(20)).map((_, index) => (
-              <Grid2 xs={4} sm={4} md={4} key={index}>
-                <PaperUser>
-                  <Stack direction="row" spacing={2}>
-                    <Box
-                      sx={{
-                        width: 50,
-                        height: 60,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        display: "flex",
-                      }}
-                    >
-                      <Avatar sx={{ width: 50, height: 50 }}>A</Avatar>
-                    </Box>
-                    <Box
-                      sx={{
-                        width: "100%",
-                        height: 60,
-                      }}
-                    >
-                      <Typography sx={{ marginBottom: 1 }}>Name</Typography>
-                      <Typography>Loacation</Typography>
-                    </Box>
-                  </Stack>
-                </PaperUser>
-              </Grid2>
-            ))}
-          </Grid2>
-        </BoxPost>
-      </Stack>
+
+              <CrePost sx={{ display: { xs: "none", lg: "block" } }}>
+                <InputBase
+                  sx={{ ml: 2, flex: 1, fontSize: 22 }}
+                  fullWidth
+                  placeholder="Đặt câu hỏi"
+                />
+              </CrePost>
+
+              <IconButton sx={{ display: { xs: "block", lg: "none" } }}>
+                <PostAddIcon fontSize="large" />
+              </IconButton>
+              <IconButton>
+                <InsertPhotoIcon fontSize="large" />
+              </IconButton>
+              <IconButton>
+                <AddLinkIcon fontSize="large" />
+              </IconButton>
+            </StackCreate>
+          </Link>
+          {post()}
+        </Box>
+      </StackContent>
     </BoxHome>
   );
 }
 
-export default Follow;
+export default Home;

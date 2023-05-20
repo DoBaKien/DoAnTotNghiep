@@ -17,29 +17,28 @@ const handleOnCellClick = (params) => {
   window.open(`/post/${params.row.qid}`, "_blank");
 };
 const handleDelete = (id, value) => {
-  console.log(id);
-  // Swal.fire({
-  //   title: "Bạn có chắc chắn không?",
-  //   text: "Một khi đã xóa thì không thể hoàn tác",
-  //   icon: "warning",
-  //   showCancelButton: true,
-  //   confirmButtonColor: "#3085d6",
-  //   cancelButtonColor: "#d33",
-  //   confirmButtonText: "Xóa",
-  //   cancelButtonText: "Hủy",
-  //   reverseButtons: "true",
-  // }).then((result) => {
-  //   if (result.isConfirmed) {
-  //     axios
-  //       .delete(`/${value}/deleteReport/${id}`)
-  //       .then(function (response) {
-  //         Swal.fire("Đã xóa!", "Tố cáo của bạn đã xóa", "success");
-  //       })
-  //       .catch(function (error) {
-  //         console.log(error);
-  //       });
-  //   }
-  // });
+  Swal.fire({
+    title: "Bạn có chắc chắn không?",
+    text: "Một khi đã xóa thì không thể hoàn tác",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Xóa",
+    cancelButtonText: "Hủy",
+    reverseButtons: "true",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      axios
+        .delete(`/${value}/deleteReport/${id}`)
+        .then(function (response) {
+          Swal.fire("Đã xóa!", "Tố cáo của bạn đã xóa", "success");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  });
 };
 const columns = [
   {

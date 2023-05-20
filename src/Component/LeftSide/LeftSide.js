@@ -9,7 +9,6 @@ import {
   Switch,
   styled,
 } from "@mui/material";
-
 import HomeIcon from "@mui/icons-material/Home";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
@@ -22,6 +21,7 @@ import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { useNavigate } from "react-router-dom";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { AuthContext } from "../Auth/AuthContext.js";
+
 function LeftSide() {
   const BoxSide = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
@@ -48,6 +48,9 @@ function LeftSide() {
   const handleAdmin = () => {
     navigate("/admin");
   };
+  const handleFollow = () => {
+    navigate("/follow");
+  };
 
   return (
     <BoxSide>
@@ -71,11 +74,11 @@ function LeftSide() {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={handleFollow}>
                   <ListItemIcon>
                     <QuestionAnswerIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Câu hỏi" />
+                  <ListItemText primary="Theo dõi" />
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
@@ -136,7 +139,7 @@ function LeftSide() {
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={handleFollow}>
                   <ListItemIcon>
                     <QuestionAnswerIcon />
                   </ListItemIcon>

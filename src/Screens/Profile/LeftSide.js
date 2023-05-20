@@ -11,14 +11,34 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import LogoutIcon from "@mui/icons-material/Logout";
-
 import My from "./My";
 import Save from "./Save";
-
 import Tag from "./Tag";
+import { signOut } from "firebase/auth";
+import { auth } from "../../Assert/Config";
+import Cookies from "js-cookie";
+import { useContext } from "react";
+import { AuthContext } from "../../Component/Auth/AuthContext";
+
 function LeftSide(props) {
+  const { test, setTest, role } = useContext(AuthContext);
   const handleFollow = () => {
     props.setPage(<My id={props.id} />);
+  };
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        setTest(!test);
+        Cookies.remove("sessionCookie");
+        localStorage.removeItem("id");
+
+        if (role === "Admin") {
+          window.location.reload();
+        }
+      })
+      .catch((error) => {
+        console.log("dx lỗi");
+      });
   };
   return (
     <BoxList>
@@ -62,7 +82,7 @@ function LeftSide(props) {
               </ListItem>
 
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={handleLogout}>
                   <ListItemIcon>
                     <LogoutIcon />
                   </ListItemIcon>
@@ -86,28 +106,32 @@ function LeftSide(props) {
           >
             <List style={{ width: "50px" }}>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={() => handleFollow}>
                   <ListItemIcon>
                     <FavoriteIcon />
                   </ListItemIcon>
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton
+                  onClick={() => props.setPage(<Save id={props.id} />)}
+                >
                   <ListItemIcon>
                     <QuestionAnswerIcon />
                   </ListItemIcon>
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton
+                  onClick={() => props.setPage(<Tag id={props.id} />)}
+                >
                   <ListItemIcon>
                     <LocalOfferIcon />
                   </ListItemIcon>
                 </ListItemButton>
               </ListItem>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton onClick={handleLogout}>
                   <ListItemIcon>
                     <LogoutIcon />
                   </ListItemIcon>

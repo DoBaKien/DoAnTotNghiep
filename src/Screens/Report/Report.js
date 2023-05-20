@@ -1,15 +1,11 @@
 import { Divider, Typography } from "@mui/material";
-
 import Header from "../../Component/Header/Header";
-
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../Component/Auth/AuthContext";
 import axios from "axios";
-
 import { Navigate } from "react-router-dom";
 import { BoxContent, BoxTitle } from "./Style";
 import { BoxHome } from "../../Assert/Style";
-
 import Cookies from "js-cookie";
 import { datatable, datatableanswer, datatablecomment } from "./Data";
 

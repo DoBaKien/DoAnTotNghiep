@@ -537,23 +537,25 @@ function Post() {
                   justifyContent: "center",
                 }}
               >
-                <IconButton
-                  onClick={() => VoteAction("Up")}
-                  color={check === "Up" ? "primary" : ""}
-                >
-                  <NorthIcon />
-                </IconButton>
-
+                <Tooltip title="Hữu ích" placement="left">
+                  <IconButton
+                    onClick={() => VoteAction("Up")}
+                    color={check === "Up" ? "primary" : ""}
+                  >
+                    <NorthIcon />
+                  </IconButton>
+                </Tooltip>
                 <Typography variant="h6" sx={{ marginBottom: 0.6 }}>
                   {vote}
                 </Typography>
-                <IconButton
-                  onClick={() => VoteAction("Down")}
-                  color={check === "Down" ? "primary" : ""}
-                >
-                  <SouthIcon />
-                </IconButton>
-
+                <Tooltip title="Không hữu ích" placement="left">
+                  <IconButton
+                    onClick={() => VoteAction("Down")}
+                    color={check === "Down" ? "primary" : ""}
+                  >
+                    <SouthIcon />
+                  </IconButton>
+                </Tooltip>
                 <Tooltip title="Lịch sử chỉnh sửa" placement="left">
                   <Link to={`/history/question/${qid}`}>
                     <IconButton>

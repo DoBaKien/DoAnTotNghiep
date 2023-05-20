@@ -1,5 +1,4 @@
 import { Navigate } from "react-router-dom";
-
 import ManagerUser from "../Screens/Admin/User/ManagerUser";
 import ManagerQuest from "../Screens/Admin/Question/MangerQuest";
 import ManagerTag from "../Screens/Admin/Tag/MangerTag";
