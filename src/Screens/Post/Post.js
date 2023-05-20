@@ -615,7 +615,7 @@ function Post() {
             </Stack>
           </BoxContent>
 
-          <BoxContent sx={{ marginTop: 2, paddingTop: 2, paddingBottom: 2 }}>
+          <BoxContent sx={{ marginTop: 2, paddingTop: 2, paddingBottom: 2,paddingLeft:2 }}>
             <Grid container spacing={1} columns={{ xs: 4, sm: 8, md: 12 }}>
               {Array.from(tags).map((t, index) => (
                 <Grid item xs={2} sm={2} md={2} key={index}>

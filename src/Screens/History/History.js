@@ -1,6 +1,6 @@
 import Header from "../../Component/Header/Header";
 import LeftSide from "../../Component/LeftSide/LeftSide";
-import { BoxContent, StackContent } from "./Style";
+import { BoxContent, BoxTable, StackContent } from "./Style";
 import { BoxHome, ValueDate } from "../../Assert/Style";
 import { Avatar, Box, CircularProgress, Typography } from "@mui/material";
 
@@ -236,7 +236,7 @@ function History() {
               </BoxUserPost>
             </Link>
           </BoxUserPost>
-          <Box sx={{ width: "100%", marginTop: 2 }}>{datatableQuestion()}</Box>
+          <BoxTable>{datatableQuestion()}</BoxTable>
         </BoxContent>
       );
     } else if (type === "answer") {

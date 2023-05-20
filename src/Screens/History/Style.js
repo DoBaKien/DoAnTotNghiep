@@ -10,3 +10,8 @@ export const StackContent = styled(Stack)(({ theme }) => ({
   width: "80vw",
   margin: "0 auto",
 }));
+export const BoxTable = styled(Box)(({theme}) => ({
+  backgroundColor: theme.palette.mode === "light" ? "white" : "black",
+  width: "100%",
+  marginTop: 2,
+}));
