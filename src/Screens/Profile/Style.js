@@ -1,7 +1,5 @@
-import { Box } from "@mui/material";
-import { styled } from "@mui/system";
+import { Box, styled } from "@mui/material";
 
 export const BoxPost = styled(Box)(() => ({
-  width: "60vw",
   marginLeft: 20,
 }));

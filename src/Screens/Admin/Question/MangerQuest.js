@@ -8,25 +8,26 @@ import LeftAdmin from "../../../Component/Admin/Left";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { ValueDate } from "../../../Assert/Style";
 
 function ManagerQuest() {
   const { show, setShow } = useContext(AuthContext);
   const [questions, setQuestions] = useState([]);
-  const navigate = useNavigate();
+
   useEffect(() => {
     axios
       .get("/question/getAllQuestionDTO")
       .then(function (response) {
         setQuestions(response.data);
+        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
   }, []);
   const handleOnCellClick = (params) => {
-    navigate(`/post/${params.id}`);
+    window.open(`/post/${params.id}`, "_blank");
   };
 
   const columns = [
@@ -50,6 +51,12 @@ function ManagerQuest() {
     {
       field: "status",
       headerName: "Trạng thái",
+      flex: 0.6,
+    },
+    {
+      field: "accept",
+      headerName: "Trả lời",
+      type: "boolean",
       flex: 0.6,
     },
     {
@@ -78,6 +85,7 @@ function ManagerQuest() {
               status: item.question.status,
               date: item.question.date,
               vote: item.questionVote,
+              accept: item.acceptAnswerAvailable,
             }))}
             columns={columns}
             pageSizeOptions={[10, 50, 100]}
@@ -94,6 +102,8 @@ function ManagerQuest() {
                 quickFilterProps: { debounceMs: 500 },
                 csvOptions: {
                   fields: ["qid", "title", "name", "status", "vote", "date"],
+                  utf8WithBom: true,
+                  fileName: "TableQuestionData",
                 },
               },
             }}

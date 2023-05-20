@@ -6,8 +6,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import { useState } from "react";
-function ModalBox({ setModal, modal }) {
+import Swal from "sweetalert2";
+function ModalBox({ setModal, modal, setTags }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const style = {
@@ -30,7 +32,29 @@ function ModalBox({ setModal, modal }) {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(name, description);
+
+    if (name !== "" || description !== "") {
+      axios
+        .post("/tag/addTag", {
+          name,
+          description,
+        })
+        .then(function (response) {
+          setModal(false);
+          Swal.fire("Thành công", "Tạo thành công", "success");
+          axios
+            .get("/tag/getAllTag")
+            .then(function (response) {
+              setTags(response.data);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   };
 
   return (
@@ -84,7 +108,7 @@ function ModalBox({ setModal, modal }) {
                   Hủy
                 </Button>
                 <Button type="submit" variant="contained" sx={{ width: 150 }}>
-                  đăng nhập
+                  Tạo
                 </Button>
               </Stack>
             </form>

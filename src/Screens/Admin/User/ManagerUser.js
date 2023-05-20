@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Box,
   CircularProgress,
   IconButton,
@@ -6,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import Header from "../../../Component/Admin/Header";
-import { DataGrid, GridActionsCellItem, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useContext } from "react";
 import { AuthContext } from "../../../Component/Auth/AuthContext";
 import { BoxHome, StackContent } from "../Style";
@@ -15,19 +16,12 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
 import SecurityIcon from "@mui/icons-material/Security";
-import PersonOffIcon from "@mui/icons-material/PersonOff";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import ModalEdit from "./ModalEdit";
 
 function ManagerUser() {
   const { show, setShow } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [pageSize, setPageSize] = useState(10);
-  const [id, setId] = useState("");
-  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     axios
@@ -40,49 +34,72 @@ function ManagerUser() {
       });
   }, []);
 
-  const handleRoleAdmin = (id) => {
-    axios
-      .post(`/account/admin/adminClaim/${id}`)
-      .then(function (response) {
-        Swal.fire("Thành công", "Cấp quyền Admin thành công", "success");
-        axios
-          .get(`/user/getAllUser`)
-          .then(function (response) {
-            setUsers(response.data);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  const handleRoleUser = (id) => {
-    axios
-      .post(`/account/admin/userClaim/${id}`)
-      .then(function (response) {
-        Swal.fire("Thành công", "Cấp quyền User thành công", "success");
-        axios
-          .get(`/user/getAllUser`)
-          .then(function (response) {
-            setUsers(response.data);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-  const handleEdit = (value) => {
-    setId(value);
-    setModal(!modal);
+  const handleRoleAdmin = (id, role) => {
+    Swal.fire({
+      text: `Chắc chắn muốn cấp quyền cho người này không`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Chuyển",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (role === "User") {
+          axios
+            .post(`/account/admin/adminClaim/${id}`)
+            .then(function (response) {
+              Swal.fire("Thành công", "Cấp quyền Admin thành công", "success");
+              axios
+                .get(`/user/getAllUser`)
+                .then(function (response) {
+                  setUsers(response.data);
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        } else {
+          axios
+            .post(`/account/admin/userClaim/${id}`)
+            .then(function (response) {
+              Swal.fire("Thành công", "Cấp quyền User thành công", "success");
+              axios
+                .get(`/user/getAllUser`)
+                .then(function (response) {
+                  setUsers(response.data);
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        }
+      }
+    });
   };
 
   const columns = [
     { field: "uid", headerName: "ID", flex: 0.5 },
+    {
+      field: "avatar",
+      headerName: "Ảnh",
+      flex: 0.3,
+      renderCell: (params) => (
+        <>
+          {params.value === null ? (
+            <Avatar>V</Avatar>
+          ) : (
+            <img src={params.value} alt="" height={50} width={50} />
+          )}
+        </>
+      ),
+    },
     {
       field: "name",
       headerName: "Tên",
@@ -111,49 +128,15 @@ function ManagerUser() {
       getActions: (params) => {
         let actions = [
           <>
-            <Tooltip title="Sửa ngươi dùng" placement="left">
-              <IconButton onClick={() => handleEdit(params.id)}>
-                <DriveFileRenameOutlineIcon />
+            <Tooltip title="Chuyển quyền" placement="left">
+              <IconButton
+                onClick={() => handleRoleAdmin(params.id, params.row.role)}
+              >
+                <SecurityIcon />
               </IconButton>
             </Tooltip>
           </>,
-          <GridActionsCellItem
-            icon={<PersonOffIcon />}
-            label="Vô hiệu quá"
-            showInMenu
-            onClick={() => {}}
-          />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Xóa người dùng"
-            showInMenu
-            onClick={() => {}}
-          />,
         ];
-
-        if (params.row.role === "User") {
-          actions.push(
-            <GridActionsCellItem
-              icon={<SecurityIcon />}
-              label="Cấp Quyền Admin"
-              showInMenu
-              onClick={() => {
-                handleRoleAdmin(params.id);
-              }}
-            />
-          );
-        } else {
-          actions.push(
-            <GridActionsCellItem
-              icon={<SecurityIcon />}
-              label="Cấp Quyền User"
-              showInMenu
-              onClick={() => {
-                handleRoleUser(params.id);
-              }}
-            />
-          );
-        }
 
         return actions;
       },
@@ -163,9 +146,9 @@ function ManagerUser() {
   function getRowId(row) {
     return row.uid;
   }
-  const navigate = useNavigate();
+
   const handleOnCellClick = (params) => {
-    navigate(`/profile/${params.id}`);
+    window.open(`/profile/${params.id}`, "_blank");
   };
   const datatable = () => {
     if (Array.isArray(users) && users.length !== 0) {
@@ -189,7 +172,7 @@ function ManagerUser() {
                 csvOptions: {
                   fields: ["uid", "name", "location", "role"],
                   utf8WithBom: true,
-                  fileName: "UserData",
+                  fileName: "TableUserData",
                 },
               },
             }}
@@ -244,7 +227,7 @@ function ManagerUser() {
             <Box sx={{ padding: "5px 5px 5px" }}>
               <Typography variant="h4">Quản lý người dùng</Typography>
             </Box>
-            <ModalEdit setModal={setModal} modal={modal} id={id} />
+
             {datatable()}
           </Box>
         </Box>

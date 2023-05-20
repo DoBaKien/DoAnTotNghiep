@@ -27,11 +27,11 @@ function ReportC() {
       });
   }, []);
   const handleOnCellClick = (params) => {
-    console.log(params);
+    window.open(`/post/${params.row.qid}`, "_blank");
   };
 
   const handleDone = () => {
-    if (select === []) {
+    if (select !== []) {
       axios
         .put("/comment/editReport", select)
         .then(function (response) {
@@ -101,7 +101,7 @@ function ReportC() {
               name: item.user.name,
               status: item.commentReport.status,
               date: item.commentReport.date,
-              qid: item.comment.qid,
+              qid: item.question.qid,
               content: item.comment.detail,
             }))}
             checkboxSelection
@@ -122,7 +122,9 @@ function ReportC() {
                 showQuickFilter: true,
                 quickFilterProps: { debounceMs: 500 },
                 csvOptions: {
-                  fields: ["qid", "detail", "name", "status", "date"],
+                  fields: ["id", "qid", "detail", "status", "name", "date"],
+                  utf8WithBom: true,
+                  fileName: "TableReportComment",
                 },
               },
             }}

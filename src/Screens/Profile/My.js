@@ -15,12 +15,15 @@ import {
 } from "../Home/Style";
 import { BoxPost } from "./Style";
 import { BoxTag } from "../../Assert/Style";
-import { memo, useEffect, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
+import { AuthContext } from "../../Component/Auth/AuthContext";
 
 function My(props) {
+  const { currentUser } = useContext(AuthContext);
+
   const [data, setData] = useState("");
   useEffect(() => {
     axios
@@ -131,7 +134,16 @@ function My(props) {
     }
   };
 
-  return <BoxPost>{post()}</BoxPost>;
+  return (
+    <BoxPost
+      sx={{
+        width: currentUser === props.id ? "60vw" : "81vw",
+        paddingRight: currentUser === props.id ? 0 : 2,
+      }}
+    >
+      {post()}
+    </BoxPost>
+  );
 }
 
 export default memo(My);

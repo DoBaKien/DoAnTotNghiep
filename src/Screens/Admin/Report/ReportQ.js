@@ -26,11 +26,11 @@ function ReportQ() {
       });
   }, []);
   const handleOnCellClick = (params) => {
-    console.log(params);
+    window.open(`/post/${params.row.qid}`, "_blank");
   };
 
   const handleDone = () => {
-    if (select === []) {
+    if (select !== []) {
       axios
         .put("/answer/editReport", select)
         .then(function (response) {
@@ -96,7 +96,6 @@ function ReportQ() {
               date: item.questionReport.date,
               qid: item.questionReport.qid,
             }))}
-            checkboxSelection
             columns={columns}
             pageSizeOptions={[10, 50, 100]}
             components={{
@@ -106,6 +105,7 @@ function ReportQ() {
               ...data.initialState,
               pagination: { paginationModel: { pageSize: 10 } },
             }}
+            checkboxSelection
             onRowSelectionModelChange={(id) => {
               setSelect(id);
             }}
@@ -114,7 +114,9 @@ function ReportQ() {
                 showQuickFilter: true,
                 quickFilterProps: { debounceMs: 500 },
                 csvOptions: {
-                  fields: ["qid", "title", "name", "status", "vote", "date"],
+                  fields: ["id", "qid", "detail", "status", "name", "date"],
+                  utf8WithBom: true,
+                  fileName: "TableReportQuestion",
                 },
               },
             }}

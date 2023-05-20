@@ -30,12 +30,13 @@ import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { AuthContext } from "../Auth/AuthContext";
 import axios from "axios";
+import { signOut } from "firebase/auth";
 function Header({ show, setShow }) {
   const navigate = useNavigate();
   const context = useContext(ThemeUseContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, setTest, role,test } = useContext(AuthContext);
   const [data, setData] = useState("");
   useEffect(() => {
     const findByUid = async () => {
@@ -58,13 +59,25 @@ function Header({ show, setShow }) {
     setAnchorEl(null);
   };
   const handlelogout = () => {
-    auth.signOut();
-    Cookies.remove("sessionCookie");
-    localStorage.removeItem("id");
-    setAnchorEl(null);
-    navigate("/login");
+    signOut(auth)
+      .then(() => {
+        setTest(!test);
+        Cookies.remove("sessionCookie");
+        localStorage.removeItem("id");
+        setAnchorEl(null);
+        if (role === "Admin") {
+          window.location.reload();
+        }
+      })
+      .catch((error) => {
+        console.log("dx lỗi");
+      });
   };
-  const handlePf = () => {};
+  const handlePf = () => {
+    navigate(`/profile/${currentUser}`);
+    setAnchorEl(null);
+    setTest(!test);
+  };
   const handleSetting = () => {
     navigate("/setting");
     setAnchorEl(null);

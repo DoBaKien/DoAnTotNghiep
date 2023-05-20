@@ -30,6 +30,8 @@ import {
 import History from "./Screens/History/History";
 import EditPost from "./Screens/EditPost/EditPost";
 import Setting from "./Screens/Setting/Setting";
+import Report from "./Screens/Report/Report";
+import Find from "./Screens/Home/Find";
 
 function Router() {
   const context = useContext(ThemeUseContext);
@@ -63,8 +65,9 @@ function Router() {
         <Route path="/history/:type/:id" element={<History />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/edit/:type/:qid" element={<EditPost />} />
+        <Route path="/report" element={<Report />} />
+        <Route path="/find/:text" element={<Find />} />
 
-        <Route path="/post/:qid/admin/:id" element={<Post />} />
         <Route path="/admin" element={<AdminCheck role={role} />} />
         <Route path="/manageruser" element={<UserPageCheck role={role} />} />
         <Route path="/managertag" element={<TagPageCheck role={role} />} />

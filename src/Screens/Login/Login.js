@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { BoxGG, BtnLog, BoxLogin } from "./Style";
 import GoogleIcon from "@mui/icons-material/Google";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
@@ -27,14 +27,12 @@ import Cookies from "js-cookie";
 import Header from "../../Component/Header/Header";
 import { auth } from "../../Assert/Config";
 import Swal from "sweetalert2";
-import { AuthContext } from "../../Component/Auth/AuthContext";
+
 import ModalForgot from "./ModalForgot";
 
 var regEmail = /^([a-zA-Z0-9_.-])+@(([a-zA-Z0-9-])+.)+([a-zA-Z]{2,4})+$/;
 var regpass = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
 function Login() {
-  const { role } = useContext(AuthContext);
-
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
   const [userName, setUserName] = useState("");
@@ -45,6 +43,7 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (userName === "" || password === "") {
       Swal.fire({
         icon: "error",
@@ -55,7 +54,6 @@ function Login() {
         .then((userCredential) => {
           const user = userCredential.user;
           localStorage.setItem("id", user.uid);
-
           return user.getIdToken();
         })
         .then((token) => {
@@ -63,11 +61,18 @@ function Login() {
             .post("/account/createSessionCookie", token)
             .then(function (response) {
               Cookies.set("sessionCookie", response.data, { expires: 10 });
-              if (role === "Admin") {
-                navigate("/admin");
-              } else if (role === "User") {
-                navigate(-1);
-              }
+              axios
+                .get(`/account/getUserClaims`)
+                .then(function (response) {
+                  if (response.data === "Admin") {
+                    navigate("/admin");
+                  } else if (response.data === "User") {
+                    navigate(-1);
+                  }
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
             });
         })
         .catch((error) => {

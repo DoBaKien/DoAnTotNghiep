@@ -37,7 +37,8 @@ function Header() {
   const open = Boolean(anchorEl);
   const cookie = Cookies.get("sessionCookie");
   const [data, setData] = useState("");
-  // console.log(currentUser);
+  const [text, setText] = useState("");
+
   useEffect(() => {
     const findByUid = async () => {
       try {
@@ -57,6 +58,10 @@ function Header() {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleFind = () => {
+    navigate(`/find/${text}`);
   };
 
   const handlelogout = () => {
@@ -176,6 +181,12 @@ function Header() {
           sx={{ ml: 2, flex: 1, fontSize: 22 }}
           fullWidth
           placeholder="Tìm kiếm..."
+          onChange={(e) => setText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleFind();
+            }
+          }}
           startAdornment={
             <InputAdornment position="start">
               <SearchIcon />

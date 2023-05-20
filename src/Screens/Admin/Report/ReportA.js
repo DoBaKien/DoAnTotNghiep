@@ -31,7 +31,7 @@ function ReportA() {
   };
 
   const handleDone = () => {
-    if (select === []) {
+    if (select !== []) {
       axios
         .put("/question/editReport", select)
         .then(function (response) {
@@ -101,7 +101,7 @@ function ReportA() {
               name: item.user.name,
               status: item.answerReport.status,
               date: item.answerReport.date,
-              qid: item.answer.qid,
+              qid: item.question.qid,
             }))}
             checkboxSelection
             columns={columns}
@@ -121,7 +121,9 @@ function ReportA() {
                 showQuickFilter: true,
                 quickFilterProps: { debounceMs: 500 },
                 csvOptions: {
-                  fields: ["qid", "title", "name", "status", "vote", "date"],
+                  fields: ["id", "qid", "detail", "status", "name", "date"],
+                  utf8WithBom: true,
+                  fileName: "TableReportAnswer",
                 },
               },
             }}

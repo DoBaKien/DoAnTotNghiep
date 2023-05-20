@@ -20,6 +20,7 @@ import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutli
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModalBox from "./ModalBox";
 import ModalEdit from "./ModalEdit";
+import Swal from "sweetalert2";
 
 function ManagerTag() {
   const { show, setShow } = useContext(AuthContext);
@@ -41,6 +42,38 @@ function ManagerTag() {
   const handleEdit = (value) => {
     setId(value);
     setModalE(!modalE);
+  };
+
+  const handleDelete = (value) => {
+    Swal.fire({
+      title: "Chắc chắn muốn xóa?",
+      text: "",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`/tag/deleteTag/${value}`)
+          .then(function (response) {
+            Swal.fire("Thành công", "Xóa thành công", "success");
+            axios
+              .get("/tag/getAllTag")
+              .then(function (response) {
+                setTags(response.data);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    });
   };
 
   const columns = [
@@ -65,7 +98,7 @@ function ManagerTag() {
         let actions = [
           <>
             <Tooltip title="Xóa thẻ" placement="left">
-              <IconButton>
+              <IconButton onClick={() => handleDelete(params.id)}>
                 <DeleteIcon />
               </IconButton>
             </Tooltip>
@@ -107,8 +140,15 @@ function ManagerTag() {
               toolbar: {
                 showQuickFilter: true,
                 quickFilterProps: { debounceMs: 500 },
-                csvOptions: { fields: ["tid", "name", "description"] },
+                csvOptions: {
+                  fields: ["tid", "name", "description"],
+                  utf8WithBom: true,
+                  fileName: "TableTagData",
+                },
               },
+            }}
+            slots={{
+              toolbar: GridToolbar,
             }}
             getRowHeight={() => "auto"}
             sx={{
@@ -164,8 +204,13 @@ function ManagerTag() {
             >
               Thêm thẻ
             </Button>
-            <ModalBox setModal={setModal} modal={modal} />
-            <ModalEdit setModalE={setModalE} modalE={modalE} id={id} />
+            <ModalBox setModal={setModal} modal={modal} setTags={setTags} />
+            <ModalEdit
+              setModalE={setModalE}
+              modalE={modalE}
+              id={id}
+              setTags={setTags}
+            />
             {datatable()}
           </Box>
         </Box>

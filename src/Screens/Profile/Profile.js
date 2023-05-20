@@ -52,11 +52,10 @@ function Profile() {
   return (
     <BoxHome color={"text.primary"}>
       <Header />
-      <BoxContent
-      >
+      <BoxContent sx={{ display: "flex", justifyContent: "center" }}>
         <StackContent
           direction={{ xs: "column", lg: "row" }}
-          sx={{ display: "flex", justifyContent: "space-between",padding:1 }}
+          sx={{ display: "flex", justifyContent: "space-between", padding: 1 }}
         >
           <Stack direction={{ xs: "column", lg: "row" }}>
             <Box
@@ -106,11 +105,17 @@ function Profile() {
       <Stack
         direction="row"
         sx={{
+          display: "flex",
           justifyContent: "center",
           marginTop: 4,
         }}
       >
-        <LeftSide page={page} setPage={setPage} id={id.id} />
+        {currentUser === id.id ? (
+          <LeftSide page={page} setPage={setPage} id={id.id} />
+        ) : (
+          <></>
+        )}
+
         {page}
       </Stack>
     </BoxHome>

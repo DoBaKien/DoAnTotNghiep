@@ -6,11 +6,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { useEffect } from "react";
 import { useState } from "react";
+import Swal from "sweetalert2";
 
-function ModalEdit({ setModalE, modalE, id }) {
+function ModalEdit({ setModalE, modalE, id, setTags }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -25,13 +29,48 @@ function ModalEdit({ setModalE, modalE, id }) {
   };
   const maxLength = 500;
   const count = description.length;
+  useEffect(() => {
+    if (modalE === true) {
+      axios
+        .get(`/tag/getTagByTid/${id}`)
+        .then(function (response) {
+          setName(response.data.name);
+          setDescription(response.data.description);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  }, [id, modalE]);
 
   const toggleModal = () => {
     setModalE(false);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(name, description);
+
+    if (name !== "" || description !== "") {
+      axios
+        .put(`/tag/editTag/${id}`, {
+          name,
+          description,
+        })
+        .then(function (response) {
+          setModalE(false);
+          Swal.fire("Thành công", "Sửa thành công", "success");
+          axios
+            .get("/tag/getAllTag")
+            .then(function (response) {
+              setTags(response.data);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   };
 
   return (
@@ -63,6 +102,7 @@ function ModalEdit({ setModalE, modalE, id }) {
               <TextField
                 label="Tên thẻ"
                 variant="outlined"
+                value={name}
                 fullWidth
                 onChange={(e) => setName(e.target.value)}
               />
@@ -70,6 +110,7 @@ function ModalEdit({ setModalE, modalE, id }) {
               <TextField
                 label="Mô tả"
                 rows={3}
+                value={description}
                 multiline
                 style={{ marginTop: 20, marginBottom: 20 }}
                 fullWidth
@@ -93,7 +134,7 @@ function ModalEdit({ setModalE, modalE, id }) {
                   Hủy
                 </Button>
                 <Button type="submit" variant="contained" sx={{ width: 150 }}>
-                  đăng nhập
+                  tạo
                 </Button>
               </Stack>
             </form>

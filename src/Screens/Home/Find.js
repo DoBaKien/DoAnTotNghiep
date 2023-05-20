@@ -1,92 +1,82 @@
+import {
+  Box,
+  Typography,
+  Avatar,
+  IconButton,
+  InputBase,
+  Stack,
+  Divider,
+  CircularProgress,
+  Grid,
+} from "@mui/material";
+import NavigationIcon from "@mui/icons-material/Navigation";
 import Header from "../../Component/Header/Header";
 import LeftSide from "../../Component/LeftSide/LeftSide";
-
-import { BoxContent, StackContent } from "./Style";
-import { BoxHome, BoxTag } from "../../Assert/Style";
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
+import AddLinkIcon from "@mui/icons-material/AddLink";
+import PostAddIcon from "@mui/icons-material/PostAdd";
 import {
-  Avatar,
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  Grid,
-  Link,
-  Stack,
-  Typography,
-} from "@mui/material";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
-
-import "../../Assert/index.css";
-import {
+  BtnToTop,
+  BoxContent,
   BoxDetails,
   BoxText,
   BoxTitle,
+  CrePost,
+  StackContent,
+  StackCreate,
   StackName,
   StackPost,
+  StyledBadge,
   TypographyTitle,
-} from "../Home/Style";
+} from "./Style";
+import { BoxHome, BoxTag } from "../../Assert/Style";
+import CheckIcon from "@mui/icons-material/Check";
+import "../../Assert/index.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import CheckIcon from "@mui/icons-material/Check";
-import { useParams } from "react-router-dom";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import Swal from "sweetalert2";
-function TagDetails() {
-  const { tid } = useParams();
-  const [tagD, setTagD] = useState("");
-  const [tagID, setTagID] = useState("");
-  const [fol, setFolTag] = useState("");
-  useEffect(() => {
-    axios
-      .get(`/question/getQuestionDTOByTag/${tid}`)
-      .then(function (response) {
-        setTagD(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    axios
-      .get(`/tag/getTagByTid/${tid}`)
-      .then(function (response) {
-        setTagID(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    axios
-      .get(`/user/checkFollowTag/${tid}`)
-      .then(function (response) {
-        setFolTag(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, [tid]);
+import { Link, useParams } from "react-router-dom";
 
-  const handleFollow = (value) => {
+function Find() {
+  const [questions, setQuestions] = useState("");
+  const [backToTop, setBackToTop] = useState(false);
+  const text = useParams().text;
+
+  useEffect(() => {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 100) {
+        setBackToTop(true);
+      } else {
+        setBackToTop(false);
+      }
+    });
     axios
-      .post(`/user/modifyFollowTag/${tid}`)
+      .get(`/question/findQuestion/${text}`)
       .then(function (response) {
-        Swal.fire("Thành công", `${value} thành công`, "success");
-        axios
-          .get(`/user/checkFollowTag/${tid}`)
-          .then(function (response) {
-            setFolTag(response.data);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+        setQuestions(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
+  }, [text]);
+
+  const scrollUp = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   const post = () => {
-    if (tagD && tagD.length > 0) {
+    if (questions === "Question not found") {
+      return (
+        <StackPost sx={{ marginTop: 2 }}>
+          <Typography variant="h4">Không tìm thấy dữ liệu </Typography>
+        </StackPost>
+      );
+    } else if (questions && questions.length > 0) {
       return (
         <BoxContent>
-          {tagD.map((q, i) => (
+          {questions.map((q, i) => (
             <StackPost
               key={i}
               direction="row"
@@ -196,47 +186,56 @@ function TagDetails() {
       );
     }
   };
-
   return (
     <BoxHome color={"text.primary"}>
+      {backToTop && (
+        <BtnToTop onClick={scrollUp}>
+          <NavigationIcon />
+        </BtnToTop>
+      )}
+
       <Header />
-      <StackContent direction="row">
+      <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
-        <BoxContent sx={{ width: { xs: "100vw", lg: "60vw" } }}>
-          <Typography variant="h4">Câu hỏi gắn thẻ {tagID.name}</Typography>
-          <Box sx={{ width: "50vw", marginTop: 2 }}>
-            <Typography>{tagID.description}</Typography>
-          </Box>
-          <Stack direction="row" sx={{ marginTop: 3 }}>
-            {fol !== "Following" ? (
-              <Button
-                variant="contained"
-                sx={{ marginRight: 5 }}
-                startIcon={<RemoveRedEyeIcon />}
-                onClick={()=>handleFollow("Theo dõi")}
-              >
-                Theo dõi
-              </Button>
-            ) : (
-              <>
-                <Button
-                  variant="contained"
-                  sx={{ marginRight: 5 }}
-                  startIcon={<VisibilityOffIcon />}
-                  onClick={()=>handleFollow("Bỏ Theo dõi")}
-                >
-                  Bỏ Theo dõi
-                </Button>
-              </>
-            )}
-          </Stack>
-          <Box sx={{ marginTop: 3, marginBottom: 5 }}>
-            <BoxContent>{post()}</BoxContent>
-          </Box>
-        </BoxContent>
+        <Box>
+          <Link to="/create">
+            <StackCreate direction="row" spacing={{ xs: 1, lg: 2 }}>
+              <Box>
+                <IconButton>
+                  <StyledBadge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    variant="dot"
+                  >
+                    <Avatar sx={{ width: 40, height: 40 }}>M</Avatar>
+                  </StyledBadge>
+                </IconButton>
+              </Box>
+
+              <CrePost sx={{ display: { xs: "none", lg: "block" } }}>
+                <InputBase
+                  sx={{ ml: 2, flex: 1, fontSize: 22 }}
+                  fullWidth
+                  placeholder="Đặt câu hỏi"
+                />
+              </CrePost>
+
+              <IconButton sx={{ display: { xs: "block", lg: "none" } }}>
+                <PostAddIcon fontSize="large" />
+              </IconButton>
+              <IconButton>
+                <InsertPhotoIcon fontSize="large" />
+              </IconButton>
+              <IconButton>
+                <AddLinkIcon fontSize="large" />
+              </IconButton>
+            </StackCreate>
+          </Link>
+          {post()}
+        </Box>
       </StackContent>
     </BoxHome>
   );
 }
 
-export default TagDetails;
+export default Find;

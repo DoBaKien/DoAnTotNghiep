@@ -212,7 +212,7 @@ function Post() {
 
   const handleReport = () => {
     if (Cookies.get("sessionCookie") !== undefined) {
-      if (checkRp !== "None") {
+      if (checkRp === "None") {
         setModal(!modal);
       } else {
         Swal.fire("Bạn đã tố cáo rồi");
