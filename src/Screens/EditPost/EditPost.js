@@ -534,8 +534,8 @@ function EditPost() {
                 }}
               >
                 {Array.from(tagSel).map((t, i) => (
-                  <Grid item xs={2} sm={2} md={2} key={i}>
-                    <BoxTag sx={{ paddingTop: 1, paddingBottom: 1 }}>
+                  <Grid key={i}>
+                    <BoxTag sx={{ padding: 1 }}>
                       <Typography variant="body2">{t.name}</Typography>
                     </BoxTag>
                   </Grid>
