@@ -10,8 +10,6 @@ import {
 import { Animation } from "@devexpress/dx-react-chart";
 
 export const Question = (props) => {
-  console.log(props.questYear);
-
   return (
     <Box sx={{ width: "80%" }}>
       {props.questYear.length > 0 ? (

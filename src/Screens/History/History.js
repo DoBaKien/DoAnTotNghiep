@@ -216,7 +216,7 @@ function History() {
     if (type === "question") {
       return (
         <BoxContent sx={{ width: "60vw" }}>
-          <Typography variant="h4">Lịch sử chỉnh sửa</Typography>
+          <Typography variant="h4">Lịch sử hoạt động </Typography>
           <Typography sx={{ marginTop: 1 }}>Tiêu để: {title}</Typography>
           <BoxUserPost direction="row" gap={1} sx={{ marginTop: 1 }}>
             <Typography variant="subtitle1">Người đăng:</Typography>
@@ -242,7 +242,7 @@ function History() {
     } else if (type === "answer") {
       return (
         <BoxContent sx={{ width: "60vw" }}>
-          <Typography variant="h4">Lịch sử chỉnh sửa câu trả lời</Typography>
+          <Typography variant="h4">Lịch sử hoạt động câu trả lời</Typography>
 
           <Box sx={{ width: "100%", marginTop: 2 }}>{datatableAnswer()}</Box>
         </BoxContent>

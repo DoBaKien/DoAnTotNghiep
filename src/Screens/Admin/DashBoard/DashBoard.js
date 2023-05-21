@@ -1,9 +1,12 @@
 import {
   Box,
+  FormControl,
+  InputLabel,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  NativeSelect,
   Paper,
   Stack,
   Typography,
@@ -24,11 +27,13 @@ import {
   ArgumentAxis,
   ValueAxis,
 } from "@devexpress/dx-react-chart-material-ui";
+import AnnouncementIcon from "@mui/icons-material/Announcement";
 import { Animation } from "@devexpress/dx-react-chart";
-import ReportIcon from "@mui/icons-material/Report";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import { Question } from "./Question";
-
+import SmsIcon from "@mui/icons-material/Sms";
+import ChatIcon from "@mui/icons-material/Chat";
+import { memo } from "react";
 function DashBoard() {
   const { show, setShow } = useContext(AuthContext);
   const [totalQ, setTotalQ] = useState(""); //tổng câu hỏi
@@ -47,33 +52,51 @@ function DashBoard() {
   const [check, setCheck] = useState(true);
   const [chart, setChart] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedYear, setSelectedYear] = useState(
+    new Date().getFullYear().toString()
+  );
+
+  const handleYearChange = (event) => {
+    setSelectedYear(event.target.value);
+  };
+  const currentYear = new Date().getFullYear();
+  const recentYears = Array.from(
+    { length: 5 },
+    (_, index) => currentYear - index
+  );
 
   const handleQ = (event, index) => {
+    //0
     setChart(<Question questYear={questYear} />);
     setSelectedIndex(index);
     setCheck(false);
   };
   const handleReportQ = (event, index) => {
+    //1
     setSelectedIndex(index);
     setChart(<Question questYear={questRYear} />);
     setCheck(false);
   };
   const handleA = (event, index) => {
+    //2
     setSelectedIndex(index);
     setChart(<Question questYear={answerYear} />);
     setCheck(false);
   };
   const handleReportA = (event, index) => {
+    //3
     setSelectedIndex(index);
     setChart(<Question questYear={answerRYear} />);
     setCheck(false);
   };
   const handleC = (event, index) => {
+    //4
     setSelectedIndex(index);
     setChart(<Question questYear={commentYear} />);
     setCheck(false);
   };
   const handleReportC = (event, index) => {
+    //5
     setSelectedIndex(index);
     setChart(<Question questYear={commentRYear} />);
     setCheck(false);
@@ -144,8 +167,8 @@ function DashBoard() {
     // tổng user
     const getAllUser = async () => {
       try {
-        const response = await axios.get("/user/getAllUser");
-        setUser(response.data.length);
+        const response = await axios.get("/user/countUser");
+        setUser(response.data);
       } catch (error) {
         console.log(error);
       }
@@ -154,7 +177,9 @@ function DashBoard() {
     // tổng câu hỏi năm
     const getTotalQuestionYear = async () => {
       try {
-        const response = await axios.get("/question/getTotalQuestionYear/2023");
+        const response = await axios.get(
+          `/question/getTotalQuestionYear/${selectedYear}`
+        );
 
         const transformedData = Object.entries(response.data).map(
           ([year, population]) => ({
@@ -171,7 +196,7 @@ function DashBoard() {
     const getTotalQuestionYearReport = async () => {
       try {
         const response = await axios.get(
-          "/question/getTotalQuestionYearReport/2023"
+          `/question/getTotalQuestionYearReport/${selectedYear}`
         );
 
         const transformedData = Object.entries(response.data).map(
@@ -187,7 +212,9 @@ function DashBoard() {
     };
     const getTotalAnswerYear = async () => {
       try {
-        const response = await axios.get("/answer/getTotalAnswerYear/2023");
+        const response = await axios.get(
+          `/answer/getTotalAnswerYear/${selectedYear}`
+        );
 
         const transformedData = Object.entries(response.data).map(
           ([year, population]) => ({
@@ -204,7 +231,7 @@ function DashBoard() {
     const getTotalAnswerReport = async () => {
       try {
         const response = await axios.get(
-          "/answer/getTotalAnswerReportYear/2023"
+          `/answer/getTotalAnswerReportYear/${selectedYear}`
         );
 
         const transformedData = Object.entries(response.data).map(
@@ -221,7 +248,7 @@ function DashBoard() {
     const getTotalCommentReportYear = async () => {
       try {
         const response = await axios.get(
-          "/comment/getTotalCommentReportYear/2023"
+          `/comment/getTotalCommentReportYear/${selectedYear}`
         );
 
         const transformedData = Object.entries(response.data).map(
@@ -237,7 +264,9 @@ function DashBoard() {
     };
     const getTotalCommentYear = async () => {
       try {
-        const response = await axios.get("/comment/getTotalCommentYear/2023");
+        const response = await axios.get(
+          `/comment/getTotalCommentYear/${selectedYear}`
+        );
 
         const transformedData = Object.entries(response.data).map(
           ([year, population]) => ({
@@ -263,7 +292,7 @@ function DashBoard() {
     getTotalQuestionReportQ();
     getTotalQuestionReportC();
     getTotalQuestionQ();
-  }, []);
+  }, [selectedYear]);
 
   return (
     <BoxHome color={"text.primary"}>
@@ -320,6 +349,25 @@ function DashBoard() {
             }}
           >
             <Box>
+              <FormControl fullWidth>
+                <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                  Năm
+                </InputLabel>
+                <NativeSelect
+                  defaultValue={currentYear}
+                  onChange={handleYearChange}
+                  inputProps={{
+                    name: "Năm",
+                    id: "uncontrolled-native",
+                  }}
+                >
+                  {recentYears.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </FormControl>
               <List component="nav" aria-label="main mailbox folders">
                 <ListItemButton
                   selected={selectedIndex === 0}
@@ -335,7 +383,7 @@ function DashBoard() {
                   onClick={(event) => handleReportQ(event, 1)}
                 >
                   <ListItemIcon>
-                    <ReportIcon />
+                    <AnnouncementIcon />
                   </ListItemIcon>
                   <ListItemText primary="Báo cáo câu hỏi" />
                 </ListItemButton>
@@ -344,7 +392,7 @@ function DashBoard() {
                   onClick={(event) => handleA(event, 2)}
                 >
                   <ListItemIcon>
-                    <ReportIcon />
+                    <SmsIcon />
                   </ListItemIcon>
                   <ListItemText primary="Câu trả lời" />
                 </ListItemButton>
@@ -353,7 +401,7 @@ function DashBoard() {
                   onClick={(event) => handleReportA(event, 3)}
                 >
                   <ListItemIcon>
-                    <ReportIcon />
+                    <AnnouncementIcon />
                   </ListItemIcon>
                   <ListItemText primary="Báo cáo câu trả lời" />
                 </ListItemButton>
@@ -362,18 +410,18 @@ function DashBoard() {
                   onClick={(event) => handleC(event, 4)}
                 >
                   <ListItemIcon>
-                    <ReportIcon />
+                    <ChatIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Báo cáo câu trả lời" />
+                  <ListItemText primary="Bình luận" />
                 </ListItemButton>
                 <ListItemButton
                   selected={selectedIndex === 5}
                   onClick={(event) => handleReportC(event, 5)}
                 >
                   <ListItemIcon>
-                    <ReportIcon />
+                    <AnnouncementIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Báo cáo câu trả lời" />
+                  <ListItemText primary="Báo cáo bình luận" />
                 </ListItemButton>
               </List>
             </Box>
@@ -406,4 +454,4 @@ function DashBoard() {
   );
 }
 
-export default DashBoard;
+export default memo(DashBoard);
