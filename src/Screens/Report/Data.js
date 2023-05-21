@@ -14,7 +14,13 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const handleOnCellClick = (params) => {
-  window.open(`/post/${params.row.qid}`, "_blank");
+  if (params.row.ii === undefined) {
+    window.open(`/post/${params.row.qid}`, "_blank");
+  } else if (params.row.iz === "answer") {
+    window.open(`/post/${params.row.qid}/answer/${params.row.ii}`, "_blank");
+  } else if (params.row.iz === "comment") {
+    window.open(`/post/${params.row.qid}/comment/${params.row.ii}`, "_blank");
+  }
 };
 const handleDelete = (id, value) => {
   Swal.fire({
@@ -45,7 +51,17 @@ const columns = [
     field: "title",
     headerName: "Câu hỏi",
     flex: 1.5,
-    renderCell: (params) => <ExpandableCell {...params} />,
+    renderCell: (params) => {
+      return (
+        <>
+          {params.value !== undefined ? (
+            <ExpandableCell {...params} />
+          ) : (
+            <>Đã bị xóa</>
+          )}
+        </>
+      );
+    },
   },
   {
     field: "detail",
@@ -55,7 +71,7 @@ const columns = [
   },
 
   {
-    field: "id",
+    field: "status",
     headerName: "Trạng thái",
     flex: 0.6,
   },
@@ -93,14 +109,20 @@ export const datatable = (data) => {
       <Box height={400} width="100%">
         <DataGrid
           rowHeight={50}
-          rows={data.map((item) => ({
-            id: item.questionReport.rqid,
-            title: item.question.title,
-            detail: item.questionReport.detail,
-            status: item.questionReport.status,
-            date: item.questionReport.date,
-            qid: item.question.qid,
-          }))}
+          rows={data.map((item) => {
+            const row = {
+              id: item.questionReport.rqid,
+              detail: item.questionReport.detail,
+              status: item.questionReport.status,
+              date: item.questionReport.date,
+              qid: item.question.qid,
+            };
+            if (item.questionReport.qid !== "Câu hỏi đã bị xoá") {
+              row.title = item.question.title;
+            }
+
+            return row;
+          })}
           columns={columns}
           pageSizeOptions={[5, 10, 15]}
           components={{
@@ -164,7 +186,17 @@ const columnAnswer = [
     field: "title",
     headerName: "Câu hỏi",
     flex: 1,
-    renderCell: (params) => <ExpandableCell {...params} />,
+    renderCell: (params) => {
+      return (
+        <>
+          {params.value !== undefined ? (
+            <ExpandableCell {...params} />
+          ) : (
+            <>Đã bị xóa</>
+          )}
+        </>
+      );
+    },
   },
   {
     field: "detail",
@@ -212,15 +244,22 @@ export const datatableanswer = (data) => {
       <Box height={400} width="100%">
         <DataGrid
           rowHeight={50}
-          rows={data.map((item) => ({
-            id: item.answerReport.raid,
-            title: item.question.title,
-            detail: item.answerReport.detail,
+          rows={data.map((item) => {
+            const row = {
+              id: item.answerReport.raid,
+              detail: item.answerReport.detail,
+              ii: item.answerReport.aid,
+              status: item.answerReport.status,
+              date: item.answerReport.date,
+              iz: "answer",
+            };
+            if (item.answerReport.aid !== "Câu trả lời đã bị xoá") {
+              row.qid = item.question.qid;
+              row.title = item.question.title;
+            }
 
-            status: item.answerReport.status,
-            date: item.answerReport.date,
-            qid: item.question.qid,
-          }))}
+            return row;
+          })}
           columns={columnAnswer}
           pageSizeOptions={[5, 10, 15]}
           components={{
@@ -284,7 +323,17 @@ const columnComment = [
     field: "title",
     headerName: "Câu hỏi",
     flex: 1,
-    renderCell: (params) => <ExpandableCell {...params} />,
+    renderCell: (params) => {
+      return (
+        <>
+          {params.value !== undefined ? (
+            <ExpandableCell {...params} />
+          ) : (
+            <>Đã bị xóa</>
+          )}
+        </>
+      );
+    },
   },
   {
     field: "detail",
@@ -332,15 +381,32 @@ export const datatablecomment = (data) => {
       <Box height={400} width="100%">
         <DataGrid
           rowHeight={50}
-          rows={data.map((item) => ({
-            id: item.commentReport.rcid,
-            title: item.question.title,
-            detail: item.commentReport.detail,
+          // rows={data.map((item) => ({
+          //   id: item.commentReport.rcid,
+          //   title: item.question.title,
+          //   detail: item.commentReport.detail,
+          //   ii: item.commentReport.cid,
+          //   status: item.commentReport.status,
+          //   date: item.commentReport.date,
+          //   qid: item.question.qid,
+          //   iz: "comment",
+          // }))}
+          rows={data.map((item) => {
+            const row = {
+              id: item.commentReport.rcid,
+              detail: item.commentReport.detail,
+              ii: item.commentReport.cid,
+              status: item.commentReport.status,
+              date: item.commentReport.date,
+              iz: "comment",
+            };
+            if (item.commentReport.cid !== "Bình luận đã bị xoá") {
+              row.qid = item.question.qid;
+              row.title = item.question.title;
+            }
 
-            status: item.commentReport.status,
-            date: item.commentReport.date,
-            qid: item.question.qid,
-          }))}
+            return row;
+          })}
           columns={columnComment}
           pageSizeOptions={[5, 10, 15]}
           components={{

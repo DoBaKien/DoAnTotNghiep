@@ -37,6 +37,15 @@ function AnswerAction(props) {
   const [fileImage, setFileImage] = useState("");
   var hours = new Date().getHours();
 
+  const checkUserAnswer = async () => {
+    try {
+      const response = await axios.get(`question/checkUserAnswer/${props.qid}`);
+      props.setCheckUser(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   const checkLog = () => {
     if (Cookies.get("sessionCookie") === undefined) {
       Swal.fire({
@@ -128,6 +137,7 @@ function AnswerAction(props) {
     const file = e.target.files[0];
     await uploadImage(file, index, key);
   };
+
   const handleAnswer = () => {
     axios
       .post(`/answer/create/${props.qid}`, {})
@@ -159,26 +169,15 @@ function AnswerAction(props) {
           .then(function (response) {
             Swal.fire("Thành công", "Bạn trả lời thành công", "success");
             setPost([{ id: 1, type: "text", content: "" }]);
-
-            if (currentUser === "") {
-              axios
-                .get(`answer/getAnswerDTOByQid/${props.qid}`)
-                .then(function (response) {
-                  props.setAnswer(response.data);
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
-            } else {
-              axios
-                .get(`answer/getAnswerDTOByQidCk/${props.qid}`)
-                .then(function (response) {
-                  props.setAnswer(response.data);
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
-            }
+            checkUserAnswer();
+            axios
+              .get(`answer/getAnswerDTOByQidCk/${props.qid}`)
+              .then(function (response) {
+                props.setAnswer(response.data);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
           })
           .catch(function (error) {
             console.log(error);

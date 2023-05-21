@@ -1,4 +1,12 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import Header from "../../../Component/Admin/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useContext } from "react";
@@ -11,6 +19,7 @@ import { useState } from "react";
 import { ValueDate } from "../../../Assert/Style";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Swal from "sweetalert2";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function ReportQ() {
   const { show, setShow } = useContext(AuthContext);
@@ -27,17 +36,52 @@ function ReportQ() {
       });
   }, []);
   const handleOnCellClick = (params) => {
-    window.open(`/post/${params.row.qid}`, "_blank");
+    if (params.row.qid !== "Câu hỏi đã bị xoá") {
+      window.open(`/post/${params.row.qid}`, "_blank");
+    }
+  };
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Bạn có chắc chắn không?",
+      text: "Một khi đã xóa thì không thể hoàn tác",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+      reverseButtons: "true",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`/question/deleteReport/${id}`)
+          .then(function (response) {
+            axios
+              .get("/question/getQuestionReport")
+              .then(function (response) {
+                setData(response.data);
+                Swal.fire("Đã xóa!", "Tố cáo của bạn đã xóa", "success");
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    });
   };
 
   const handleDone = () => {
     if (select !== []) {
       axios
-        .put("/answer/editReport", select)
+        .put("/question/editReport", select)
         .then(function (response) {
           axios
-            .get("/answer/getAnswerReport")
+            .get("/question/getQuestionReport")
             .then(function (response) {
+              setData(response.data);
               Swal.fire("Thành công", "Chuyển thành công", "question");
             })
             .catch(function (error) {
@@ -51,6 +95,42 @@ function ReportQ() {
       Swal.fire("", "Vui lòng chọn bài tố cáo", "question");
     }
   };
+  const handleDeleteList = () => {
+    Swal.fire({
+      title: "Bạn có chắc chắn không?",
+      text: "Một khi đã xóa thì không thể hoàn tác",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+      reverseButtons: "true",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (select !== []) {
+          axios
+            .put("/question/deleteListReport", select)
+            .then(function (response) {
+              axios
+                .get("/question/getQuestionReport")
+                .then(function (response) {
+                  setData(response.data);
+                  Swal.fire("Thành công", "Xóa thành công", "question");
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        } else {
+          Swal.fire("", "Vui lòng chọn bài tố cáo", "question");
+        }
+      }
+    });
+  };
 
   const columns = [
     {
@@ -59,9 +139,14 @@ function ReportQ() {
       flex: 0.4,
     },
     {
+      field: "qid",
+      headerName: "Mã câu hỏi",
+      flex: 0.4,
+    },
+    {
       field: "detail",
       headerName: "Nội dung",
-      flex: 0.6,
+      flex: 2,
       renderCell: (params) => <ExpandableCell {...params} />,
     },
 
@@ -78,8 +163,27 @@ function ReportQ() {
     {
       field: "date",
       headerName: "Ngày đăng",
-      flex: 1,
+      flex: 0.6,
       renderCell: (params) => <ValueDate {...params} />,
+    },
+    {
+      field: "actions",
+      headerName: "Action",
+      type: "actions",
+      flex: 0.4,
+      getActions: (params) => {
+        let actions = [
+          <>
+            <Tooltip title="Xóa" placement="left">
+              <IconButton onClick={() => handleDelete(params.id)}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </>,
+        ];
+
+        return actions;
+      },
     },
   ];
 
@@ -170,13 +274,23 @@ function ReportQ() {
             <Box sx={{ padding: "5px 5px 5px" }}>
               <Typography variant="h4">Quản lý tố cáo câu hỏi</Typography>
             </Box>
-            <Button
-              size="small"
-              startIcon={<CheckCircleIcon />}
-              onClick={handleDone}
-            >
-              Chuyển trạng thái
-            </Button>
+            <Stack direction="row" gap={5}>
+              <Button
+                size="small"
+                startIcon={<CheckCircleIcon />}
+                onClick={handleDone}
+              >
+                Chuyển trạng thái
+              </Button>
+              <Button
+                size="small"
+                startIcon={<CheckCircleIcon />}
+                onClick={handleDeleteList}
+                color="error"
+              >
+                Xóa
+              </Button>
+            </Stack>
             {datatable()}
           </Box>
         </Box>

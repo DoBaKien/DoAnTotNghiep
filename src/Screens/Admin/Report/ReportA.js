@@ -1,4 +1,12 @@
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import Header from "../../../Component/Admin/Header";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { useContext } from "react";
@@ -11,6 +19,7 @@ import { useState } from "react";
 import { ValueDate } from "../../../Assert/Style";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Swal from "sweetalert2";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function ReportA() {
   const { show, setShow } = useContext(AuthContext);
@@ -21,14 +30,85 @@ function ReportA() {
       .get("/answer/getAnswerReport")
       .then(function (response) {
         setData(response.data);
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
   }, []);
   const handleOnCellClick = (params) => {
-    window.open(`/post/${params.row.qid}`, "_blank");
+    if (params.row.aid !== "Câu trả lời đã bị xoá") {
+      window.open(`/post/${params.row.qid}/answer/${params.row.aid}`, "_blank");
+    }
+  };
+
+  const handleDeleteList = () => {
+    Swal.fire({
+      title: "Bạn có chắc chắn không?",
+      text: "Một khi đã xóa thì không thể hoàn tác",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+      reverseButtons: "true",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (select !== []) {
+          axios
+            .put("/answer/deleteListReport", select)
+            .then(function (response) {
+              axios
+                .get("/answer/getAnswerReport")
+                .then(function (response) {
+                  setData(response.data);
+                  Swal.fire("Thành công", "Xóa thành công", "question");
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        } else {
+          Swal.fire("", "Vui lòng chọn bài tố cáo", "question");
+        }
+      }
+    });
+  };
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Bạn có chắc chắn không?",
+      text: "Một khi đã xóa thì không thể hoàn tác",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+      reverseButtons: "true",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`/answer/deleteReport/${id}`)
+          .then(function (response) {
+            axios
+              .get("/answer/getAnswerReport")
+              .then(function (response) {
+                setData(response.data);
+                Swal.fire("Đã xóa!", "Tố cáo đã xóa", "success");
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    });
   };
 
   const handleDone = () => {
@@ -37,8 +117,9 @@ function ReportA() {
         .put("/question/editReport", select)
         .then(function (response) {
           axios
-            .get("/question/getAnswerReport")
+            .get("/answer/getAnswerReport")
             .then(function (response) {
+              setData(response.data);
               Swal.fire("Thành công", "Chuyển thành công", "question");
             })
             .catch(function (error) {
@@ -56,12 +137,12 @@ function ReportA() {
   const columns = [
     {
       field: "id",
-      headerName: "Mã câu trả lời",
+      headerName: "Mã tố cáo",
       flex: 0.4,
     },
     {
-      field: "qid",
-      headerName: "Mã câu hỏi",
+      field: "aid",
+      headerName: "Mã trả lời",
       flex: 0.4,
     },
 
@@ -88,6 +169,25 @@ function ReportA() {
       flex: 1,
       renderCell: (params) => <ValueDate {...params} />,
     },
+    {
+      field: "actions",
+      headerName: "Action",
+      type: "actions",
+      flex: 0.4,
+      getActions: (params) => {
+        let actions = [
+          <>
+            <Tooltip title="Xóa" placement="left">
+              <IconButton onClick={() => handleDelete(params.id)}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </>,
+        ];
+
+        return actions;
+      },
+    },
   ];
 
   const datatable = () => {
@@ -96,14 +196,22 @@ function ReportA() {
         <Box height="80vh" width="99%">
           <DataGrid
             rowHeight={50}
-            rows={data.map((item) => ({
-              id: item.answerReport.raid,
-              detail: item.answerReport.detail,
-              name: item.user.name,
-              status: item.answerReport.status,
-              date: item.answerReport.date,
-              qid: item.question.qid,
-            }))}
+            rows={data.map((item) => {
+              const row = {
+                id: item.answerReport.raid,
+                detail: item.answerReport.detail,
+                name: item.user.name,
+                status: item.answerReport.status,
+                date: item.answerReport.date,
+                aid: item.answerReport.aid,
+              };
+
+              if (item.answerReport.aid !== "Câu trả lời đã bị xoá") {
+                row.qid = item.question.qid;
+              }
+
+              return row;
+            })}
             checkboxSelection
             columns={columns}
             pageSizeOptions={[10, 50, 100]}
@@ -177,13 +285,23 @@ function ReportA() {
             <Box sx={{ padding: "5px 5px 5px" }}>
               <Typography variant="h4">Quản lý tố cáo câu trả lời</Typography>
             </Box>
-            <Button
-              size="small"
-              startIcon={<CheckCircleIcon />}
-              onClick={handleDone}
-            >
-              Chuyển trạng thái
-            </Button>
+            <Stack direction="row" gap={5}>
+              <Button
+                size="small"
+                startIcon={<CheckCircleIcon />}
+                onClick={handleDone}
+              >
+                Chuyển trạng thái
+              </Button>
+              <Button
+                size="small"
+                startIcon={<CheckCircleIcon />}
+                onClick={handleDeleteList}
+                color="error"
+              >
+                Xóa
+              </Button>
+            </Stack>
             {datatable()}
           </Box>
         </Box>

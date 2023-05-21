@@ -149,41 +149,36 @@ function AnswerDetails(props) {
   };
 
   const checkRole = (uid, aid) => {
-    if (role === "Admin") {
-      return (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Tooltip title="Báo cáo" placement="left">
-            <IconButton onClick={() => handleReport(aid)}>
-              <ReportIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Chỉnh sửa" placement="left">
-            <Link to={`/edit/answer/${aid}`}>
-              <IconButton>
-                <ModeEditIcon fontSize="small" />
-              </IconButton>
-            </Link>
-          </Tooltip>
-          <Tooltip title="Xóa" placement="left">
-            <IconButton>
-              <ClearIcon fontSize="small" color="error" />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      );
-    } else if (
+    if (
       props.currentUser !== uid ||
       Cookies.get("sessionCookie") === undefined
     ) {
-      return (
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Tooltip title="Báo cáo" placement="left">
-            <IconButton onClick={() => handleReport(aid)}>
-              <ReportIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      );
+      if (role === "Admin") {
+        return (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Tooltip title="Báo cáo" placement="left">
+              <IconButton onClick={() => handleReport(aid)}>
+                <ReportIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Xóa" placement="right">
+              <IconButton onClick={() => handleDelete(aid)}>
+                <ClearIcon fontSize="small" color="error" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        );
+      } else {
+        return (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Tooltip title="Báo cáo" placement="left">
+              <IconButton onClick={() => handleReport(aid)}>
+                <ReportIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        );
+      }
     } else if (props.currentUser === uid) {
       return (
         <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -195,13 +190,38 @@ function AnswerDetails(props) {
             </Link>
           </Tooltip>
           <Tooltip title="Xóa" placement="left">
-            <IconButton>
+            <IconButton onClick={() => handleDelete(aid)}>
               <ClearIcon fontSize="small" color="error" />
             </IconButton>
           </Tooltip>
         </Box>
       );
     }
+  };
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Bạn có chắc chắn không?",
+      text: "Một khi đã xóa thì không thể hoàn tác",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+      reverseButtons: "true",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`answer/deleteAnswer/${id}`)
+          .then(function (response) {
+            GetAnswerCK();
+            Swal.fire("Đã xóa!", "Tố cáo của bạn đã xóa", "success");
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    });
   };
 
   const ad = () => {
@@ -212,8 +232,10 @@ function AnswerDetails(props) {
             <BoxContent
               sx={{
                 marginTop: 2,
-
-                border: item.answer.aid === props.id ? "3px solid red" : "",
+                border:
+                  item.answer.aid === props.id && props.type === "answer"
+                    ? "3px solid red"
+                    : "",
               }}
               key={i}
             >

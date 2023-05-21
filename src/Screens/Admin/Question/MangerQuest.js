@@ -39,7 +39,6 @@ function ManagerQuest() {
       field: "title",
       headerName: "Tiêu đề",
       flex: 2,
-      editable: true,
       renderCell: (params) => <ExpandableCell {...params} />,
     },
     {

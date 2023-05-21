@@ -134,7 +134,7 @@ function ModalEdit({ setModalE, modalE, id, setTags }) {
                   Hủy
                 </Button>
                 <Button type="submit" variant="contained" sx={{ width: 150 }}>
-                  tạo
+                  Sửa
                 </Button>
               </Stack>
             </form>

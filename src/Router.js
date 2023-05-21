@@ -68,6 +68,7 @@ function Router() {
         <Route path="/report" element={<Report />} />
         <Route path="/find/:text" element={<Find />} />
 
+        <Route path="/post/:qid/:type/:id" element={<Post />} />
         <Route path="/admin" element={<AdminCheck role={role} />} />
         <Route path="/manageruser" element={<UserPageCheck role={role} />} />
         <Route path="/managertag" element={<TagPageCheck role={role} />} />

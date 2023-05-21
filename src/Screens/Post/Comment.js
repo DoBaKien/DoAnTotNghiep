@@ -32,6 +32,7 @@ function Comment(props) {
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState("");
   const { role } = useContext(AuthContext);
+
   const navigation = useNavigate("");
   const getCommentDTOByQid = useCallback(async () => {
     try {
@@ -49,24 +50,42 @@ function Comment(props) {
   }, [getCommentDTOByQid]);
 
   const handleSend = () => {
-    if (comment !== "") {
-      axios
-        .post(`/comment/create/${props.qid}`, {
-          detail: comment,
-        })
-        .then(function (response) {
-          getCommentDTOByQid();
-          setComment("");
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+    if (Cookies.get("sessionCookie") !== undefined) {
+      if (comment !== "") {
+        axios
+          .post(`/comment/create/${props.qid}`, {
+            detail: comment,
+          })
+          .then(function (response) {
+            getCommentDTOByQid();
+            setComment("");
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        Swal.fire(
+          "Thiếu thông tin",
+          "Vui lòng điền đầy đủ thông tin",
+          "question"
+        );
+      }
     } else {
-      Swal.fire(
-        "Thiếu thông tin",
-        "Vui lòng điền đầy đủ thông tin",
-        "question"
-      );
+      Swal.fire({
+        title: "Lỗi",
+        text: "Bạn phải đăng nhập trước",
+        icon: "error",
+        showCancelButton: true,
+        confirmButtonText: "Đăng nhập",
+        cancelButtonText: "Hủy",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigation("/login");
+        }
+      });
     }
   };
   const TextUser = (name, id) => {
@@ -119,40 +138,63 @@ function Comment(props) {
     setOpen(!open);
   };
 
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Bạn có chắc chắn không?",
+      text: "Một khi đã xóa thì không thể hoàn tác",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+      reverseButtons: "true",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`comment/deleteComment/${id}`)
+          .then(function (response) {
+            getCommentDTOByQid();
+            Swal.fire("Đã xóa!", "Tố cáo của bạn đã xóa", "success");
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    });
+  };
+
   const checkRole = (cid, detail, uid) => {
-    if (role === "Admin") {
-      return (
-        <>
-          <Tooltip title="Báo cáo" placement="left">
-            <IconButton onClick={() => handleReport(cid)}>
-              <ReportIcon sx={{ fontSize: 18 }} />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Chỉnh sửa" placement="top">
-            <IconButton onClick={() => handleEdit(cid, detail)}>
-              <ModeEditIcon sx={{ fontSize: 15 }} />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Xóa" placement="right">
-            <IconButton>
-              <ClearIcon sx={{ fontSize: 18 }} color="error" />
-            </IconButton>
-          </Tooltip>
-        </>
-      );
-    } else if (
+    if (
       props.currentUser !== uid ||
       Cookies.get("sessionCookie") === undefined
     ) {
-      return (
-        <>
-          <Tooltip title="Báo cáo" placement="left">
-            <IconButton onClick={() => handleReport(cid)}>
-              <ReportIcon sx={{ fontSize: 18 }} />
-            </IconButton>
-          </Tooltip>
-        </>
-      );
+      if (role === "Admin") {
+        return (
+          <>
+            <Tooltip title="Báo cáo" placement="left">
+              <IconButton onClick={() => handleReport(cid)}>
+                <ReportIcon sx={{ fontSize: 18 }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Xóa" placement="right">
+              <IconButton onClick={() => handleDelete(cid)}>
+                <ClearIcon sx={{ fontSize: 18 }} color="error" />
+              </IconButton>
+            </Tooltip>
+          </>
+        );
+      } else {
+        return (
+          <>
+            <Tooltip title="Báo cáo" placement="left">
+              <IconButton onClick={() => handleReport(cid)}>
+                <ReportIcon sx={{ fontSize: 18 }} />
+              </IconButton>
+            </Tooltip>
+          </>
+        );
+      }
     } else if (props.currentUser === uid && role === "Admin") {
       return (
         <>
@@ -162,7 +204,7 @@ function Comment(props) {
             </IconButton>
           </Tooltip>
           <Tooltip title="Xóa" placement="right">
-            <IconButton>
+            <IconButton onClick={() => handleDelete(cid)}>
               <ClearIcon sx={{ fontSize: 18 }} color="error" />
             </IconButton>
           </Tooltip>
@@ -178,7 +220,15 @@ function Comment(props) {
           {data.map((item, i) => (
             <Box
               key={i}
-              sx={{ marginBottom: 1, alignItems: "center", display: "flex" }}
+              sx={{
+                marginBottom: 1,
+                alignItems: "center",
+                display: "flex",
+                border:
+                  item.comment.cid === props.id && props.type === "comment"
+                    ? "3px solid red"
+                    : "",
+              }}
             >
               <Typography
                 variant="body2"
@@ -238,7 +288,7 @@ function Comment(props) {
             </Button>
           </Stack>
         ) : (
-          <></>
+          <Typography>Câu hỏi đã dóng</Typography>
         )}
       </BoxContent>
     </>

@@ -34,8 +34,9 @@ import ModalReport from "../../Assert/ModalReport";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import Comment from "./Comment";
+
 function Post() {
-  const { qid, id } = useParams();
+  const { qid, id, type } = useParams();
   const [details, setDetails] = useState("");
   const [title, setTitle] = useState("");
   const [tags, setTags] = useState("");
@@ -143,6 +144,7 @@ function Post() {
       try {
         const response = await axios.get(`answer/getAnswerDTOByQidCk/${qid}`);
         setAnswer(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -236,6 +238,32 @@ function Post() {
     }
   };
 
+  const handleDelete = () => {
+    Swal.fire({
+      title: "Bạn có chắc chắn không?",
+      text: "Một khi đã xóa thì không thể hoàn tác",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Xóa",
+      cancelButtonText: "Hủy",
+      reverseButtons: "true",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios
+          .delete(`question/delete/${qid}`)
+          .then(function (response) {
+            navigation("/");
+            Swal.fire("Đã xóa!", "Bài đăng đã xóa", "success");
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    });
+  };
+
   const checkAnswer = () => {
     if (title.status === "Open") {
       if (Cookies.get("sessionCookie") === undefined) {
@@ -271,7 +299,13 @@ function Post() {
           </BoxContent>
         );
       } else {
-        return <AnswerAction qid={qid} setAnswer={setAnswer} />;
+        return (
+          <AnswerAction
+            qid={qid}
+            setAnswer={setAnswer}
+            setCheckUser={setCheckUser}
+          />
+        );
       }
     } else if (title.status === "Closed") {
       return (
@@ -293,7 +327,7 @@ function Post() {
   };
 
   const saveQuestion = (type) => {
-    if (currentUser !== undefined) {
+    if (Cookies.get("sessionCookie") !== undefined) {
       axios
         .post(`/user/saveQuestion/${qid}`)
         .then(function (response) {
@@ -415,6 +449,7 @@ function Post() {
             variant="contained"
             color="error"
             sx={{ marginRight: 1, width: 200 }}
+            onClick={handleDelete}
           >
             Xóa bài viết
           </Button>
@@ -433,6 +468,7 @@ function Post() {
             variant="contained"
             color="error"
             sx={{ marginRight: 1, width: 200 }}
+            onClick={handleDelete}
           >
             Xóa bài viết
           </Button>
@@ -615,7 +651,14 @@ function Post() {
             </Stack>
           </BoxContent>
 
-          <BoxContent sx={{ marginTop: 2, paddingTop: 2, paddingBottom: 2,paddingLeft:2 }}>
+          <BoxContent
+            sx={{
+              marginTop: 2,
+              paddingTop: 2,
+              paddingBottom: 2,
+              paddingLeft: 2,
+            }}
+          >
             <Grid container spacing={1} columns={{ xs: 4, sm: 8, md: 12 }}>
               {Array.from(tags).map((t, index) => (
                 <Grid item xs={2} sm={2} md={2} key={index}>
@@ -630,7 +673,13 @@ function Post() {
             Bình luận
           </Typography>
 
-          <Comment qid={qid} currentUser={currentUser} status={title.status} />
+          <Comment
+            qid={qid}
+            currentUser={currentUser}
+            status={title.status}
+            id={id}
+            type={type}
+          />
 
           <AnswerDetails
             setAnswer={setAnswer}
@@ -639,6 +688,7 @@ function Post() {
             currentUser={currentUser}
             qid={qid}
             id={id}
+            type={type}
           />
           {checkAnswer()}
         </Box>
