@@ -14,9 +14,7 @@ import Post from "./Screens/Post/Post";
 import EditPf from "./Screens/EditPf/EditPf";
 import TagDetails from "./Screens/TagDetails/TagDetails";
 import NotFound from "./Component/NotFound/NotFound";
-
 import Cookies from "js-cookie";
-
 import { AuthContext } from "./Component/Auth/AuthContext";
 import {
   AdminCheck,
@@ -40,7 +38,7 @@ function Router() {
   return (
     <ThemeProvider theme={context.darkTheme}>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/DoAnTotNghiep" element={<Home />} />
         <Route
           path="/login"
           element={
