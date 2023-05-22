@@ -67,38 +67,70 @@ function DashBoard() {
 
   const handleQ = (event, index) => {
     //0
-    setChart(<Question questYear={questYear} />);
+
+    setChart(
+      <Question
+        questYear={questYear}
+        text={`Số liệu câu hỏi năm ${selectedYear}`}
+      />
+    );
     setSelectedIndex(index);
     setCheck(false);
   };
   const handleReportQ = (event, index) => {
     //1
+
     setSelectedIndex(index);
-    setChart(<Question questYear={questRYear} />);
+    setChart(
+      <Question
+        questYear={questRYear}
+        text={`Số liệu câu hỏi bị tố cáo năm ${selectedYear}`}
+      />
+    );
     setCheck(false);
   };
   const handleA = (event, index) => {
     //2
     setSelectedIndex(index);
-    setChart(<Question questYear={answerYear} />);
+    setChart(
+      <Question
+        questYear={answerYear}
+        text={`Số liệu câu trả lời năm ${selectedYear}`}
+      />
+    );
     setCheck(false);
   };
   const handleReportA = (event, index) => {
     //3
     setSelectedIndex(index);
-    setChart(<Question questYear={answerRYear} />);
+    setChart(
+      <Question
+        questYear={answerRYear}
+        text={`Số liệu câu trả lời bị tố cáo năm ${selectedYear}`}
+      />
+    );
     setCheck(false);
   };
   const handleC = (event, index) => {
     //4
     setSelectedIndex(index);
-    setChart(<Question questYear={commentYear} />);
+    setChart(
+      <Question
+        questYear={commentYear}
+        text={`Số liệu bình luận năm ${selectedYear}`}
+      />
+    );
     setCheck(false);
   };
   const handleReportC = (event, index) => {
     //5
     setSelectedIndex(index);
-    setChart(<Question questYear={commentRYear} />);
+    setChart(
+      <Question
+        questYear={commentRYear}
+        text={`Số liệu bình luận bị tố cáo năm ${selectedYear}`}
+      />
+    );
     setCheck(false);
   };
 

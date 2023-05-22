@@ -19,7 +19,7 @@ export const Question = (props) => {
             <ValueAxis max={12} />
 
             <BarSeries valueField="total" argumentField="month" />
-            <Title text="Số liệu câu hỏi năm 2023" />
+            <Title text={props.text} />
             <Animation />
           </Chart>
         </Paper>
