@@ -32,7 +32,7 @@ function Comment(props) {
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState("");
   const { role } = useContext(AuthContext);
-
+  const cookies = Cookies.get("sessionCookie");
   const navigation = useNavigate("");
   const getCommentDTOByQid = useCallback(async () => {
     try {
@@ -50,10 +50,10 @@ function Comment(props) {
   }, [getCommentDTOByQid]);
 
   const handleSend = () => {
-    if (Cookies.get("sessionCookie") !== undefined) {
+    if (cookies !== undefined) {
       if (comment !== "") {
         axios
-          .post(`/comment/create/${props.qid}`, {
+          .post(`/comment/create/${props.qid}/${cookies}`, {
             detail: comment,
           })
           .then(function (response) {
@@ -100,9 +100,9 @@ function Comment(props) {
   };
   const handleReport = (id) => {
     setCid(id);
-    if (Cookies.get("sessionCookie") !== undefined) {
+    if (cookies !== undefined) {
       axios
-        .get(`comment/getUserReportValue/${id}`)
+        .get(`comment/getUserReportValue/${id}/${cookies}`)
         .then(function (response) {
           if (response.data === "None") {
             setModal(!modal);
@@ -152,7 +152,7 @@ function Comment(props) {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`comment/deleteComment/${id}`)
+          .delete(`comment/deleteComment/${id}/${cookies}`)
           .then(function (response) {
             getCommentDTOByQid();
             Swal.fire("Đã xóa!", "Tố cáo của bạn đã xóa", "success");
@@ -165,10 +165,7 @@ function Comment(props) {
   };
 
   const checkRole = (cid, detail, uid) => {
-    if (
-      props.currentUser !== uid ||
-      Cookies.get("sessionCookie") === undefined
-    ) {
+    if (props.currentUser !== uid || cookies === undefined) {
       if (role === "Admin") {
         return (
           <>

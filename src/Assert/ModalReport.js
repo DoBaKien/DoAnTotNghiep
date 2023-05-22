@@ -7,14 +7,18 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { memo, useState } from "react";
 import Swal from "sweetalert2";
 
 function ModalReport({ setModal, modal, qid, type, setCheckRp }) {
   const [reason, setReason] = useState("");
+  const cookie = Cookies.get("sessionCookie");
   const getUserReportValue = async () => {
     try {
-      const response = await axios.get(`question/getUserReportValue/${qid}`);
+      const response = await axios.get(
+        `/question/getUserReportValue/${qid}/${cookie}`
+      );
       setCheckRp(response.data);
     } catch (error) {
       console.log(error);
@@ -43,7 +47,7 @@ function ModalReport({ setModal, modal, qid, type, setCheckRp }) {
   const handleSubmit = () => {
     if (type === "câu trả lời" && reason !== "") {
       axios
-        .post(`/answer/report/${qid}`, { detail: reason })
+        .post(`/answer/report/${qid}/${cookie}`, { detail: reason })
         .then(function (response) {
           setModal(false);
 
@@ -54,7 +58,7 @@ function ModalReport({ setModal, modal, qid, type, setCheckRp }) {
         });
     } else if (type === "câu hỏi" && reason !== "") {
       axios
-        .post(`/question/report/${qid}`, { detail: reason })
+        .post(`/question/report/${qid}/${cookie}`, { detail: reason })
         .then(function (response) {
           setModal(false);
           getUserReportValue();
@@ -65,7 +69,7 @@ function ModalReport({ setModal, modal, qid, type, setCheckRp }) {
         });
     } else if (type === "bình luận" && reason !== "") {
       axios
-        .post(`/comment/report/${qid}`, { detail: reason })
+        .post(`/comment/report/${qid}/${cookie}`, { detail: reason })
         .then(function (response) {
           setModal(false);
 

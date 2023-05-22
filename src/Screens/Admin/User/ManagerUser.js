@@ -17,12 +17,13 @@ import axios from "axios";
 import { useState } from "react";
 import SecurityIcon from "@mui/icons-material/Security";
 import Swal from "sweetalert2";
+import Cookies from "js-cookie";
 
 function ManagerUser() {
   const { show, setShow } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const [pageSize, setPageSize] = useState(10);
-
+  const cookies = Cookies.get("sessionCookie");
   useEffect(() => {
     axios
       .get(`/user/getAllUser`)
@@ -47,7 +48,7 @@ function ManagerUser() {
       if (result.isConfirmed) {
         if (role === "User") {
           axios
-            .post(`/account/admin/adminClaim/${id}`)
+            .post(`/account/admin/adminClaim/${id}/${cookies}`)
             .then(function (response) {
               Swal.fire("Thành công", "Cấp quyền Admin thành công", "success");
               axios
@@ -64,7 +65,7 @@ function ManagerUser() {
             });
         } else {
           axios
-            .post(`/account/admin/userClaim/${id}`)
+            .post(`/account/admin/userClaim/${id}/${cookies}`)
             .then(function (response) {
               Swal.fire("Thành công", "Cấp quyền User thành công", "success");
               axios

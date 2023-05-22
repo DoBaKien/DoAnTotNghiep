@@ -21,6 +21,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ModalBox from "./ModalBox";
 import ModalEdit from "./ModalEdit";
 import Swal from "sweetalert2";
+import Cookies from "js-cookie";
 
 function ManagerTag() {
   const { show, setShow } = useContext(AuthContext);
@@ -57,7 +58,7 @@ function ManagerTag() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`/tag/deleteTag/${value}`)
+          .delete(`/tag/deleteTag/${value}/${Cookies.get("sessionCookie")}`)
           .then(function (response) {
             Swal.fire("Thành công", "Xóa thành công", "success");
             axios

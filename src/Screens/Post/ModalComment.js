@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 import Swal from "sweetalert2";
 
@@ -31,6 +32,7 @@ function ModalComment({
     color: "text.primary",
     p: 4,
   };
+  const cookie = Cookies.get("sessionCookie");
 
   const toggleModal = () => {
     setOpen(false);
@@ -38,7 +40,7 @@ function ModalComment({
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(`/comment/edit/${id}`, {
+      .put(`/comment/edit/${id}/${cookie}`, {
         detail: content,
       })
       .then(function (response) {

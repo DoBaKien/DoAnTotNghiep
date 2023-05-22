@@ -8,12 +8,13 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 function Tag() {
   const [data, setData] = useState("");
   useEffect(() => {
     axios
-      .get(`/user/getUserFollowTag`)
+      .get(`/user/getUserFollowTag/${Cookies.get("sessionCookie")}`)
       .then(function (response) {
         setData(response.data);
         console.log(response.data);

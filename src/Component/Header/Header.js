@@ -67,9 +67,7 @@ function Header() {
     signOut(auth)
       .then(() => {
         setTest(!test);
-        Cookies.remove("sessionCookie", {
-          path: "https://vietstackoverflow-production.up.railway.app",
-        });
+        Cookies.remove("sessionCookie");
         localStorage.removeItem("id");
         console.log("asd");
         setAnchorEl(null);

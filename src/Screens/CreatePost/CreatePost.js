@@ -36,6 +36,7 @@ function CreatePost() {
   const editor = useRef(null);
   const [title, setTitle] = useState("");
   const [fileImage, setFileImage] = useState("");
+  const cookie = Cookies.get("sessionCookie");
 
   const navigation = useNavigate();
   useEffect(() => {
@@ -60,24 +61,26 @@ function CreatePost() {
   const handleP = () => {
     const SelectTag = personName.map((item) => item.tid);
 
-    if (Cookies.get("sessionCookie") !== undefined) {
+    if (cookie !== undefined) {
       axios
-        .post("/question/create", {
+        .post(`/question/create/${cookie}`, {
           title: title,
         })
         .then(function (response) {
           const a = response.data;
           axios
-            .post(`/question/modifyTagPost/${response.data}`, SelectTag)
+            .post(
+              `/question/modifyTagPost/${response.data}/${cookie}`,
+              SelectTag
+            )
             .then(function (response) {
-              console.log(response);
               setPersonName([]);
             })
             .catch(function (error) {
               console.log(error);
             });
           axios
-            .post(`/question/createDetail/${response.data}`, post)
+            .post(`/question/createDetail/${response.data}/${cookie}`, post)
             .then(function (response) {
               console.log(response);
             })
@@ -85,10 +88,13 @@ function CreatePost() {
               console.log(error);
             });
           axios
-            .post(`/question/createActivityHistory/${response.data}`, {
-              action: "Đặt câu hỏi",
-              description: "Khởi tạo câu hỏi",
-            })
+            .post(
+              `/question/createActivityHistory/${response.data}/${cookie}`,
+              {
+                action: "Đặt câu hỏi",
+                description: "Khởi tạo câu hỏi",
+              }
+            )
             .then(function (response) {
               Swal.fire({
                 title: "Đăng bài thành công",

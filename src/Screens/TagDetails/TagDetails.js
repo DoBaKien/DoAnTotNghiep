@@ -31,11 +31,13 @@ import CheckIcon from "@mui/icons-material/Check";
 import { useParams } from "react-router-dom";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Swal from "sweetalert2";
+import Cookies from "js-cookie";
 function TagDetails() {
   const { tid } = useParams();
   const [tagD, setTagD] = useState("");
   const [tagID, setTagID] = useState("");
   const [fol, setFolTag] = useState("");
+  const cookie = Cookies.get("sessionCookie");
   useEffect(() => {
     axios
       .get(`/question/getQuestionDTOByTag/${tid}`)
@@ -54,22 +56,22 @@ function TagDetails() {
         console.log(error);
       });
     axios
-      .get(`/user/checkFollowTag/${tid}`)
+      .get(`/user/checkFollowTag/${tid}/${cookie}`)
       .then(function (response) {
         setFolTag(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, [tid]);
+  }, [tid, cookie]);
 
   const handleFollow = (value) => {
     axios
-      .post(`/user/modifyFollowTag/${tid}`)
+      .post(`/user/modifyFollowTag/${tid}/${cookie}`)
       .then(function (response) {
         Swal.fire("Thành công", `${value} thành công`, "success");
         axios
-          .get(`/user/checkFollowTag/${tid}`)
+          .get(`/user/checkFollowTag/${tid}/${cookie}`)
           .then(function (response) {
             setFolTag(response.data);
           })
@@ -213,7 +215,7 @@ function TagDetails() {
                 variant="contained"
                 sx={{ marginRight: 5 }}
                 startIcon={<RemoveRedEyeIcon />}
-                onClick={()=>handleFollow("Theo dõi")}
+                onClick={() => handleFollow("Theo dõi")}
               >
                 Theo dõi
               </Button>
@@ -223,7 +225,7 @@ function TagDetails() {
                   variant="contained"
                   sx={{ marginRight: 5 }}
                   startIcon={<VisibilityOffIcon />}
-                  onClick={()=>handleFollow("Bỏ Theo dõi")}
+                  onClick={() => handleFollow("Bỏ Theo dõi")}
                 >
                   Bỏ Theo dõi
                 </Button>

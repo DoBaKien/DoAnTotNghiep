@@ -21,7 +21,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../Component/Auth/AuthContext";
 
 function LeftSide(props) {
-  const { test, setTest, role } = useContext(AuthContext);
+  const { test, setTest } = useContext(AuthContext);
   const handleFollow = () => {
     props.setPage(<My id={props.id} />);
   };
@@ -32,9 +32,9 @@ function LeftSide(props) {
         Cookies.remove("sessionCookie");
         localStorage.removeItem("id");
 
-        if (role === "Admin") {
-          window.location.reload();
-        }
+        // if (role === "Admin") {
+        //   window.location.reload();
+        // }
       })
       .catch((error) => {
         console.log("dx lỗi");

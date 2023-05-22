@@ -20,22 +20,23 @@ import { ValueDate } from "../../../Assert/Style";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Swal from "sweetalert2";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Cookies from "js-cookie";
 
 function ReportC() {
   const { show, setShow } = useContext(AuthContext);
   const [data, setData] = useState([]);
   const [select, setSelect] = useState([]);
+  const cookie = Cookies.get("sessionCookie");
   useEffect(() => {
     axios
-      .get("/comment/getCommentReport")
+      .get(`/comment/getCommentReport/${cookie}`)
       .then(function (response) {
         setData(response.data);
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+  }, [cookie]);
   const handleOnCellClick = (params) => {
     if (params.row.cid !== "Bình luận đã bị xoá") {
       window.open(
@@ -60,10 +61,10 @@ function ReportC() {
       if (result.isConfirmed) {
         if (select !== []) {
           axios
-            .put("/comment/deleteListReport", select)
+            .put(`/comment/deleteListReport/${cookie}`, select)
             .then(function (response) {
               axios
-                .get("/comment/getCommentReport")
+                .get(`/comment/getCommentReport/${cookie}`)
                 .then(function (response) {
                   setData(response.data);
                   Swal.fire("Thành công", "Xóa thành công", "question");
@@ -96,10 +97,10 @@ function ReportC() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`/comment/deleteReport/${id}`)
+          .delete(`/comment/deleteReport/${id}/${cookie}`)
           .then(function (response) {
             axios
-              .get("/comment/getCommentReport")
+              .get(`/comment/getCommentReport/${cookie}`)
               .then(function (response) {
                 setData(response.data);
                 Swal.fire("Đã xóa!", "Tố cáo đã xóa", "success");
@@ -118,10 +119,10 @@ function ReportC() {
   const handleDone = () => {
     if (select !== []) {
       axios
-        .put("/comment/editReport", select)
+        .put(`/comment/editReport/${cookie}`, select)
         .then(function (response) {
           axios
-            .get("/comment/getCommentReport")
+            .get(`/comment/getCommentReport/${cookie}`)
             .then(function (response) {
               setData(response.data);
               Swal.fire("Thành công", "Chuyển thành công", "question");

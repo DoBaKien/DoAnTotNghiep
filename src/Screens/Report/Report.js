@@ -19,7 +19,7 @@ function Report() {
     const getUserReportQuestion = async () => {
       try {
         const response = await axios.get(
-          `/question/getUserReport/${currentUser}`
+          `/question/getUserReport/${currentUser}/${cookie}`
         );
         setData(response.data);
       } catch (error) {
@@ -29,7 +29,7 @@ function Report() {
     const getUserReportAnswer = async () => {
       try {
         const response = await axios.get(
-          `/answer/getUserReport/${currentUser}`
+          `/answer/getUserReport/${currentUser}/${cookie}`
         );
         setAnswer(response.data);
       } catch (error) {
@@ -39,7 +39,7 @@ function Report() {
     const getUserReportComment = async () => {
       try {
         const response = await axios.get(
-          `/comment/getUserReport/${currentUser}`
+          `/comment/getUserReport/${currentUser}/${cookie}`
         );
         setComment(response.data);
       } catch (error) {
@@ -51,7 +51,7 @@ function Report() {
       getUserReportQuestion();
       getUserReportAnswer();
     }
-  }, [currentUser]);
+  }, [currentUser, cookie]);
 
   return (
     <>

@@ -25,6 +25,7 @@ import SmsIcon from "@mui/icons-material/Sms";
 import ChatIcon from "@mui/icons-material/Chat";
 import { memo } from "react";
 import { ChartQuestion } from "./Chart";
+import Cookies from "js-cookie";
 
 function DashBoard() {
   const { show, setShow } = useContext(AuthContext);
@@ -35,10 +36,12 @@ function DashBoard() {
   const [totalRA, setTotalRA] = useState(""); // tổng report của câu trả lời
   const [totalRC, setTotalRC] = useState(""); // tổng report của bình luận
   const [user, setUser] = useState(""); // tổng người dùng
+  const cookie = Cookies.get("sessionCookie");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedYear, setSelectedYear] = useState(
     new Date().getFullYear().toString()
   );
+
   const [chart, setChart] = useState(
     <ChartQuestion
       type="/question/getTotalQuestionYear"
@@ -146,7 +149,9 @@ function DashBoard() {
     //tổng câu hỏi
     const getTotalQuestionQ = async () => {
       try {
-        const response = await axios.get("/question/getTotalQuestion");
+        const response = await axios.get(
+          `/question/getTotalQuestion/${cookie}`
+        );
         setTotalQ(response.data);
       } catch (error) {
         console.log(error);
@@ -155,7 +160,7 @@ function DashBoard() {
     //   //tổng vote câu hỏi
     const getTotalVoteQ = async () => {
       try {
-        const response = await axios.get("/question/getTotalVote");
+        const response = await axios.get(`/question/getTotalVote/`);
         setTotalQV(response.data);
       } catch (error) {
         console.log(error);
@@ -164,7 +169,7 @@ function DashBoard() {
     //   //tổng vote câu trả lời
     const getTotalVoteA = async () => {
       try {
-        const response = await axios.get("/answer/getTotalVote");
+        const response = await axios.get(`/answer/getTotalVote/`);
         setTotalAV(response.data);
       } catch (error) {
         console.log(error);
@@ -173,7 +178,9 @@ function DashBoard() {
     //   //tổng báo cáo answer
     const getTotalQuestionReportA = async () => {
       try {
-        const response = await axios.get("/question/getTotalQuestionReport");
+        const response = await axios.get(
+          `/question/getTotalQuestionReport/${cookie}`
+        );
         setTotalRA(response.data);
       } catch (error) {
         console.log(error);
@@ -182,7 +189,9 @@ function DashBoard() {
     //   //tổng báo cáo câu hỏi
     const getTotalQuestionReportQ = async () => {
       try {
-        const response = await axios.get("/answer/getTotalAnswerReport");
+        const response = await axios.get(
+          `/answer/getTotalAnswerReport/${cookie}`
+        );
         setTotalRQ(response.data);
       } catch (error) {
         console.log(error);
@@ -191,7 +200,9 @@ function DashBoard() {
     //   //tổng báo cáo bình luận
     const getTotalQuestionReportC = async () => {
       try {
-        const response = await axios.get("/comment/getTotalCommentReport");
+        const response = await axios.get(
+          `/comment/getTotalCommentReport/${cookie}`
+        );
         setTotalRC(response.data);
       } catch (error) {
         console.log(error);
@@ -200,7 +211,7 @@ function DashBoard() {
     //   // tổng user
     const getAllUser = async () => {
       try {
-        const response = await axios.get("/user/countUser");
+        const response = await axios.get(`/user/countUser/${cookie}`);
         setUser(response.data);
       } catch (error) {
         console.log(error);
@@ -214,7 +225,7 @@ function DashBoard() {
     getTotalQuestionReportQ();
     getTotalQuestionReportC();
     getTotalQuestionQ();
-  }, []);
+  }, [cookie]);
 
   return (
     <BoxHome color={"text.primary"}>

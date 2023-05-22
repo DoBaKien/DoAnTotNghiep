@@ -12,13 +12,16 @@ import {
   ValueAxis,
 } from "@devexpress/dx-react-chart-material-ui";
 import { Animation } from "@devexpress/dx-react-chart";
+import Cookies from "js-cookie";
 
 export const ChartQuestion = (props) => {
   const [data, setData] = useState("");
   useEffect(() => {
     const getTotalQuestionYear = async () => {
       try {
-        const response = await axios.get(`${props.type}/${props.year}`);
+        const response = await axios.get(
+          `${props.type}/${props.year}/${Cookies.get("sessionCookie")}`
+        );
         const transformedData = Object.entries(response.data).map(
           ([year, population]) => ({
             month: `Tháng ${parseInt(year)}`,

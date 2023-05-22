@@ -36,18 +36,20 @@ function AnswerAction(props) {
   const [post, setPost] = useState([{ id: 1, type: "text", content: "" }]);
   const [fileImage, setFileImage] = useState("");
   var hours = new Date().getHours();
-
+  const cookie = Cookies.get("sessionCookie");
   const checkUserAnswer = async () => {
     try {
-      const response = await axios.get(`question/checkUserAnswer/${props.qid}`);
+      const response = await axios.get(
+        `/question/checkUserAnswer/${props.qid}/${cookie}`
+      );
       props.setCheckUser(response.data);
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   const checkLog = () => {
-    if (Cookies.get("sessionCookie") === undefined) {
+    if (cookie === undefined) {
       Swal.fire({
         title: "Lỗi",
         text: "Bạn phải đăng nhập trước",
@@ -140,10 +142,10 @@ function AnswerAction(props) {
 
   const handleAnswer = () => {
     axios
-      .post(`/answer/create/${props.qid}`, {})
+      .post(`/answer/create/${props.qid}/${cookie}`)
       .then(function (response) {
         axios
-          .post(`/answer/createActivityHistory/${response.data}`, {
+          .post(`/answer/createActivityHistory/${response.data}/${cookie}`, {
             action: "Trả lời",
             description: "Khởi tạo câu trả lời",
           })
@@ -154,9 +156,9 @@ function AnswerAction(props) {
             console.log(error);
           });
         axios
-          .post(`/question/createActivityHistory/${props.qid}`, {
+          .post(`/question/createActivityHistory/${props.qid}/${cookie}`, {
             action: "Trả lời",
-            description: "Trả lời",
+            description: "Khởi tạo câu trả lời",
           })
           .then(function (response) {
             console.log(response);
@@ -165,30 +167,19 @@ function AnswerAction(props) {
             console.log(error);
           });
         axios
-          .post(`/answer/createDetail/${response.data}`, post)
+          .post(`/answer/createDetail/${response.data}/${cookie}`, post)
           .then(function (response) {
             Swal.fire("Thành công", "Bạn trả lời thành công", "success");
             setPost([{ id: 1, type: "text", content: "" }]);
             checkUserAnswer();
             axios
-              .get(`answer/getAnswerDTOByQidCk/${props.qid}`)
+              .get(`/answer/getAnswerDTOByQidCk/${props.qid}/${cookie}`)
               .then(function (response) {
                 props.setAnswer(response.data);
               })
               .catch(function (error) {
                 console.log(error);
               });
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-        axios
-          .post(`/question/createActivityHistory/${props.qid}`, {
-            action: "Trả lời",
-            description: "Khởi tạo câu trả lời",
-          })
-          .then(function (response) {
-            console.log(response);
           })
           .catch(function (error) {
             console.log(error);

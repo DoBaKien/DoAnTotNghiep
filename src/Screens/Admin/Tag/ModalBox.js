@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { useState } from "react";
 import Swal from "sweetalert2";
 
@@ -36,7 +37,7 @@ function ModalBox({ setModal, modal, setTags }) {
 
     if (name !== "" || description !== "") {
       axios
-        .post("/tag/addTag", {
+        .post(`/tag/addTag/${Cookies.get("sessionCookie")}`, {
           name,
           description,
         })

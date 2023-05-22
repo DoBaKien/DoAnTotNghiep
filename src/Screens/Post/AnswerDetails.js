@@ -33,10 +33,10 @@ function AnswerDetails(props) {
   const [modal, setModal] = useState(false);
   const [aid, setAid] = useState("");
   const { role } = useContext(AuthContext);
-
+  const cookie = Cookies.get("sessionCookie");
   const navigation = useNavigate();
   const handleReport = (id) => {
-    if (Cookies.get("sessionCookie") !== undefined) {
+    if (cookie !== undefined) {
       setModal(!modal);
       setAid(id);
     } else {
@@ -60,9 +60,9 @@ function AnswerDetails(props) {
 
   const VoteAction = (id, value) => {
     console.log(id, value);
-    if (Cookies.get("sessionCookie") !== undefined) {
+    if (cookie !== undefined) {
       axios
-        .post(`answer/castAnswerVoteUD/${id}`, { value })
+        .post(`/answer/castAnswerVoteUD/${id}/${cookie}`, { value })
         .then(function (response) {
           Swal.fire("Thành công", `Bạn vote thành công`, "success");
           GetAnswerCK();
@@ -92,7 +92,7 @@ function AnswerDetails(props) {
   const GetAnswerCK = async () => {
     try {
       const response = await axios.get(
-        `answer/getAnswerDTOByQidCk/${props.qid}`
+        `/answer/getAnswerDTOByQidCk/${props.qid}/${cookie}`
       );
       props.setAnswer(response.data);
     } catch (error) {
@@ -101,9 +101,9 @@ function AnswerDetails(props) {
   };
 
   const handleApt = (id) => {
-    if (Cookies.get("sessionCookie") !== undefined) {
+    if (cookie !== undefined) {
       axios
-        .put(`/answer/acceptAnswer/${id}`)
+        .put(`/answer/acceptAnswer/${id}/${cookie}`)
         .then(function (response) {
           GetAnswerCK();
           Swal.fire("", "Bạn đã chấp nhận câu trả lời này", "success");
@@ -212,7 +212,7 @@ function AnswerDetails(props) {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`answer/deleteAnswer/${id}`)
+          .delete(`/answer/deleteAnswer/${id}/${cookie}`)
           .then(function (response) {
             GetAnswerCK();
             Swal.fire("Đã xóa!", "Tố cáo của bạn đã xóa", "success");

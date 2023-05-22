@@ -30,6 +30,7 @@ import { AuthContext } from "../../Component/Auth/AuthContext";
 import NotFound from "../../Component/NotFound/NotFound";
 import Swal from "sweetalert2";
 import { memo } from "react";
+import Cookies from "js-cookie";
 
 function EditPost() {
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ function EditPost() {
   const [title, setTitle] = useState("");
   const [personName, setPersonName] = useState([]);
   const [tt, setTT] = useState("");
-
+  const cookie = Cookies.get("sessionCookie");
   const [fileImage, setFileImage] = useState("");
   const [tagSel, setTagSel] = useState("");
   const [user, setUser] = useState("");
@@ -60,7 +61,7 @@ function EditPost() {
 
     const getQuestionById = async () => {
       try {
-        const response = await axios.get(`question/getQuestionById/${qid}`);
+        const response = await axios.get(`/question/getQuestionById/${qid}`);
         setTitle(response.data.title);
         setUser(response.data.uid);
       } catch (error) {
@@ -69,7 +70,7 @@ function EditPost() {
     };
     const getAnswerByQid = async () => {
       try {
-        const response = await axios.get(`answer/getAnswerByAid/${qid}`);
+        const response = await axios.get(`/answer/getAnswerByAid/${qid}`);
         setUser(response.data.uid);
       } catch (error) {
         console.error(error);
@@ -79,7 +80,7 @@ function EditPost() {
     const getQuestionDetailByQid = async () => {
       try {
         const response = await axios.get(
-          `question/getQuestionDetailByQid/${qid}`
+          `/question/getQuestionDetailByQid/${qid}`
         );
         setPost(response.data);
       } catch (error) {
@@ -88,7 +89,9 @@ function EditPost() {
     };
     const getQuestionTagByQid = async () => {
       try {
-        const response = await axios.get(`question/getQuestionTagByQid/${qid}`);
+        const response = await axios.get(
+          `/question/getQuestionTagByQid/${qid}`
+        );
         setTagSel(response.data);
       } catch (error) {
         console.error(error);
@@ -96,9 +99,8 @@ function EditPost() {
     };
     const getAnswerDetailByAid = async () => {
       try {
-        const response = await axios.get(`answer/getAnswerDetailByAid/${qid}`);
+        const response = await axios.get(`/answer/getAnswerDetailByAid/${qid}`);
         setPost(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -123,7 +125,7 @@ function EditPost() {
         Swal.fire("Thiếu thông tin", "Vui lòng điền đầy đủ thông tin", "error");
       } else {
         axios
-          .put(`/question/edit/${qid}`, {
+          .put(`/question/edit/${qid}/${cookie}`, {
             title: title,
           })
           .then(function (response) {
@@ -145,7 +147,7 @@ function EditPost() {
           });
 
         axios
-          .post(`/question/modifyTagPost/${qid}`, SelectTag)
+          .post(`/question/modifyTagPost/${qid}/${cookie}`, SelectTag)
           .then(function (response) {
             console.log(response);
           })
@@ -153,7 +155,7 @@ function EditPost() {
             console.log(error);
           });
         axios
-          .post(`/question/editDetail/${qid}`, post)
+          .post(`/question/editDetail/${qid}/${cookie}`, post)
           .then(function (response) {
             console.log(response);
           })
@@ -161,7 +163,7 @@ function EditPost() {
             console.log(error);
           });
         axios
-          .post(`/question/createActivityHistory/${qid}`, {
+          .post(`/question/createActivityHistory/${qid}/${cookie}`, {
             action: "Sửa câu hỏi",
             description: tt,
           })
@@ -174,7 +176,7 @@ function EditPost() {
       }
     } else if (type === "answer") {
       axios
-        .post(`/answer/createActivityHistory/${qid}`, {
+        .post(`/answer/createActivityHistory/${qid}/${cookie}`, {
           action: "Sửa câu trả lời",
           description: tt,
         })
@@ -185,7 +187,7 @@ function EditPost() {
           console.log(error);
         });
       axios
-        .post(`/answer/editDetail/${qid}`, post)
+        .post(`/answer/editDetail/${qid}/${cookie}`, post)
         .then(function (response) {
           Swal.fire({
             title: "Chỉnh sửa bài thành công",
@@ -250,7 +252,7 @@ function EditPost() {
     const newPost = post.filter((user) => user.qdid !== id);
     setPost(newPost);
     axios
-      .post(`/question/editDetail/${qid}`, newPost)
+      .post(`/question/editDetail/${qid}/${cookie}`, newPost)
       .then(function (response) {
         console.log(response);
       })

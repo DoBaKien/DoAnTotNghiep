@@ -10,13 +10,13 @@ import {
 import { BoxHome } from "../../Assert/Style";
 import Header from "../../Component/Header/Header";
 import { BoxContent, BoxTitle } from "./Style";
-
 import { useEffect, useState } from "react";
 import Avatar from "react-avatar-edit";
 import { useNavigate, useParams } from "react-router-dom";
 import { dataLocation } from "../../Assert/DataLocation";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Cookies from "js-cookie";
 
 function EditPf() {
   const id = useParams().id;
@@ -57,7 +57,7 @@ function EditPf() {
     e.preventDefault();
 
     axios
-      .put(`user/updateUser`, {
+      .put(`user/updateUser/${Cookies.get("sessionCookie")}`, {
         name: name,
         about: about,
         location: location,

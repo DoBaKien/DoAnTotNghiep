@@ -13,13 +13,14 @@ import { memo, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import CheckIcon from "@mui/icons-material/Check";
+import Cookies from "js-cookie";
 
-function Save({ id }) {
+function Save() {
   const [data, setData] = useState("");
 
   useEffect(() => {
     axios
-      .get(`/user/getUserSavedQuestion`)
+      .get(`/user/getUserSavedQuestion/${Cookies.get("sessionCookie")}`)
       .then(function (response) {
         setData(response.data);
       })

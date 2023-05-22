@@ -50,10 +50,13 @@ function Post() {
   const [checkRp, setCheckRp] = useState("None");
   const [checkSave, setCheckSave] = useState("None");
   const navigation = useNavigate();
+  const cookie = Cookies.get("sessionCookie");
   useEffect(() => {
     const getUserReportValue = async () => {
       try {
-        const response = await axios.get(`question/getUserReportValue/${qid}`);
+        const response = await axios.get(
+          `/question/getUserReportValue/${qid}/${cookie}`
+        );
         setCheckRp(response.data);
       } catch (error) {
         console.log(error);
@@ -63,9 +66,8 @@ function Post() {
     const getQuestionDetailByQid = async () => {
       try {
         const response = await axios.get(
-          `question/getQuestionDetailByQid/${qid}`
+          `/question/getQuestionDetailByQid/${qid}`
         );
-
         setDetails(response.data);
       } catch (error) {
         navigation("/");
@@ -75,7 +77,9 @@ function Post() {
 
     const checkUserAnswer = async () => {
       try {
-        const response = await axios.get(`question/checkUserAnswer/${qid}`);
+        const response = await axios.get(
+          `/question/checkUserAnswer/${qid}/${cookie}`
+        );
         setCheckUser(response.data);
       } catch (error) {
         console.log(error);
@@ -83,7 +87,7 @@ function Post() {
     };
 
     axios
-      .get(`question/getQuestionById/${qid}`)
+      .get(`/question/getQuestionById/${qid}`)
       .then(function (response) {
         setTitle(response.data);
 
@@ -102,7 +106,9 @@ function Post() {
 
     const getQuestionTagByQid = async () => {
       try {
-        const response = await axios.get(`question/getQuestionTagByQid/${qid}`);
+        const response = await axios.get(
+          `/question/getQuestionTagByQid/${qid}`
+        );
         setTags(response.data);
       } catch (error) {
         console.error(error);
@@ -111,7 +117,9 @@ function Post() {
     getQuestionTagByQid();
     const checkSaveQuestion = async () => {
       try {
-        const response = await axios.get(`user/checkSaveQuestion/${qid}`);
+        const response = await axios.get(
+          `/user/checkSaveQuestion/${qid}/${cookie}`
+        );
         setCheckSave(response.data);
       } catch (error) {
         console.error(error);
@@ -122,7 +130,9 @@ function Post() {
     if (currentUser !== "") {
       const getUserVoteValue = async () => {
         try {
-          const response = await axios.get(`question/getUserVoteValue/${qid}`);
+          const response = await axios.get(
+            `/question/getUserVoteValue/${qid}/${cookie}`
+          );
           setCheck(response.data);
         } catch (error) {
           console.error(error);
@@ -133,7 +143,7 @@ function Post() {
 
     const GetTotalVoteValue = async () => {
       try {
-        const response = await axios.get(`question/getTotalVoteValue/${qid}`);
+        const response = await axios.get(`/question/getTotalVoteValue/${qid}`);
         setVote(response.data);
       } catch (error) {
         console.error(error);
@@ -142,16 +152,17 @@ function Post() {
     GetTotalVoteValue();
     const GetAnswerCK = async () => {
       try {
-        const response = await axios.get(`answer/getAnswerDTOByQidCk/${qid}`);
+        const response = await axios.get(
+          `/answer/getAnswerDTOByQidCk/${qid}/${cookie}`
+        );
         setAnswer(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
     };
     const GetAnswer = async () => {
       try {
-        const response = await axios.get(`answer/getAnswerDTOByQid/${qid}`);
+        const response = await axios.get(`/answer/getAnswerDTOByQid/${qid}`);
         setAnswer(response.data);
       } catch (error) {
         console.error(error);
@@ -165,16 +176,16 @@ function Post() {
       getUserReportValue();
       checkUserAnswer();
     }
-  }, [qid, currentUser, navigation]);
+  }, [qid, currentUser, navigation, cookie]);
 
   const VoteAction = (value) => {
     if (Cookies.get("sessionCookie") !== undefined) {
       axios
-        .post(`question/castQuestionVoteUD/${qid}`, { value })
+        .post(`/question/castQuestionVoteUD/${qid}/${cookie}`, { value })
         .then(function (response) {
           Swal.fire("Thành công", `Bạn vote thành công`, "success");
           axios
-            .get(`question/getTotalVoteValue/${qid}`)
+            .get(`/question/getTotalVoteValue/${qid}`)
             .then(function (response) {
               setVote(response.data);
             })
@@ -182,7 +193,7 @@ function Post() {
               console.log(error);
             });
           axios
-            .get(`question/getUserVoteValue/${qid}`)
+            .get(`/question/getUserVoteValue/${qid}/${cookie}`)
             .then(function (response) {
               setCheck(response.data);
             })
@@ -252,7 +263,7 @@ function Post() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`question/delete/${qid}`)
+          .delete(`/question/delete/${qid}/${cookie}`)
           .then(function (response) {
             navigation("/");
             Swal.fire("Đã xóa!", "Bài đăng đã xóa", "success");
@@ -327,12 +338,12 @@ function Post() {
   };
 
   const saveQuestion = (type) => {
-    if (Cookies.get("sessionCookie") !== undefined) {
+    if (cookie !== undefined) {
       axios
-        .post(`/user/saveQuestion/${qid}`)
+        .post(`/user/saveQuestion/${qid}/${cookie}`)
         .then(function (response) {
           axios
-            .get(`/user/checkSaveQuestion/${qid}`)
+            .get(`/user/checkSaveQuestion/${qid}/${cookie}`)
             .then(function (response) {
               setCheckSave(response.data);
               Swal.fire("Thành công", `${type} thành công`, "success");
@@ -363,6 +374,25 @@ function Post() {
     }
   };
 
+  const handleCl = (type) => {
+    axios
+      .put(`/question/closeQuestion/${qid}/${cookie}`)
+      .then(function (response) {
+        axios
+          .get(`/question/getQuestionById/${qid}`)
+          .then(function (response) {
+            setTitle(response.data);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        Swal.fire("Thành công", `${type} câu hỏi thành công`, "success");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   const handleClose = () => {
     if (title.status === "Open") {
       Swal.fire({
@@ -373,22 +403,7 @@ function Post() {
         denyButtonText: `Đóng`,
       }).then((result) => {
         if (result.isDenied) {
-          axios
-            .put(`/question/closeQuestion/${qid}`)
-            .then(function (response) {
-              axios
-                .get(`question/getQuestionById/${qid}`)
-                .then(function (response) {
-                  setTitle(response.data);
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
-              Swal.fire("Thành công", "Đóng câu hỏi thành công", "success");
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+          handleCl("Đóng");
         }
       });
     } else if (title.status === "Closed") {
@@ -400,22 +415,7 @@ function Post() {
         reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
-          axios
-            .put(`/question/closeQuestion/${qid}`)
-            .then(function (response) {
-              axios
-                .get(`question/getQuestionById/${qid}`)
-                .then(function (response) {
-                  setTitle(response.data);
-                })
-                .catch(function (error) {
-                  console.log(error);
-                });
-              Swal.fire("Thành công", "Mở câu hỏi thành công", "success");
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+          handleCl("Mở");
         }
       });
     }

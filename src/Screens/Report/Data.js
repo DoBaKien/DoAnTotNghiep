@@ -12,6 +12,7 @@ import { BoxContent } from "./Style";
 import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Cookies from "js-cookie";
 
 const handleOnCellClick = (params) => {
   if (params.row.ii === undefined) {
@@ -36,7 +37,7 @@ const handleDelete = (id, value) => {
   }).then((result) => {
     if (result.isConfirmed) {
       axios
-        .delete(`/${value}/deleteReport/${id}`)
+        .delete(`/${value}/deleteReport/${id}/${Cookies.get("sessionCookie")}`)
         .then(function (response) {
           Swal.fire("Đã xóa!", "Tố cáo của bạn đã xóa", "success");
         })
@@ -381,16 +382,6 @@ export const datatablecomment = (data) => {
       <Box height={400} width="100%">
         <DataGrid
           rowHeight={50}
-          // rows={data.map((item) => ({
-          //   id: item.commentReport.rcid,
-          //   title: item.question.title,
-          //   detail: item.commentReport.detail,
-          //   ii: item.commentReport.cid,
-          //   status: item.commentReport.status,
-          //   date: item.commentReport.date,
-          //   qid: item.question.qid,
-          //   iz: "comment",
-          // }))}
           rows={data.map((item) => {
             const row = {
               id: item.commentReport.rcid,

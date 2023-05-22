@@ -35,6 +35,7 @@ import "../../Assert/index.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 function Home() {
   const [questions, setQuestions] = useState("");
@@ -50,7 +51,7 @@ function Home() {
     });
 
     axios
-      .get("/question/getQuestionDTOByUserTag")
+      .get(`/question/getQuestionDTOByUserTag/${Cookies.get("sessionCookie")}`)
       .then(function (response) {
         setQuestions(response.data);
       })

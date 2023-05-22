@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useState } from "react";
 import Swal from "sweetalert2";
@@ -51,7 +52,7 @@ function ModalEdit({ setModalE, modalE, id, setTags }) {
 
     if (name !== "" || description !== "") {
       axios
-        .put(`/tag/editTag/${id}`, {
+        .put(`/tag/editTag/${id}/${Cookies.get("sessionCookie")}`, {
           name,
           description,
         })
