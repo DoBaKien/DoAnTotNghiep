@@ -31,7 +31,7 @@ function NotFound() {
       <BoxItem>
         <Typography variant="h1">404</Typography>
         <Typography variant="h3">
-          This page isn't available. Sorry about that
+         Trang không tồn tại
         </Typography>
         <Button
           variant="outlined"

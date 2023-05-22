@@ -49,7 +49,7 @@ function Home() {
       }
     });
     axios
-      .get("/question/getQuestionDTOByUserTag")
+      .get("/question/getQuestionDTOByUserTag", { withCredentials: true })
       .then(function (response) {
         setQuestions(response.data);
       })

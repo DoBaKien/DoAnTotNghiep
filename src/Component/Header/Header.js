@@ -67,8 +67,11 @@ function Header() {
     signOut(auth)
       .then(() => {
         setTest(!test);
-        Cookies.remove("sessionCookie");
+        Cookies.remove("sessionCookie", {
+          path: "https://vietstackoverflow-production.up.railway.app",
+        });
         localStorage.removeItem("id");
+        console.log("asd");
         setAnchorEl(null);
         if (role === "Admin") {
           window.location.reload();
@@ -79,11 +82,11 @@ function Header() {
       });
   };
   const handlePf = () => {
-    navigate(`/profile/${currentUser}`);
+    navigate(`//profile/${currentUser}`);
     setAnchorEl(null);
   };
   const handleLogin = () => {
-    navigate("/login");
+    navigate("//login");
     setTest(!test);
   };
   const handleSetting = () => {

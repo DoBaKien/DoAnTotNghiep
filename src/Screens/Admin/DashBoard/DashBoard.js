@@ -7,7 +7,6 @@ import {
   ListItemIcon,
   ListItemText,
   NativeSelect,
-  Paper,
   Stack,
   Typography,
 } from "@mui/material";
@@ -20,20 +19,13 @@ import { AuthContext } from "../../../Component/Auth/AuthContext";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
-import {
-  Chart,
-  BarSeries,
-  Title,
-  ArgumentAxis,
-  ValueAxis,
-} from "@devexpress/dx-react-chart-material-ui";
 import AnnouncementIcon from "@mui/icons-material/Announcement";
-import { Animation } from "@devexpress/dx-react-chart";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
-import { Question } from "./Question";
 import SmsIcon from "@mui/icons-material/Sms";
 import ChatIcon from "@mui/icons-material/Chat";
 import { memo } from "react";
+import { ChartQuestion } from "./Chart";
+
 function DashBoard() {
   const { show, setShow } = useContext(AuthContext);
   const [totalQ, setTotalQ] = useState(""); //tổng câu hỏi
@@ -43,19 +35,17 @@ function DashBoard() {
   const [totalRA, setTotalRA] = useState(""); // tổng report của câu trả lời
   const [totalRC, setTotalRC] = useState(""); // tổng report của bình luận
   const [user, setUser] = useState(""); // tổng người dùng
-  const [questYear, setQuestYear] = useState(""); // tổng câu hỏi năm
-  const [questRYear, setQuestRYear] = useState(""); // tổng report câu hỏi năm
-  const [answerRYear, setAnswerRYear] = useState(""); // tổng báo cáo câu trả lời năm
-  const [answerYear, setAnswerYear] = useState(""); // tổng câu trả lời năm
-  const [commentYear, setCommentYear] = useState(""); // tổng bình luận năm
-  const [commentRYear, setCommentRYear] = useState(""); // tổng bình luận năm
-  const [check, setCheck] = useState(true);
-  const [chart, setChart] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedYear, setSelectedYear] = useState(
     new Date().getFullYear().toString()
   );
-
+  const [chart, setChart] = useState(
+    <ChartQuestion
+      type="/question/getTotalQuestionYear"
+      text="Số liệu câu hỏi"
+      year={selectedYear}
+    />
+  );
   const handleYearChange = (event) => {
     setSelectedYear(event.target.value);
   };
@@ -67,71 +57,89 @@ function DashBoard() {
 
   const handleQ = (event, index) => {
     //0
-
-    setChart(
-      <Question
-        questYear={questYear}
-        text={`Số liệu câu hỏi năm ${selectedYear}`}
-      />
-    );
+    setChart(<ChartQuestion type="none" />);
+    setTimeout(() => {
+      setChart(
+        <ChartQuestion
+          type="/question/getTotalQuestionYear"
+          text="Số liệu câu hỏi"
+          year={selectedYear}
+        />
+      );
+    }, 1000);
     setSelectedIndex(index);
-    setCheck(false);
   };
+
   const handleReportQ = (event, index) => {
     //1
-
     setSelectedIndex(index);
-    setChart(
-      <Question
-        questYear={questRYear}
-        text={`Số liệu câu hỏi bị tố cáo năm ${selectedYear}`}
-      />
-    );
-    setCheck(false);
+    setChart(<ChartQuestion type="none" />);
+    setTimeout(() => {
+      setChart(
+        <ChartQuestion
+          type="/question/getTotalQuestionYearReport"
+          text="Số liệu câu hỏi bị tố cáo"
+          year={selectedYear}
+        />
+      );
+    }, 1000);
   };
   const handleA = (event, index) => {
     //2
+    setChart(<ChartQuestion type="none" />);
+    setTimeout(() => {
+      setChart(
+        <ChartQuestion
+          type="/answer/getTotalAnswerYear"
+          text="Số liệu câu trả lời"
+          year={selectedYear}
+        />
+      );
+    }, 1000);
     setSelectedIndex(index);
-    setChart(
-      <Question
-        questYear={answerYear}
-        text={`Số liệu câu trả lời năm ${selectedYear}`}
-      />
-    );
-    setCheck(false);
   };
   const handleReportA = (event, index) => {
     //3
+    setChart(<ChartQuestion type="none" />);
+    setTimeout(() => {
+      setChart(
+        <ChartQuestion
+          type="/answer/getTotalAnswerReportYear"
+          text={`Số liệu câu trả lời bị tố cáo `}
+          year={selectedYear}
+        />
+      );
+    }, 1000);
     setSelectedIndex(index);
-    setChart(
-      <Question
-        questYear={answerRYear}
-        text={`Số liệu câu trả lời bị tố cáo năm ${selectedYear}`}
-      />
-    );
-    setCheck(false);
   };
   const handleC = (event, index) => {
     //4
+    setChart(<ChartQuestion type="none" />);
+    setTimeout(() => {
+      setChart(
+        <ChartQuestion
+          ChartQuestion
+          type="/comment/getTotalCommentYear"
+          text={`Số liệu bình luận `}
+          year={selectedYear}
+        />
+      );
+    }, 1000);
     setSelectedIndex(index);
-    setChart(
-      <Question
-        questYear={commentYear}
-        text={`Số liệu bình luận năm ${selectedYear}`}
-      />
-    );
-    setCheck(false);
   };
   const handleReportC = (event, index) => {
     //5
     setSelectedIndex(index);
-    setChart(
-      <Question
-        questYear={commentRYear}
-        text={`Số liệu bình luận bị tố cáo năm ${selectedYear}`}
-      />
-    );
-    setCheck(false);
+    setChart(<ChartQuestion type="none" />);
+    setTimeout(() => {
+      setChart(
+        <ChartQuestion
+          type="/comment/getTotalCommentReportYear"
+          text={`Số liệu bình luận `}
+          year={selectedYear}
+        />
+      );
+    }, 1000);
   };
 
   useEffect(() => {
@@ -139,14 +147,12 @@ function DashBoard() {
     const getTotalQuestionQ = async () => {
       try {
         const response = await axios.get("/question/getTotalQuestion");
-
         setTotalQ(response.data);
       } catch (error) {
         console.log(error);
       }
     };
-
-    //tổng vote câu hỏi
+    //   //tổng vote câu hỏi
     const getTotalVoteQ = async () => {
       try {
         const response = await axios.get("/question/getTotalVote");
@@ -155,8 +161,7 @@ function DashBoard() {
         console.log(error);
       }
     };
-
-    //tổng vote câu trả lời
+    //   //tổng vote câu trả lời
     const getTotalVoteA = async () => {
       try {
         const response = await axios.get("/answer/getTotalVote");
@@ -165,8 +170,7 @@ function DashBoard() {
         console.log(error);
       }
     };
-
-    //tổng báo cáo answer
+    //   //tổng báo cáo answer
     const getTotalQuestionReportA = async () => {
       try {
         const response = await axios.get("/question/getTotalQuestionReport");
@@ -175,8 +179,7 @@ function DashBoard() {
         console.log(error);
       }
     };
-
-    //tổng báo cáo câu hỏi
+    //   //tổng báo cáo câu hỏi
     const getTotalQuestionReportQ = async () => {
       try {
         const response = await axios.get("/answer/getTotalAnswerReport");
@@ -185,8 +188,7 @@ function DashBoard() {
         console.log(error);
       }
     };
-
-    //tổng báo cáo câu hỏi
+    //   //tổng báo cáo bình luận
     const getTotalQuestionReportC = async () => {
       try {
         const response = await axios.get("/comment/getTotalCommentReport");
@@ -195,8 +197,7 @@ function DashBoard() {
         console.log(error);
       }
     };
-
-    // tổng user
+    //   // tổng user
     const getAllUser = async () => {
       try {
         const response = await axios.get("/user/countUser");
@@ -206,117 +207,6 @@ function DashBoard() {
       }
     };
 
-    // tổng câu hỏi năm
-    const getTotalQuestionYear = async () => {
-      try {
-        const response = await axios.get(
-          `/question/getTotalQuestionYear/${selectedYear}`
-        );
-
-        const transformedData = Object.entries(response.data).map(
-          ([year, population]) => ({
-            month: `Tháng ${parseInt(year)}`,
-            total: population,
-          })
-        );
-        setQuestYear(transformedData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const getTotalQuestionYearReport = async () => {
-      try {
-        const response = await axios.get(
-          `/question/getTotalQuestionYearReport/${selectedYear}`
-        );
-
-        const transformedData = Object.entries(response.data).map(
-          ([year, population]) => ({
-            month: `Tháng ${parseInt(year)}`,
-            total: population,
-          })
-        );
-        setQuestRYear(transformedData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    const getTotalAnswerYear = async () => {
-      try {
-        const response = await axios.get(
-          `/answer/getTotalAnswerYear/${selectedYear}`
-        );
-
-        const transformedData = Object.entries(response.data).map(
-          ([year, population]) => ({
-            month: `Tháng ${parseInt(year)}`,
-            total: population,
-          })
-        );
-        setAnswerYear(transformedData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const getTotalAnswerReport = async () => {
-      try {
-        const response = await axios.get(
-          `/answer/getTotalAnswerReportYear/${selectedYear}`
-        );
-
-        const transformedData = Object.entries(response.data).map(
-          ([year, population]) => ({
-            month: `Tháng ${parseInt(year)}`,
-            total: population,
-          })
-        );
-        setAnswerRYear(transformedData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    const getTotalCommentReportYear = async () => {
-      try {
-        const response = await axios.get(
-          `/comment/getTotalCommentReportYear/${selectedYear}`
-        );
-
-        const transformedData = Object.entries(response.data).map(
-          ([year, population]) => ({
-            month: `Tháng ${parseInt(year)}`,
-            total: population,
-          })
-        );
-        setCommentRYear(transformedData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    const getTotalCommentYear = async () => {
-      try {
-        const response = await axios.get(
-          `/comment/getTotalCommentYear/${selectedYear}`
-        );
-
-        const transformedData = Object.entries(response.data).map(
-          ([year, population]) => ({
-            month: `Tháng ${parseInt(year)}`,
-            total: population,
-          })
-        );
-        setCommentYear(transformedData);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getTotalCommentYear();
-    getTotalCommentReportYear();
-    getTotalQuestionYear();
-    getTotalAnswerYear();
-    getTotalAnswerReport();
-    getTotalQuestionYearReport();
     getAllUser();
     getTotalVoteQ();
     getTotalVoteA();
@@ -324,14 +214,14 @@ function DashBoard() {
     getTotalQuestionReportQ();
     getTotalQuestionReportC();
     getTotalQuestionQ();
-  }, [selectedYear]);
+  }, []);
 
   return (
     <BoxHome color={"text.primary"}>
       <StackContent direction="row">
         {show && <LeftAdmin />}
         <Box sx={{ width: "100%" }}>
-          <Header show={show} setShow={setShow} />
+          <Header setShow={setShow} show={show} />
           <Box
             bgcolor={"background.default"}
             sx={{ width: "moz-fit-width", paddingLeft: 2, paddingRight: 2 }}
@@ -456,27 +346,6 @@ function DashBoard() {
                   <ListItemText primary="Báo cáo bình luận" />
                 </ListItemButton>
               </List>
-            </Box>
-            <Box
-              sx={{
-                width: "80%",
-                display: check === true ? "block" : "none",
-              }}
-            >
-              {questYear.length > 0 ? (
-                <Paper>
-                  <Chart data={questYear}>
-                    <ArgumentAxis />
-                    <ValueAxis max={12} />
-
-                    <BarSeries valueField="total" argumentField="month" />
-                    <Title text="Số liệu câu hỏi năm 2023" />
-                    <Animation />
-                  </Chart>
-                </Paper>
-              ) : (
-                <></>
-              )}
             </Box>
             {chart}
           </Stack>

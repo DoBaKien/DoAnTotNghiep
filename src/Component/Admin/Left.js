@@ -16,7 +16,7 @@ import ReportIcon from "@mui/icons-material/Report";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import { useNavigate } from "react-router-dom";
 import logo from "../../Assert/Img/logo.png";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 import CommentIcon from "@mui/icons-material/Comment";
 import AnnouncementIcon from "@mui/icons-material/Announcement";
@@ -163,4 +163,4 @@ function LeftAdmin() {
   );
 }
 
-export default LeftAdmin;
+export default memo(LeftAdmin);

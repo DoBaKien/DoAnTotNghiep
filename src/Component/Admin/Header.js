@@ -17,7 +17,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Logout, Settings } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { memo, useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useContext } from "react";
 import { ThemeUseContext } from "../Darkmode/ThemeUseContext";
@@ -28,6 +28,7 @@ import { useEffect } from "react";
 import { AuthContext } from "../Auth/AuthContext";
 import axios from "axios";
 import { signOut } from "firebase/auth";
+
 function Header({ show, setShow }) {
   const navigate = useNavigate();
   const context = useContext(ThemeUseContext);
@@ -193,4 +194,4 @@ function Header({ show, setShow }) {
   );
 }
 
-export default Header;
+export default memo(Header);

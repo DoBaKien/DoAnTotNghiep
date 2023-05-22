@@ -60,7 +60,9 @@ function Login() {
           axios
             .post("/account/createSessionCookie", token)
             .then(function (response) {
-              Cookies.set("sessionCookie", response.data, { expires: 10 });
+              Cookies.set("sessionCookie", response.data, {
+                expires: 10,
+              });
               axios
                 .get(`/account/getUserClaims`)
                 .then(function (response) {

@@ -19,7 +19,6 @@ function ManagerQuest() {
       .get("/question/getAllQuestionDTO")
       .then(function (response) {
         setQuestions(response.data);
-        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
