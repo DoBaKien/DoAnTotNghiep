@@ -64,7 +64,7 @@ function Login() {
                 expires: 10,
               });
               axios
-                .get(`/account/getUserClaims`)
+                .get(`/account/getUserClaims/${response.data}`)
                 .then(function (response) {
                   if (response.data === "Admin") {
                     navigate("/admin");

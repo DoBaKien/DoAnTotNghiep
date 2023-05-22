@@ -48,8 +48,9 @@ function Home() {
         setBackToTop(false);
       }
     });
+
     axios
-      .get("/question/getQuestionDTOByUserTag", { withCredentials: true })
+      .get("/question/getQuestionDTOByUserTag")
       .then(function (response) {
         setQuestions(response.data);
       })
