@@ -7,7 +7,7 @@ import { ThemeProvider } from "./Component/Darkmode/ThemeUseContext";
 import axios from "axios";
 import { AuthProvider } from "./Component/Auth/AuthContext";
 
-// axios.defaults.baseURL = "https://vietstackoverflow-production.up.railway.app";
+axios.defaults.baseURL = "https://vietstackoverflow-production.up.railway.app";
 // axios.defaults.baseURL = "http://localhost:8080";
 
 axios.defaults.withCredentials = true;

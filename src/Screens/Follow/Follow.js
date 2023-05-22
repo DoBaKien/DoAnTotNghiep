@@ -36,6 +36,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
+import { Cookie } from "@mui/icons-material";
 
 function Home() {
   const [questions, setQuestions] = useState("");
@@ -165,6 +166,19 @@ function Home() {
             </StackPost>
           ))}
         </BoxContent>
+      );
+    } else if (Cookies.get("sessionCookie") === undefined) {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            height: "81vh",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography>Bạn phải đăng nhập trước</Typography>
+        </Box>
       );
     } else {
       return (
