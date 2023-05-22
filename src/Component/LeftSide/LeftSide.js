@@ -110,15 +110,6 @@ function LeftSide() {
               ) : (
                 <></>
               )}
-
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    <ModeNightIcon />
-                  </ListItemIcon>
-                  <Switch onChange={context.toggle} />
-                </ListItemButton>
-              </ListItem>
             </List>
           </Box>
         </Box>

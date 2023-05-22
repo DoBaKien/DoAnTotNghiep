@@ -160,7 +160,7 @@ function DashBoard() {
     //   //tổng vote câu hỏi
     const getTotalVoteQ = async () => {
       try {
-        const response = await axios.get(`/question/getTotalVote/`);
+        const response = await axios.get(`/question/getTotalVote/${cookie}`);
         setTotalQV(response.data);
       } catch (error) {
         console.log(error);
@@ -169,7 +169,7 @@ function DashBoard() {
     //   //tổng vote câu trả lời
     const getTotalVoteA = async () => {
       try {
-        const response = await axios.get(`/answer/getTotalVote/`);
+        const response = await axios.get(`/answer/getTotalVote/${cookie}`);
         setTotalAV(response.data);
       } catch (error) {
         console.log(error);
