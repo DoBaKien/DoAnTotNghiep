@@ -1,6 +1,8 @@
-import { Box, Stack, styled, Typography } from "@mui/material";
+import { Box, Button, Stack, styled, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function NotFound() {
+  const navi = useNavigate();
   const BoxItem = styled(Stack)(({ theme }) => ({
     border:
       theme.palette.mode === "dark" ? "10px dashed white" : "10px dashed black",
@@ -10,6 +12,9 @@ function NotFound() {
     display: "flex",
     textAlign: "center",
   }));
+  const handleBack = () => {
+    navi("/");
+  };
 
   return (
     <Box
@@ -28,6 +33,14 @@ function NotFound() {
         <Typography variant="h3">
           This page isn't available. Sorry about that
         </Typography>
+        <Button
+          variant="outlined"
+          size="large"
+          sx={{ marginTop: 2 }}
+          onClick={handleBack}
+        >
+          Trở về trang chủ
+        </Button>
       </BoxItem>
     </Box>
   );
