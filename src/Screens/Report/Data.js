@@ -16,11 +16,11 @@ import Cookies from "js-cookie";
 
 const handleOnCellClick = (params) => {
   if (params.row.ii === undefined) {
-    window.open(`/post/${params.row.qid}`, "_blank");
+    window.open(`/DoAnTotNghiep/post/${params.row.qid}`, "_blank");
   } else if (params.row.iz === "answer") {
-    window.open(`/post/${params.row.qid}/answer/${params.row.ii}`, "_blank");
+    window.open(`/DoAnTotNghiep/post/${params.row.qid}/answer/${params.row.ii}`, "_blank");
   } else if (params.row.iz === "comment") {
-    window.open(`/post/${params.row.qid}/comment/${params.row.ii}`, "_blank");
+    window.open(`/DoAnTotNghiep/post/${params.row.qid}/comment/${params.row.ii}`, "_blank");
   }
 };
 const handleDelete = (id, value) => {
