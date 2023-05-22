@@ -40,7 +40,7 @@ function ReportC() {
   const handleOnCellClick = (params) => {
     if (params.row.cid !== "Bình luận đã bị xoá") {
       window.open(
-        `/DoAnTotNghiep/post/${params.row.qid}/comment/${params.row.cid}`,
+        `/DoAnTotNghiep/#/post/${params.row.qid}/comment/${params.row.cid}`,
         "_blank"
       );
     }

@@ -39,7 +39,7 @@ function ReportQ() {
   }, [cookie]);
   const handleOnCellClick = (params) => {
     if (params.row.qid !== "Câu hỏi đã bị xoá") {
-      window.open(`/DoAnTotNghiep/post/${params.row.qid}`, "_blank");
+      window.open(`/DoAnTotNghiep/#/post/${params.row.qid}`, "_blank");
     }
   };
   const handleDelete = (id) => {

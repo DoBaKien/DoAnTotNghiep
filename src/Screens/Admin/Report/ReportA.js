@@ -40,7 +40,7 @@ function ReportA() {
   const handleOnCellClick = (params) => {
     if (params.row.aid !== "Câu trả lời đã bị xoá") {
       window.open(
-        `/DoAnTotNghiep/post/${params.row.qid}/answer/${params.row.aid}`,
+        `/DoAnTotNghiep/#/post/${params.row.qid}/answer/${params.row.aid}`,
         "_blank"
       );
     }
