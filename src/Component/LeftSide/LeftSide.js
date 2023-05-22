@@ -6,14 +6,12 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Switch,
   styled,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import PeopleIcon from "@mui/icons-material/People";
-import ModeNightIcon from "@mui/icons-material/ModeNight";
 import { useContext } from "react";
 import { ThemeUseContext } from "../Darkmode/ThemeUseContext.js";
 import Brightness4Icon from "@mui/icons-material/Brightness4";

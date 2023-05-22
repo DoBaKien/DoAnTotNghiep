@@ -37,7 +37,7 @@ function Router() {
 
   return (
     <ThemeProvider theme={context.darkTheme}>
-      <Routes>
+      <Routes basename="/DoAnTotNghiep">
         <Route path="/" element={<Home />} />
         <Route
           path="/login"
