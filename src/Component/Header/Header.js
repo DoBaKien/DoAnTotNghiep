@@ -80,11 +80,11 @@ function Header() {
       });
   };
   const handlePf = () => {
-    navigate(`//profile/${currentUser}`);
+    navigate(`/profile/${currentUser}`);
     setAnchorEl(null);
   };
   const handleLogin = () => {
-    navigate("//login");
+    navigate("/login");
     setTest(!test);
   };
   const handleSetting = () => {
