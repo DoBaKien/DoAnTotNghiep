@@ -134,7 +134,9 @@ function AnswerDetails(props) {
     if (stt === "Accepted") {
       return (
         <Tooltip title="Chấp nhận câu trả lởi" placement="left">
-          <CheckIcon color="success" fontSize="large" />
+          <IconButton onClick={() => handleApt(aid)}>
+            <CheckIcon color="success" fontSize="large" />
+          </IconButton>
         </Tooltip>
       );
     } else if (props.uid === props.currentUser) {
@@ -215,7 +217,7 @@ function AnswerDetails(props) {
           .delete(`/answer/deleteAnswer/${id}/${cookie}`)
           .then(function (response) {
             GetAnswerCK();
-            Swal.fire("Đã xóa!", "Tố cáo của bạn đã xóa", "success");
+            Swal.fire("Đã xóa!", "Câu trả lời đã xóa", "success");
           })
           .catch(function (error) {
             console.log(error);

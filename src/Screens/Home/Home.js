@@ -29,16 +29,20 @@ import {
   StyledBadge,
   TypographyTitle,
 } from "./Style";
-import { BoxHome, BoxTag } from "../../Assert/Style";
+import { BoxHome, BoxTag, DateV } from "../../Assert/Style";
 import CheckIcon from "@mui/icons-material/Check";
 import "../../Assert/index.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { AuthContext } from "../../Component/Auth/AuthContext";
 
 function Home() {
   const [questions, setQuestions] = useState("");
   const [backToTop, setBackToTop] = useState(false);
+  const { currentUser } = useContext(AuthContext);
+  const [user, setUser] = useState("");
   useEffect(() => {
     window.addEventListener("scroll", () => {
       if (window.scrollY > 100) {
@@ -47,15 +51,27 @@ function Home() {
         setBackToTop(false);
       }
     });
+    const findByUid = async () => {
+      try {
+        const response = await axios.get(`/user/findByUid/${currentUser}`);
+        setUser(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    if (currentUser !== "") {
+      findByUid();
+    }
     axios
       .get("/question/getAllQuestionDTO")
       .then(function (response) {
         setQuestions(response.data);
+        console.log(response.data);
       })
       .catch(function (error) {
         console.log(error);
       });
-  }, []);
+  }, [currentUser]);
 
   const scrollUp = () => {
     window.scrollTo({
@@ -104,9 +120,10 @@ function Home() {
                   )}
                   <Typography>{q.answerCount} trả lời</Typography>
                 </BoxText>
-
                 <BoxText>
-                  <Typography>1 xem</Typography>
+                  <Typography variant="body1">
+                    {DateV(q.question.date)}
+                  </Typography>
                 </BoxText>
               </BoxDetails>
 
@@ -135,9 +152,14 @@ function Home() {
                   >
                     {Array.from(q.tags).map((t, index) => (
                       <Grid item xs={2} sm={2} md={2} key={index}>
-                        <BoxTag>
-                          <Typography variant="body2">{t.name}</Typography>
-                        </BoxTag>
+                        <Link
+                          to={`/tagdetail/${t.tid}`}
+                          style={{ textDecoration: "none" }}
+                        >
+                          <BoxTag>
+                            <Typography variant="body2">{t.name}</Typography>
+                          </BoxTag>
+                        </Link>
                       </Grid>
                     ))}
                   </Grid>
@@ -199,7 +221,15 @@ function Home() {
                     anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                     variant="dot"
                   >
-                    <Avatar sx={{ width: 40, height: 40 }}>M</Avatar>
+                    {user.avatar !== null ? (
+                      <Avatar
+                        alt="Avatar"
+                        src={user.avatar}
+                        sx={{ width: 40, height: 40 }}
+                      />
+                    ) : (
+                      <Avatar>V</Avatar>
+                    )}
                   </StyledBadge>
                 </IconButton>
               </Box>

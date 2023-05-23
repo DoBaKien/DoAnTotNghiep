@@ -28,7 +28,7 @@ import axios from "axios";
 import { signOut } from "firebase/auth";
 
 function Header() {
-  const { currentUser, test, setTest, role } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
   const navigate = useNavigate();
   const context = useContext(ThemeUseContext);
@@ -66,14 +66,10 @@ function Header() {
   const handlelogout = () => {
     signOut(auth)
       .then(() => {
-        setTest(!test);
         Cookies.remove("sessionCookie");
         localStorage.removeItem("id");
-        console.log("asd");
         setAnchorEl(null);
-        if (role === "Admin") {
-          window.location.reload();
-        }
+        window.location.reload();
       })
       .catch((error) => {
         console.log("dx lỗi");
@@ -85,7 +81,6 @@ function Header() {
   };
   const handleLogin = () => {
     navigate("/login");
-    setTest(!test);
   };
   const handleSetting = () => {
     navigate("/setting");

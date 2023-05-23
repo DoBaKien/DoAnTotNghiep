@@ -17,24 +17,18 @@ import Tag from "./Tag";
 import { signOut } from "firebase/auth";
 import { auth } from "../../Assert/Config";
 import Cookies from "js-cookie";
-import { useContext } from "react";
-import { AuthContext } from "../../Component/Auth/AuthContext";
 
 function LeftSide(props) {
-  const { test, setTest } = useContext(AuthContext);
   const handleFollow = () => {
     props.setPage(<My id={props.id} />);
   };
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        setTest(!test);
         Cookies.remove("sessionCookie");
         localStorage.removeItem("id");
 
-        // if (role === "Admin") {
-        //   window.location.reload();
-        // }
+        window.location.reload();
       })
       .catch((error) => {
         console.log("dx lỗi");

@@ -9,7 +9,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState("");
   const [role, setRole] = useState("");
-  const [test, setTest] = useState(true);
+
   const [show, setShow] = useState(true);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -25,15 +25,13 @@ export const AuthProvider = ({ children }) => {
     });
 
     return () => unsubscribe();
-  }, [test]);
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
         currentUser,
         role,
-        test,
-        setTest,
         show,
         setShow,
       }}

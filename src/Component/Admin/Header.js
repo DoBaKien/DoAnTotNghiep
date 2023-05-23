@@ -34,7 +34,7 @@ function Header({ show, setShow }) {
   const context = useContext(ThemeUseContext);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const { currentUser, setTest, test } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const [data, setData] = useState("");
   useEffect(() => {
     const findByUid = async () => {
@@ -59,7 +59,6 @@ function Header({ show, setShow }) {
   const handlelogout = () => {
     signOut(auth)
       .then(() => {
-        setTest(!test);
         Cookies.remove("sessionCookie");
         localStorage.removeItem("id");
         setAnchorEl(null);
@@ -74,7 +73,6 @@ function Header({ show, setShow }) {
   const handlePf = () => {
     navigate(`/profile/${currentUser}`);
     setAnchorEl(null);
-    setTest(!test);
   };
   const handleSetting = () => {
     navigate("/setting");

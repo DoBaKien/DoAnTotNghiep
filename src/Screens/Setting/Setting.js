@@ -11,7 +11,7 @@ import { Link, Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 function Setting() {
-  const { currentUser, test } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const [modal, setModal] = useState(false);
   const cookie = Cookies.get("sessionCookie");
   const [data, setData] = useState("");
@@ -27,7 +27,7 @@ function Setting() {
     if (currentUser !== "") {
       GetTotalVoteValue();
     }
-  }, [currentUser, test]);
+  }, [currentUser]);
 
   const handleResetPass = () => {
     setModal(!modal);

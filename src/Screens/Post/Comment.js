@@ -155,7 +155,7 @@ function Comment(props) {
           .delete(`comment/deleteComment/${id}/${cookies}`)
           .then(function (response) {
             getCommentDTOByQid();
-            Swal.fire("Đã xóa!", "Tố cáo của bạn đã xóa", "success");
+            Swal.fire("Đã xóa!", "Bình luận đã xóa", "success");
           })
           .catch(function (error) {
             console.log(error);

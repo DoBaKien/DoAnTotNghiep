@@ -138,7 +138,7 @@ function EditPost() {
             }).then((result) => {
               /* Read more about isConfirmed, isDenied below */
               if (result.isConfirmed) {
-                navigate(-1);
+                navigate(`/post/${qid}`);
               }
             });
           })

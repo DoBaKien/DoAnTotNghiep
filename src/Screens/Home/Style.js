@@ -66,9 +66,8 @@ export const BoxDetails = styled(Box)(() => ({
   width: 100,
   display: "flex",
   justifyContent: "center",
-
-  marginLeft: 8,
   alignItems: "center",
+  marginLeft: 8,
 }));
 export const BoxText = styled(Box)(() => ({
   width: "100%",

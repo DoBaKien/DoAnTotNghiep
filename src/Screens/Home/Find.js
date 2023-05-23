@@ -112,10 +112,6 @@ function Find() {
                   )}
                   <Typography>{q.answerCount} trả lời</Typography>
                 </BoxText>
-
-                <BoxText>
-                  <Typography>1 xem</Typography>
-                </BoxText>
               </BoxDetails>
 
               <BoxTitle>

@@ -2,7 +2,7 @@ import Header from "../../Component/Header/Header";
 import LeftSide from "../../Component/LeftSide/LeftSide";
 
 import { BoxContent, StackContent } from "./Style";
-import { BoxHome, BoxTag } from "../../Assert/Style";
+import { BoxHome, BoxTag, DateV } from "../../Assert/Style";
 import {
   Avatar,
   Box,
@@ -126,7 +126,9 @@ function TagDetails() {
                 </BoxText>
 
                 <BoxText>
-                  <Typography>1 xem</Typography>
+                  <Typography variant="body1">
+                    {DateV(q.question.date)}
+                  </Typography>
                 </BoxText>
               </BoxDetails>
 

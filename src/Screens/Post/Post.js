@@ -499,10 +499,6 @@ function Post() {
     }
   };
 
-  const handleDetail = (id) => {
-    navigation(`/tagdetail/${id}`);
-  };
-
   return (
     <BoxHome color={"text.primary"}>
       <Header />
@@ -666,12 +662,14 @@ function Post() {
             <Grid container spacing={1} columns={{ xs: 4, sm: 8, md: 12 }}>
               {Array.from(tags).map((t, index) => (
                 <Grid item xs={2} sm={2} md={2} key={index}>
-                  <BoxTag
-                    sx={{ paddingTop: 1, paddingBottom: 1 }}
-                    onClick={() => handleDetail(t.tid)}
+                  <Link
+                    to={`/tagdetail/${t.tid}`}
+                    style={{ textDecoration: "none" }}
                   >
-                    <Typography variant="body2">{t.name}</Typography>
-                  </BoxTag>
+                    <BoxTag sx={{ paddingTop: 1, paddingBottom: 1 }}>
+                      <Typography variant="body2">{t.name}</Typography>
+                    </BoxTag>
+                  </Link>
                 </Grid>
               ))}
             </Grid>
