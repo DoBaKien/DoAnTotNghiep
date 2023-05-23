@@ -25,7 +25,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { AuthContext } from "../../Component/Auth/AuthContext";
 import NotFound from "../../Component/NotFound/NotFound";
 import Swal from "sweetalert2";
@@ -33,7 +33,6 @@ import { memo } from "react";
 import Cookies from "js-cookie";
 
 function EditPost() {
-  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const { type, qid } = useParams();
   const [tags, setTags] = useState("");
@@ -138,7 +137,8 @@ function EditPost() {
             }).then((result) => {
               /* Read more about isConfirmed, isDenied below */
               if (result.isConfirmed) {
-                navigate(`/post/${qid}`);
+                // navigate(`/post/${qid}`);
+                window.location.href = `/DoAnTotNghiep/#/post/${qid}`;
               }
             });
           })
@@ -197,7 +197,7 @@ function EditPost() {
             confirmButtonText: "Quay lại",
           }).then((result) => {
             if (result.isConfirmed) {
-              navigate(-1);
+              window.location.href = `/DoAnTotNghiep/#/post/${qid}`;
             }
           });
         })
