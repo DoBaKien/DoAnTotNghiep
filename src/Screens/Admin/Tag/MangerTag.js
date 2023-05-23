@@ -45,6 +45,10 @@ function ManagerTag() {
     setModalE(!modalE);
   };
 
+  const handleOnCellClick = (params) => {
+    window.open(`/DoAnTotNghiep/#/tagDetail/${params.row.tid}`, "_blank");
+  };
+
   const handleDelete = (value) => {
     Swal.fire({
       title: "Chắc chắn muốn xóa?",
@@ -151,6 +155,7 @@ function ManagerTag() {
             slots={{
               toolbar: GridToolbar,
             }}
+            onCellDoubleClick={handleOnCellClick}
             getRowHeight={() => "auto"}
             sx={{
               "&.MuiDataGrid-root--densityCompact .MuiDataGrid-cell": {

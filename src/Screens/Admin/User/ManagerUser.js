@@ -149,7 +149,7 @@ function ManagerUser() {
   }
 
   const handleOnCellClick = (params) => {
-    window.open(`/profile/${params.id}`, "_blank");
+    window.open(`/DoAnTotNghiep/#/profile/${params.id}`, "_blank");
   };
   const datatable = () => {
     if (Array.isArray(users) && users.length !== 0) {
