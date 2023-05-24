@@ -357,7 +357,7 @@ function EditPost() {
           <TextField
             id="outlined-multiline-static"
             multiline
-            rows={4}
+            rows={10}
             fullWidth
             value={da}
             placeholder="Enter code"

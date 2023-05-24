@@ -214,7 +214,7 @@ function AnswerAction(props) {
           <TextField
             id="outlined-multiline-static"
             multiline
-            rows={4}
+            rows={10}
             fullWidth
             placeholder="Enter code"
             onChange={(e) => handleInputChange(e.target.value, i, "content")}
