@@ -26,6 +26,7 @@ import { AuthContext } from "../Auth/AuthContext";
 import { auth } from "../../Assert/Config";
 import axios from "axios";
 import { signOut } from "firebase/auth";
+import Swal from "sweetalert2";
 
 function Header() {
   const { currentUser } = useContext(AuthContext);
@@ -59,8 +60,19 @@ function Header() {
     setAnchorEl(null);
   };
 
-  const handleFind = () => {
-    navigate(`/find/${text}`);
+  const handleFind = (e) => {
+    if (e.key === "Enter") {
+      if (text !== "") {
+        navigate(`/find/${text}`);
+      } else if (text === "") {
+        Swal.fire({
+          icon: "error",
+          title: "Vui lòng diền thông tin cần tìm",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      }
+    }
   };
 
   const handlelogout = () => {
@@ -178,9 +190,7 @@ function Header() {
           placeholder="Tìm kiếm..."
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleFind();
-            }
+            handleFind(e);
           }}
           startAdornment={
             <InputAdornment position="start">
