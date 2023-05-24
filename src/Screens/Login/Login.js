@@ -63,6 +63,7 @@ function Login() {
               Cookies.set("sessionCookie", response.data, {
                 expires: 10,
               });
+
               axios
                 .get(`/account/getUserClaims/${response.data}`)
                 .then(function (response) {
@@ -128,6 +129,19 @@ function Login() {
           .post("/account/createSessionCookie", user.accessToken)
           .then(function (response) {
             Cookies.set("sessionCookie", response.data, { expires: 10 });
+
+            axios
+              .get(`/account/getUserClaims/${response.data}`)
+              .then(function (response) {
+                if (response.data === "Admin") {
+                  navigate("/admin");
+                } else if (response.data === "User") {
+                  navigate(-1);
+                }
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
           })
           .catch(function (error) {
             console.log(error);

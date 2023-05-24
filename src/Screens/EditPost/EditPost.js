@@ -116,6 +116,18 @@ function EditPost() {
     }
   }, [qid, type]);
 
+  const handleCheckp = () => {
+    if (
+      title !== "" &&
+      post[0].content !== "<p><br></p>" &&
+      post[0].content !== "" &&
+      personName.length !== 0
+    ) {
+      handlePost();
+    } else {
+      Swal.fire("Lỗi", "Vui lòng điền đầy đủ thông tin", "error");
+    }
+  };
   const handlePost = async () => {
     const SelectTag = personName.map((item) => item.tid);
 
@@ -570,7 +582,7 @@ function EditPost() {
               display: "flex",
             }}
           >
-            <Button variant="contained" onClick={handlePost}>
+            <Button variant="contained" onClick={handleCheckp}>
               Sửa
             </Button>
           </BoxContent>

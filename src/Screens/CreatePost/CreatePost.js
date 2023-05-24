@@ -57,7 +57,18 @@ function CreatePost() {
     updatedUsers[index][key] = event;
     setPost(updatedUsers);
   }
-
+  const handleCheckp = () => {
+    if (
+      title !== "" &&
+      post[0].content !== "<p><br></p>" &&
+      post[0].content !== "" &&
+      personName.length !== 0
+    ) {
+      handleP();
+    } else {
+      Swal.fire("Lỗi", "Vui lòng điền đầy đủ thông tin", "error");
+    }
+  };
   const handleP = () => {
     const SelectTag = personName.map((item) => item.tid);
 
@@ -391,7 +402,7 @@ function CreatePost() {
           display: "flex",
         }}
       >
-        <Button variant="contained" onClick={handleP}>
+        <Button variant="contained" onClick={handleCheckp}>
           Tạo bài viết
         </Button>
       </BoxContent>

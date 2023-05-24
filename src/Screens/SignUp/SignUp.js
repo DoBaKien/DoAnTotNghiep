@@ -37,7 +37,7 @@ function SignUp() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(email, password, name);
+
     if (email === "" || password === "" || name === "") {
       Swal.fire({
         icon: "error",
