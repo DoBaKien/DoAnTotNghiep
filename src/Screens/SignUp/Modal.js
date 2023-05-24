@@ -1,4 +1,4 @@
-import { Box, Button, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import "./Modal.css";
 import { ModalContent } from "./Style";
 import axios from "axios";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 function Modal({ setModal, name, email, password }) {
   const [otp, setOtp] = useState("");
   const navigate = useNavigate();
-  
+
   const toggleModal = () => {
     setModal(false);
   };
@@ -61,16 +61,15 @@ function Modal({ setModal, name, email, password }) {
           </button>
           <Box>
             <Typography variant="h5">Mã xác nhận</Typography>
-            <Stack direction="row">
-              <TextField
-                variant="standard"
-                placeholder="Mã"
-                fullWidth
-                onChange={(e) => setOtp(e.target.value)}
-                sx={{ marginTop: 2, marginRight: 10 }}
-              />
-              <button className="send-modal">Gửi lại</button>
-            </Stack>
+
+            <TextField
+              variant="filled"
+              label="Mã"
+              fullWidth
+              onChange={(e) => setOtp(e.target.value)}
+              sx={{ marginTop: 2, marginRight: 10 }}
+            />
+
             <Box
               sx={{ marginTop: 2, display: "flex", justifyContent: "center" }}
             >

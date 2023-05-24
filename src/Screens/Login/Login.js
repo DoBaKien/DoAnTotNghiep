@@ -135,7 +135,7 @@ function Login() {
               .then(function (response) {
                 if (response.data === "Admin") {
                   navigate("/admin");
-                } else if (response.data === "User") {
+                } else {
                   navigate(-1);
                 }
               })
