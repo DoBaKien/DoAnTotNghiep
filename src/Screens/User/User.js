@@ -45,7 +45,7 @@ function User() {
       <Header />
       <StackContent direction="row" sx={{ marginTop: 2 }}>
         <LeftSide></LeftSide>
-        <BoxContent>
+        <BoxContent sx={{ width: "80%" }}>
           <Typography variant="h4">Người dùng</Typography>
 
           <InputFind>

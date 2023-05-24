@@ -6,6 +6,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Switch,
   styled,
 } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
@@ -20,11 +21,13 @@ import { useNavigate } from "react-router-dom";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { AuthContext } from "../Auth/AuthContext.js";
 
+import ModeNightIcon from "@mui/icons-material/ModeNight";
+
 function LeftSide() {
   const BoxSide = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "light" ? "#F8F9F9" : "#292929",
     width: 220,
-    marginRight: 20,
+    marginRight: 50,
     minWidth: 60,
     border: "1px solid gray",
     borderRadius: 20,
@@ -108,6 +111,14 @@ function LeftSide() {
               ) : (
                 <></>
               )}
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <ModeNightIcon />
+                  </ListItemIcon>
+                  <Switch onChange={context.toggle} />
+                </ListItemButton>
+              </ListItem>
             </List>
           </Box>
         </Box>
