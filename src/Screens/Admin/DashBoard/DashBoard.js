@@ -26,7 +26,8 @@ import ChatIcon from "@mui/icons-material/Chat";
 import { memo } from "react";
 import { ChartQuestion } from "./Chart";
 import Cookies from "js-cookie";
-
+import Statistics from "./Statistics";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 function DashBoard() {
   const { show, setShow } = useContext(AuthContext);
   const [totalQ, setTotalQ] = useState(""); //tổng câu hỏi
@@ -36,6 +37,7 @@ function DashBoard() {
   const [totalRA, setTotalRA] = useState(""); // tổng report của câu trả lời
   const [totalRC, setTotalRC] = useState(""); // tổng report của bình luận
   const [user, setUser] = useState(""); // tổng người dùng
+
   const cookie = Cookies.get("sessionCookie");
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedYear, setSelectedYear] = useState(
@@ -143,6 +145,11 @@ function DashBoard() {
         />
       );
     }, 1000);
+  };
+  const handleTag = (event, index) => {
+    //6
+    setSelectedIndex(index);
+    setChart(<Statistics />);
   };
 
   useEffect(() => {
@@ -355,6 +362,15 @@ function DashBoard() {
                     <AnnouncementIcon />
                   </ListItemIcon>
                   <ListItemText primary="Báo cáo bình luận" />
+                </ListItemButton>
+                <ListItemButton
+                  selected={selectedIndex === 5}
+                  onClick={(event) => handleTag(event, 6)}
+                >
+                  <ListItemIcon>
+                    <LocalOfferIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Thống kê thẻ" />
                 </ListItemButton>
               </List>
             </Box>

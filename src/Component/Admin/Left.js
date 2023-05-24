@@ -37,7 +37,6 @@ function LeftAdmin() {
     setOpen(!open);
   };
   const handleHome = () => {
-    // window.open("/tags", "_blank");
     navigate("/");
   };
   const handleDB = () => {
@@ -62,7 +61,6 @@ function LeftAdmin() {
   const handleReportC = () => {
     navigate("/managerreportcomment");
   };
-
 
   return (
     <BoxSide>
