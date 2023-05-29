@@ -593,7 +593,7 @@ function Post() {
                     <SouthIcon />
                   </IconButton>
                 </Tooltip>
-                <Tooltip title="Lịch sử chỉnh sửa" placement="left">
+                <Tooltip title="Lịch sử hoạt động" placement="left">
                   <Link to={`/history/question/${qid}`}>
                     <IconButton>
                       <HistoryIcon />

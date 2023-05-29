@@ -123,7 +123,7 @@ function ManagerUser() {
     },
     {
       field: "actions",
-      headerName: "Action",
+      headerName: "Chức năng",
       type: "actions",
       flex: 0.5,
       getActions: (params) => {

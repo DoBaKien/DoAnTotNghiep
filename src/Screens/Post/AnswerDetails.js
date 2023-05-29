@@ -2,10 +2,12 @@ import { BoxContent, BoxUser, DateV } from "./Style";
 import {
   Avatar,
   Box,
+  Button,
   CardMedia,
   CircularProgress,
   IconButton,
   Stack,
+  TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -28,13 +30,38 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { AuthContext } from "../../Component/Auth/AuthContext";
+import CommentA from "./CommentA";
 
 function AnswerDetails(props) {
   const [modal, setModal] = useState(false);
   const [aid, setAid] = useState("");
-  const { role } = useContext(AuthContext);
+  const { role, currentUser } = useContext(AuthContext);
   const cookie = Cookies.get("sessionCookie");
   const navigation = useNavigate();
+  const [comment, setComment] = useState("");
+  const [commentD, setCommentD] = useState("");
+
+  const handleSendComment = (id) => {
+    axios
+      .post(`/answerComment/create/${id}/${cookie}`, {
+        detail: comment,
+      })
+      .then(function (response) {
+        axios
+          .get(`/answerComment/getCommentDTOByAid/${id}`)
+          .then(function (response) {
+            setCommentD(response.data);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        Swal.fire("Thành công", "Bình luận thành công", "success");
+        setComment("");
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   const handleReport = (id) => {
     if (cookie !== undefined) {
       setModal(!modal);
@@ -264,7 +291,7 @@ function AnswerDetails(props) {
                     <SouthIcon fontSize="small" />
                   </IconButton>
                   <Link to={`/history/answer/${item.answer.aid}`}>
-                    <Tooltip title="Lịch sử chỉnh sửa" placement="left">
+                    <Tooltip title="Lịch sử hoạt động" placement="left">
                       <IconButton>
                         <HistoryIcon fontSize="small" />
                       </IconButton>
@@ -347,6 +374,30 @@ function AnswerDetails(props) {
                   </Box>
                 </Box>
               </Stack>
+              <CommentA
+                id={item.answer.aid}
+                setCommentD={setCommentD}
+                commentD={commentD}
+                role={role}
+                currentUser={currentUser}
+              />
+              <Box>
+                <TextField
+                  id="standard-basic"
+                  variant="standard"
+                  placeholder="Viết bình luận"
+                  sx={{ width: "30vw" }}
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                />
+                <Button
+                  variant="outlined"
+                  sx={{ marginLeft: 4 }}
+                  onClick={() => handleSendComment(item.answer.aid)}
+                >
+                  Gửi
+                </Button>
+              </Box>
             </BoxContent>
           ))}
         </Box>

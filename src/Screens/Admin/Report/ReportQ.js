@@ -170,7 +170,7 @@ function ReportQ() {
     },
     {
       field: "actions",
-      headerName: "Action",
+      headerName: "Chức năng",
       type: "actions",
       flex: 0.4,
       getActions: (params) => {

@@ -1,100 +1,43 @@
-import {
-  Box,
-  Button,
-  Divider,
-  IconButton,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { BoxContent, DateV, TextUser } from "./Style";
+import { Box, Divider, IconButton, Tooltip, Typography } from "@mui/material";
 import axios from "axios";
-import { useContext, useState } from "react";
-import Swal from "sweetalert2";
-import { useEffect } from "react";
-import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { memo, useEffect, useState } from "react";
+import { DateV, TextUser } from "./Style";
+import Cookies from "js-cookie";
+import ClearIcon from "@mui/icons-material/Clear";
 import ReportIcon from "@mui/icons-material/Report";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { memo } from "react";
-import Cookies from "js-cookie";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 import ModalReport from "../../Assert/ModalReport";
 import ModalComment from "./ModalComment";
-import ClearIcon from "@mui/icons-material/Clear";
-import { AuthContext } from "../../Component/Auth/AuthContext";
 
-function Comment(props) {
-  const [comment, setComment] = useState("");
-  const [data, setData] = useState("");
-  const [modal, setModal] = useState(false);
+const CommentA = (props) => {
+  const navigation = useNavigate();
+  const cookies = Cookies.get("sessionCookie");
   const [cid, setCid] = useState("");
+  const [modal, setModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState("");
-  const { role } = useContext(AuthContext);
-  const cookies = Cookies.get("sessionCookie");
-  const navigation = useNavigate("");
-  const getCommentDTOByQid = useCallback(async () => {
-    try {
-      const response = await axios.get(
-        `comment/getCommentDTOByQid/${props.qid}`
-      );
-      setData(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [props.qid]);
 
   useEffect(() => {
-    getCommentDTOByQid();
-  }, [getCommentDTOByQid]);
-
-  const handleSend = () => {
-    if (cookies !== undefined) {
-      if (comment !== "") {
-        axios
-          .post(`/comment/create/${props.qid}/${cookies}`, {
-            detail: comment,
-          })
-          .then(function (response) {
-            getCommentDTOByQid();
-            setComment("");
-            Swal.fire("Thành công", "Bình luận thành công", "success");
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      } else {
-        Swal.fire(
-          "Thiếu thông tin",
-          "Vui lòng điền đầy đủ thông tin",
-          "question"
+    const getCommentDTOByAid = async () => {
+      try {
+        const response = await axios.get(
+          `/answerComment/getCommentDTOByAid/${props.id}`
         );
+        props.setCommentD(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
       }
-    } else {
-      Swal.fire({
-        title: "Lỗi",
-        text: "Bạn phải đăng nhập trước",
-        icon: "error",
-        showCancelButton: true,
-        confirmButtonText: "Đăng nhập",
-        cancelButtonText: "Hủy",
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        reverseButtons: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          navigation("/login");
-        }
-      });
-    }
-  };
-
+    };
+    getCommentDTOByAid();
+  }, []);
   const handleReport = (id) => {
     setCid(id);
     if (cookies !== undefined) {
       axios
-        .get(`comment/getUserReportValue/${id}/${cookies}`)
+        .get(`answerComment/getUserReportValue/${id}/${cookies}`)
         .then(function (response) {
           if (response.data === "None") {
             setModal(!modal);
@@ -144,11 +87,8 @@ function Comment(props) {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`comment/deleteComment/${id}/${cookies}`)
-          .then(function (response) {
-            getCommentDTOByQid();
-            Swal.fire("Đã xóa!", "Bình luận đã xóa", "success");
-          })
+          .delete(`answerComment/deleteComment/${id}/${cookies}`)
+          .then(function (response) {})
           .catch(function (error) {
             console.log(error);
           });
@@ -158,7 +98,7 @@ function Comment(props) {
 
   const checkRole = (cid, detail, uid) => {
     if (props.currentUser !== uid || cookies === undefined) {
-      if (role === "Admin") {
+      if (props.role === "Admin") {
         return (
           <>
             <Tooltip title="Báo cáo" placement="left">
@@ -184,7 +124,7 @@ function Comment(props) {
           </>
         );
       }
-    } else if (props.currentUser === uid && role === "Admin") {
+    } else if (props.currentUser === uid && props.role === "Admin") {
       return (
         <>
           <Tooltip title="Chỉnh sửa" placement="top">
@@ -199,7 +139,7 @@ function Comment(props) {
           </Tooltip>
         </>
       );
-    } else if (props.currentUser === uid && role === "User") {
+    } else if (props.currentUser === uid && props.role === "User") {
       return (
         <>
           <Tooltip title="Chỉnh sửa" placement="top">
@@ -217,34 +157,30 @@ function Comment(props) {
     }
   };
 
-  const commentDetail = () => {
-    if (data && data.length > 0) {
+  const CommentDetail = () => {
+    if (props.commentD && props.commentD.length > 0) {
       return (
         <Box>
-          {data.map((item, i) => (
+          {props.commentD.map((item, i) => (
             <Box
               key={i}
               sx={{
                 marginBottom: 1,
                 alignItems: "center",
                 display: "flex",
-                border:
-                  item.comment.cid === props.id && props.type === "comment"
-                    ? "3px solid red"
-                    : "",
               }}
             >
               <Typography
                 variant="body2"
                 sx={{ float: "left", lineHeight: 1.5 }}
               >
-                {item.comment.detail} —{" "}
+                {item.answerComment.detail} —{" "}
                 {TextUser(item.user.name, item.user.uid)}{" "}
-                {DateV(item.comment.date)}
+                {DateV(item.answerComment.date)}
                 {checkRole(
-                  item.comment.cid,
-                  item.comment.detail,
-                  item.comment.uid
+                  item.answerComment.caid,
+                  item.answerComment.detail,
+                  item.answerComment.uid
                 )}
               </Typography>
               <Divider sx={{ marginTop: 1 }} />
@@ -254,50 +190,28 @@ function Comment(props) {
       );
     }
   };
-  return (
-    <>
-      <BoxContent sx={{ paddingTop: 1 }}>
-        <Box>{commentDetail()}</Box>
-        <ModalReport
-          setModal={setModal}
-          modal={modal}
-          qid={cid}
-          type="bình luận"
-        />
-        <ModalComment
-          setOpen={setOpen}
-          open={open}
-          id={cid}
-          qid={props.qid}
-          content={content}
-          setContent={setContent}
-          setData={setData}
-          type="bình luận"
-        />
-        {props.status === "Open" ? (
-          <Stack direction="row" sx={{ paddingLeft: 10 }}>
-            <TextField
-              id="standard-basic"
-              variant="standard"
-              placeholder="Viết bình luận"
-              value={comment}
-              sx={{ width: "30vw" }}
-              onChange={(e) => setComment(e.target.value)}
-            />
-            <Button
-              variant="outlined"
-              onClick={handleSend}
-              sx={{ marginLeft: 8 }}
-            >
-              Gửi
-            </Button>
-          </Stack>
-        ) : (
-          <Typography>Câu hỏi đã dóng</Typography>
-        )}
-      </BoxContent>
-    </>
-  );
-}
 
-export default memo(Comment);
+  return (
+    <Box>
+      <ModalReport
+        setModal={setModal}
+        modal={modal}
+        qid={cid}
+        type="bình luận câu trả lời"
+      />
+      <ModalComment
+        setOpen={setOpen}
+        open={open}
+        id={cid}
+        qid={props.id}
+        content={content}
+        setContent={setContent}
+        setData={props.setCommentD}
+        type="bình luận câu trả lời"
+      />
+      {CommentDetail()}
+    </Box>
+  );
+};
+
+export default memo(CommentA);

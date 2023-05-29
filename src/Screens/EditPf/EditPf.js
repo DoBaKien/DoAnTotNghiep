@@ -176,7 +176,7 @@ function EditPf() {
               Lưu thông tin
             </Button>
             <Button variant="text" onClick={() => navigate(-1)}>
-              Cancel
+              Hủy
             </Button>
           </Box>
         </BoxContent>

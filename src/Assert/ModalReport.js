@@ -78,6 +78,17 @@ function ModalReport({ setModal, modal, qid, type, setCheckRp }) {
         .catch(function (error) {
           console.log(error);
         });
+    } else if (type === "bình luận câu trả lời" && reason !== "") {
+      axios
+        .post(`/answerComment/report/${qid}/${cookie}`, { detail: reason })
+        .then(function (response) {
+          setModal(false);
+
+          Swal.fire("Thành công", "Tố cáo thành công", "success");
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   };
 
@@ -86,7 +97,12 @@ function ModalReport({ setModal, modal, qid, type, setCheckRp }) {
       <Modal open={modal} onClose={toggleModal}>
         <Box sx={style}>
           <Box
-            sx={{ display: "flex", justifyContent: "center", marginBottom: 2 }}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: 2,
+              textAlign: "center",
+            }}
           >
             <Typography id="modal-modal-title" variant="h4">
               Báo cáo {type}

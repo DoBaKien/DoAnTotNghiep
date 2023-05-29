@@ -19,6 +19,7 @@ function ModalComment({
   content,
   setContent,
   setData,
+  type,
 }) {
   const style = {
     position: "absolute",
@@ -39,25 +40,47 @@ function ModalComment({
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .put(`/comment/edit/${id}/${cookie}`, {
-        detail: content,
-      })
-      .then(function (response) {
-        axios
-          .get(`comment/getCommentDTOByQid/${qid}`)
-          .then(function (response) {
-            setData(response.data);
-            setOpen(!open);
-            Swal.fire("Thành công", "Chỉnh sửa thành công", "success");
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    if (type === "bình luận") {
+      axios
+        .put(`/comment/edit/${id}/${cookie}`, {
+          detail: content,
+        })
+        .then(function (response) {
+          axios
+            .get(`comment/getCommentDTOByQid/${qid}`)
+            .then(function (response) {
+              setData(response.data);
+              setOpen(!open);
+              Swal.fire("Thành công", "Chỉnh sửa thành công", "success");
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else if (type === "bình luận câu trả lời") {
+      axios
+        .put(`/answerComment/edit/${id}/${cookie}`, {
+          detail: content,
+        })
+        .then(function (response) {
+          axios
+            .get(`answerComment/getCommentDTOByAid/${qid}`)
+            .then(function (response) {
+              setData(response.data);
+              setOpen(!open);
+              Swal.fire("Thành công", "Chỉnh sửa thành công", "success");
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
   };
 
   return (

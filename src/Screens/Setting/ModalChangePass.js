@@ -199,7 +199,7 @@ function ModalChangePass({ setModal, modal, email }) {
                   Hủy
                 </Button>
                 <Button type="submit" variant="contained" sx={{ width: 150 }}>
-                  đăng nhập
+              Đổi
                 </Button>
               </Stack>
             </form>

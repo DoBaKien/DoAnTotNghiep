@@ -96,7 +96,7 @@ function ManagerTag() {
     },
     {
       field: "actions",
-      headerName: "Action",
+      headerName: "Chức năng",
       type: "actions",
       flex: 0.6,
       getActions: (params) => {

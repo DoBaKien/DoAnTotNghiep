@@ -141,6 +141,7 @@ function SignUp() {
                 style={{ marginTop: 20 }}
                 label="Tên hiển thị"
                 variant="outlined"
+                required
                 onChange={(e) => setName(e.target.value)}
                 fullWidth
               />

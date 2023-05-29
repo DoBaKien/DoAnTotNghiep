@@ -1,4 +1,5 @@
 import { Box, Stack, styled } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export const StackContent = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "light" ? "#DAE0E6" : "#030303",
@@ -39,3 +40,13 @@ export const BoxUserPost = styled(Stack)(() => ({
   display: "flex",
   alignItems: "center",
 }));
+export const TextUser = (name, id) => {
+  return (
+    <Link
+      to={`/profile/${id}`}
+      style={{ textDecoration: "none", color: "#A9A9A9" }}
+    >
+      {name}
+    </Link>
+  );
+};
