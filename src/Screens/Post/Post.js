@@ -125,7 +125,7 @@ function Post() {
         console.error(error);
       }
     };
-    checkSaveQuestion();
+   
 
     if (currentUser !== "") {
       const getUserVoteValue = async () => {
@@ -172,6 +172,7 @@ function Post() {
     if (currentUser === "") {
       GetAnswer();
     } else {
+      checkSaveQuestion();
       GetAnswerCK();
       getUserReportValue();
       checkUserAnswer();
